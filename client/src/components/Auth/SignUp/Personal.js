@@ -1,12 +1,24 @@
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux';
 
-import { Input, Select } from '../../../Util/Input';
-import { zones, areas } from '../../../Util/data';
+import { Input, Select } from '../../../util/Input';
+import { zones, areas } from '../../../util/data';
+import { changePageHandler, changeHandler, submitHandler } from '../../../app/signup/signupSlice';
 
-const Personal = ({currPage, setCurrentPage, formData, changeHandler, submitHandler}) => {
+const Personal = () => {
+    const formData = useSelector((state) => state.signup.formDetails);
+    const currPage = useSelector((state) => state.signup.currPage);
+
+    const dispatch = useDispatch();
 
     const cno = Number.isNaN(formData.cno) ? '' : formData.cno;
     const selectedZone = formData.zone;
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        dispatch(submitHandler());
+    }
 
     return (
         <div className='personal-form'>
@@ -16,8 +28,8 @@ const Personal = ({currPage, setCurrentPage, formData, changeHandler, submitHand
                 type="number"
                 label="Consumer Number"
                 className={formData.cno ? 'active': ''}
-                value={formData.cno}
-                onChange={changeHandler}
+                value={cno}
+                changeHandler={changeHandler}
             />
             
             <Select
@@ -25,7 +37,7 @@ const Personal = ({currPage, setCurrentPage, formData, changeHandler, submitHand
                 label="Select a zone"
                 className={formData.zone ? 'active': ''}
                 value={formData.zone}
-                onChange={changeHandler}
+                changeHandler={changeHandler}
                 options={zones}
                 optional="Select a zone"
             />
@@ -37,15 +49,15 @@ const Personal = ({currPage, setCurrentPage, formData, changeHandler, submitHand
                     label="Select a area"
                     className={formData.area ? 'active': ''}
                     value={formData.area}
-                    onChange={changeHandler}
+                    changeHandler={changeHandler}
                     options={areas[selectedZone]}
                     optional="Select an area"
                 />
             }
             
             <div className='btn-class'>
-                <button className="btn" onClick={() => setCurrentPage(currPage-1)}>Previuos</button>
-                <button className="btn" onClick={submitHandler}>Signup</button>
+                <button className="btn" onClick={() => dispatch(changePageHandler(currPage-1))}>Previuos</button>
+                <button className="btn" onClick={handleSubmit}>Signup</button>
             </div>
         </div>
     )

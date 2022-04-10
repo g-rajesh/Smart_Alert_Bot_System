@@ -1,7 +1,14 @@
 import React from 'react'
-import { Input } from '../../../Util/Input';
+import { useSelector, useDispatch } from 'react-redux';
+import { changePageHandler, changeHandler } from '../../../app/signup/signupSlice';
 
-const Account = ({currPage, setCurrentPage, formData, changeHandler}) => {
+import { Input } from '../../../util/Input';
+
+const Account = () => {
+    const formData = useSelector((state) => state.signup.formDetails);
+    const currPage = useSelector((state) => state.signup.currPage);
+
+    const dispatch = useDispatch();
 
     return (
         <div className='account-form'>
@@ -13,7 +20,7 @@ const Account = ({currPage, setCurrentPage, formData, changeHandler}) => {
                     label="First Name"
                     className={formData.fName ? 'active': ''}
                     value={formData.fName}
-                    onChange={changeHandler}
+                    changeHandler={changeHandler}
                 />
                 <Input
                     name="lName"
@@ -21,7 +28,7 @@ const Account = ({currPage, setCurrentPage, formData, changeHandler}) => {
                     label="Last Name"
                     className={formData.lName ? 'active': ''}
                     value={formData.lName}
-                    onChange={changeHandler}
+                    changeHandler={changeHandler}
                 />                
             </div>
             <Input
@@ -30,7 +37,7 @@ const Account = ({currPage, setCurrentPage, formData, changeHandler}) => {
                 label="Email"
                 className={formData.email ? 'active': ''}
                 value={formData.email}
-                onChange={changeHandler}
+                changeHandler={changeHandler}
             />
 
             <Input
@@ -39,10 +46,10 @@ const Account = ({currPage, setCurrentPage, formData, changeHandler}) => {
                 label="Password"
                 className={formData.password ? 'active': ''}
                 value={formData.password}
-                onChange={changeHandler}
+                changeHandler={changeHandler}
             />
             <div className='btn-class'>
-                <button className="btn" onClick={() => setCurrentPage(currPage+1)}>Next</button>
+                <button className="btn" onClick={() => dispatch(changePageHandler(currPage+1))}>Next</button>
             </div>
         </div>
     )
