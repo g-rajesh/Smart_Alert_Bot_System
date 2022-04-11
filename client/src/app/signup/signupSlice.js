@@ -1,5 +1,5 @@
 import { createSlice, current } from '@reduxjs/toolkit'
-import { formDetails } from '../../Util/data'
+import { formDetails } from '../../util/data'
 
 let data = formDetails;
 if(localStorage.getItem("signupState")){
