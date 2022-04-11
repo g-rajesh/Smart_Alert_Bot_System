@@ -1,8 +1,8 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Input, Select } from '../../../Util/Input';
-import { zones, areas } from '../../../Util/data';
+import { Input, Select } from '../../../util/Input';
+import { zones, areas } from '../../../util/data';
 import { changePageHandler, changeHandler, submitHandler } from '../../../app/signup/signupSlice';
 
 const Personal = () => {

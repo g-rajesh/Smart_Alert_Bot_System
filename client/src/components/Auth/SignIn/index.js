@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {Link} from 'react-router-dom';
 
 import { changeHandler, submitHandler } from '../../../app/signin/signinSlice';
-import { Input } from '../../../Util/Input';
+import { Input } from '../../../util/Input';
 
 import "./SignIn.css";
 
