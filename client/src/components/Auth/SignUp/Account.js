@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { changePageHandler, changeHandler } from '../../../app/signup/signupSlice';
 
-import { Input } from '../../../util/Input';
+import { Input } from '../../../Util/Input';
 
 const Account = () => {
     const formData = useSelector((state) => state.signup.formDetails);
