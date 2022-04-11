@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Chat.css';
 
-const messages = [
+const data = [
     {id: 1, username: 'Rajesh', message: "Hello Peter"},
     {id: 2, username: 'Bot', message: "Varenda"},
     {id: 3, username: 'Rajesh', message: "Hello Peter"},
@@ -9,7 +9,7 @@ const messages = [
     {id: 5, username: 'Bot', message: "Hello Peter"},
     {id: 6, username: 'Rajesh', message: "Varenda"},
     {id: 7, username: 'Bot', message: "Hello Peter"},
-    {id: 8, username: 'Rajesh', message: "Varenda"},
+    {id: 8, username: 'Rajesh', message: "Leaner Meaner St"},
     {id: 9, username: 'Rajesh', message: "Varenda"},
     {id: 10, username: 'Bot', message: "Hello Peter"},
     {id: 11, username: 'Bot', message: "Hello Peter"},
@@ -19,6 +19,21 @@ const messages = [
 ]
 
 const Chat = () => {
+    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState(data);
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        const newMessage = {
+            id: messages.length+1,
+            username: "Rajesh",
+            message: message
+        }
+
+        setMessages([...messages, newMessage]);
+        setMessage('');
+    }
+
     return  (
         <div className="chat">
             <div className="container">
@@ -36,11 +51,17 @@ const Chat = () => {
                                 if(username == "Rajesh") {
                                     return <div className="message" key={id}>
                                         <div className="left"></div>
-                                        <div className="right msg">{message}</div>
+                                        <div className="right msg">
+                                            <p className='msg-text'>{message}</p>
+                                            <span className='msg-profile'>{username[0]}</span> 
+                                        </div>
                                     </div>
                                 } else {
                                     return <div className="message" key={id}>
-                                        <div className="left msg">{message}</div>
+                                        <div className="left msg">
+                                            <span className='msg-profile'>{username[0]}</span> 
+                                            <p  className='msg-text'>{message}</p>
+                                        </div>
                                         <div className="right"></div>
                                     </div>
                                 }
@@ -55,8 +76,8 @@ const Chat = () => {
                             </select>
                         </div>
                         <div className="type-msg">
-                            <input type="text" placeholder='Write a message...' />
-                            <button>Send</button>
+                            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Write a message...' />
+                            <button onClick={submitHandler}>Send</button>
                         </div>
                     </div>
                 </div>

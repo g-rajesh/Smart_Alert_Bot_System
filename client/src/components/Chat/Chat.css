@@ -65,15 +65,43 @@ header .right button {
 .content .messages .message {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .message .msg {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.message .msg  .msg-profile {
+    background-color: #0063DC;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 30px;
+    color: #fff;
+}
+
+.message .msg.right .msg-profile {
+    margin-left: 0.5rem;
+}
+
+.message .msg.left .msg-profile  {
+    margin-right: 0.5rem;
+}
+
+.message .msg .msg-text {
     border: 1px solid #ccc;
     padding: 0.5rem;
     font-size: 0.75rem;
     border-radius: 5px;
-    margin-bottom: 0.5rem;
     font-weight: 500;
+}
+
+.message .msg.right .msg-text {
+    background-color: #ccc;
 }
 
 .content .send {
@@ -123,6 +151,7 @@ header .right button {
     margin-left: 1rem;
     background-color: #0063DC;
     padding: 0.35rem 0.8rem;
+    border-radius: 5px;
     outline: 0;
     border: 0;
     color: #fff;
