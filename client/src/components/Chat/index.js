@@ -1,26 +1,39 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
+
+import { useSpeechSynthesis } from 'react-speech-kit';
+import moment from 'moment';
+
 import './Chat.css';
 
 const data = [
-    {id: 1, username: 'Rajesh', message: "Hello Peter"},
-    {id: 2, username: 'Bot', message: "Varenda"},
-    {id: 3, username: 'Rajesh', message: "Hello Peter"},
-    {id: 4, username: 'Rajesh', message: "Varenda"},
-    {id: 5, username: 'Bot', message: "Hello Peter"},
-    {id: 6, username: 'Rajesh', message: "Varenda"},
-    {id: 7, username: 'Bot', message: "Hello Peter"},
-    {id: 8, username: 'Rajesh', message: "Leaner Meaner St"},
-    {id: 9, username: 'Rajesh', message: "Varenda"},
-    {id: 10, username: 'Bot', message: "Hello Peter"},
-    {id: 11, username: 'Bot', message: "Hello Peter"},
-    {id: 12, username: 'Bot', message: "Hello Peter"},
-    {id: 13, username: 'Rajesh', message: "Varenda"},
-    {id: 14, username: 'Rajesh', message: "Varenda"},
+    {id: 1, username: 'Rajesh', message: "Hello Peter", date: new Date().getTime()},
+    {id: 2, username: 'Bot', message: "Varenda", date: new Date().getTime()},
+    {id: 3, username: 'Rajesh', message: "Hello Peter", date: new Date().getTime()},
+    {id: 4, username: 'Rajesh', message: "Varenda", date: new Date().getTime()},
+    {id: 5, username: 'Bot', message: "Hello Peter", date: new Date().getTime()},
+    {id: 6, username: 'Rajesh', message: "Varenda", date: new Date().getTime()},
+    {id: 7, username: 'Bot', message: "Hello Peter", date: new Date().getTime()},
+    {id: 8, username: 'Rajesh', message: "Leaner Meaner St", date: new Date().getTime()},
+    {id: 9, username: 'Rajesh', message: "Varenda", date: new Date().getTime()},
+    {id: 10, username: 'Bot', message: "Hello Peter", date: new Date().getTime()},
+    {id: 11, username: 'Bot', message: "Hello Peter", date: new Date().getTime()},
+    {id: 12, username: 'Bot', message: "Hello Peter", date: new Date().getTime()},
+    {id: 13, username: 'Rajesh', message: "Varenda", date: new Date().getTime()},
+    {id: 14, username: 'Rajesh', message: "Varenda", date: new Date().getTime()},
 ]
 
+console.log(data);
+
 const Chat = () => {
+    const { speak } = useSpeechSynthesis();
+
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState(data);
+    const messageEndRef = useRef(null);
+
+    useEffect(() => {
+        messageEndRef.current?.scrollIntoView();
+    }, [messages]);
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -47,26 +60,37 @@ const Chat = () => {
                 <div className="content">
                     <div className="messages">
                         {
-                            messages.map(({id, username, message}) => {
+                            messages.map(({id, username, message}, date) => {
                                 if(username == "Rajesh") {
-                                    return <div className="message" key={id}>
-                                        <div className="left"></div>
-                                        <div className="right msg">
-                                            <p className='msg-text'>{message}</p>
-                                            <span className='msg-profile'>{username[0]}</span> 
+                                    return (
+                                        <div className="message right" key={id}>
+                                            <div></div>
+                                            <div className='msg'>
+                                                <div className='msg-text'>
+                                                    <p>{message}</p>
+                                                    <span>{moment(date).format('LT')} &middot; <i className="uil uil-volume-up" onClick={() => speak({ text: message })}></i></span>
+                                                </div>
+                                                <span className='msg-profile'>{username[0]}</span> 
+                                            </div>
                                         </div>
-                                    </div>
+                                    )
                                 } else {
-                                    return <div className="message" key={id}>
-                                        <div className="left msg">
-                                            <span className='msg-profile'>{username[0]}</span> 
-                                            <p  className='msg-text'>{message}</p>
+                                    return (
+                                        <div className="message left" key={id}>
+                                            <div className='msg'>
+                                                <span className='msg-profile'>{username[0]}</span> 
+                                                <div className='msg-text'>
+                                                    <p>{message}</p>
+                                                    <span>{moment(date).format('LT')} &middot; <i className="uil uil-volume-up" onClick={() => speak({ text: message })}></i></span>
+                                                </div>
+                                            </div>
+                                            <div></div>
                                         </div>
-                                        <div className="right"></div>
-                                    </div>
+                                    )
                                 }
                             })
                         }
+                        <div ref={messageEndRef}></div>
                     </div>
                     <div className="send">
                         <div className="type">

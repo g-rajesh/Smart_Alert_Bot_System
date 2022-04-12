@@ -133,6 +133,7 @@ form select {outline: 0;
 
 .form .toggle a {
     color: #0063DC;
+    text-decoration: underline;
 }
 
 @media screen and (max-width: 968px) {
