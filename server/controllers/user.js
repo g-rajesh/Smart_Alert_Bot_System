@@ -12,72 +12,33 @@ const firebaseConfig = {
     measurementId: "G-9JTT1N99MN"
   };
 
-const fireApp = initializeApp(firebaseConfig);
- const auth = getAuth(fireApp);
+initializeApp(firebaseConfig);
+const auth = getAuth();
 
+exports.signup = async (req, res, next) => {
+    const { email, password } = req.body;
 
+    try {
+        const { user } = await createUserWithEmailAndPassword(auth, email, password);
+        await sendEmailVerification(user, { url: "http://localhost:3000/" })
+        console.log(user.emailVerified);
 
-exports.signup = (req, res, next) => {
-    console.log(req.body);
-
-    return res.status(200).json(req.body);
-};
-  
-exports.signin = (req, res, next) => {
-    console.log(req.body);
-
-    return res.status(200).json(req.body);
-};
-
-req = {
-    body: {
-        email: 'sivavignesh761@gmail.com',
-        password: 'siva@123',
-        uid: 'fD6RE27es8QYgizbhAkWrdRbHi93'
+        return res.status(200).json({ user });
+    } catch(e) {
+        res.status(500).json({ error: e.message });
     }
 }
 
-async function signup(req) {
-    let email = req.body.email
-    let password = req.body.email
-    await createUserWithEmailAndPassword(auth, email, password)
-    .then(async (userCredential) => {
-        const user = userCredential.user;
-        await sendEmailVerification(auth.currentUser)
-                .then()
-                .catch(err => console.log('send email verify err: ', err))
-        // console.log('access token: ', user.stsTokenManager.accessToken, '\n')
-        // console.log('refresh token: ', user.stsTokenManager.refreshToken, '\n\n')
-        console.log('signned up!... Verification email send')
-    })
-    .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(`signup error code: ${errorCode}, err msg: ${errorMessage}`)
-    });
+exports.signin = async (req, res, next) => {
+    const { email, password } = req.body;
+
+    try {
+        const { user } = await signInWithEmailAndPassword(auth, email, password);
+        console.log(user.emailVerified);
+
+        return res.status(200).json({ user });
+    } catch(e) {
+        res.status(500).json({ error: e.message });
+    }
+    
 }
-
-async function signin() {
-    let email = req.body.email
-    let password = req.body.password
-    await signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            // console.log('access token: ', user.stsTokenManager.accessToken, '\n')
-            // console.log('refresh token: ', user.stsTokenManager.refreshToken, '\n\n')
-            console.log('signned in!')
-
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(`signin error code: ${errorCode}, err msg: ${errorMessage}`)
-            
-        });
-}
-
-
-
-// signup()
-// signin()

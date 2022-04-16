@@ -8,12 +8,12 @@ export const formDetails = {
     "area": ""
 };
 
-export const zones = ["Tiruvottiyur", "Anna Nagar", "Chengalpattu", "Valasaravakkam"];
+export const zones = ["Tiruvottiyur", "Anna Nagar", "Chrompet", "Valasaravakkam"];
 
 export const areas = {
     "Tiruvottiyur": ["Tiruvottiyur", "V.O.C Nagar", "Manali", "Wimco Nagar"],
-    "Anna Nagar": ["Anna Nagar", "Area 2", "Area 3", "Area 4"],
-    "Chengalpattu": ["Chengalpattu", "Area 2", "Area 3", "Area 4"],
-    "Valasaravakkam": ["Valasaravakkam", "Area 2", "Area 3", "Area 4"],
+    "Anna Nagar": ["Anna Nagar", "Villivakkam", "Padi", "Tirumangalam"],
+    "Chrompet": ["Chrompet", "Pallavaram", "Tambaram Santorium", "Tambaram"],
+    "Valasaravakkam": ["Valasaravakkam", "K K Nagar", "Porur", "Ramapuram"],
 };
 
