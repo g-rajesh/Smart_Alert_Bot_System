@@ -29,10 +29,6 @@ const User = sequelize.define("User", {
         type: DataTypes.STRING,
         allowNull: false
     },
-    consumerNumber: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
     isVerified: {
         type: DataTypes.INTEGER,
         allowNull: false

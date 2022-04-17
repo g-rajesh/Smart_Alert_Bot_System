@@ -19,6 +19,14 @@ app.use(cors());
 
 app.use("/user", userRoutes);
 
+app.use((error, req, res, next) => {
+  console.log(error);
+  const status = error.status || 500;
+  const message = error.message;
+  const data = error.data;
+  return res.status(status).json({ message, data });
+});
+
 Official.hasOne(Zone);
 Zone.belongsTo(Official);
 
@@ -49,17 +57,7 @@ sequelize
           app.listen(PORT, async () => {
                console.log(`Server starts listening to PORT ${PORT}`);
 
-               const area = await Area.findOne({
-                    where: {
-                         name: 'V.O.C Nagar'
-                    },
-                    include: {
-                         model: Zone
-                    }
-               });
-
-               console.log('Area:', area.name);
-               console.log('Zone:', await area.Zone.name);
+               // const user = await User.create({})
           });
      })
      .catch((err) => {

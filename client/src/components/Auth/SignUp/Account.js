@@ -6,7 +6,21 @@ import { Input } from '../../../util/Input';
 
 const Account = () => {
     const formData = useSelector((state) => state.signup.formDetails);
+    const error = useSelector((state) => state.signup.error);
     const currPage = useSelector((state) => state.signup.currPage);
+
+    const classes = { "fName": "", "lName": "", "email": "", "password": "" }
+    if(formData.fName != "") classes.fName += "active ";
+    if(error.fName != "") classes.fName += "error";
+    
+    if(formData.lName != "") classes.lName += "active ";
+    if(error.lName != "") classes.lName += "error";
+    
+    if(formData.email != "") classes.email += "active ";
+    if(error.email != "") classes.email += "error";
+    
+    if(formData.password != "") classes.password += "active ";
+    if(error.password != "") classes.password += "error";
 
     const dispatch = useDispatch();
 
@@ -18,16 +32,18 @@ const Account = () => {
                     name="fName"
                     type="text"
                     label="First Name"
-                    className={formData.fName ? 'active': ''}
+                    className={classes.fName}
                     value={formData.fName}
+                    error={error.fName}
                     changeHandler={changeHandler}
                 />
                 <Input
                     name="lName"
                     type="text"
                     label="Last Name"
-                    className={formData.lName ? 'active': ''}
+                    className={classes.lName}
                     value={formData.lName}
+                    error={error.lName}
                     changeHandler={changeHandler}
                 />                
             </div>
@@ -35,8 +51,9 @@ const Account = () => {
                 name="email"
                 type="email"
                 label="Email"
-                className={formData.email ? 'active': ''}
+                className={classes.email}
                 value={formData.email}
+                error={error.email}
                 changeHandler={changeHandler}
             />
 
@@ -44,8 +61,9 @@ const Account = () => {
                 name="password"
                 type="password"
                 label="Password"
-                className={formData.password ? 'active': ''}
+                className={classes.password}
                 value={formData.password}
+                error={error.password}
                 changeHandler={changeHandler}
             />
             <div className='btn-class'>

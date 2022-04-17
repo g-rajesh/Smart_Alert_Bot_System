@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
 
-export const Input = ({name, type, label, className, value, changeHandler}) => {
+export const Input = ({name, type, label, className, value, error, changeHandler}) => {
     const dispatch = useDispatch();
 
     const handleChange = (e) => {
@@ -17,11 +17,14 @@ export const Input = ({name, type, label, className, value, changeHandler}) => {
         <div className="form-group">
             <label htmlFor={name}>{label}</label>
             <input type={type} className={className} name={name} id={name} value={value} onChange={handleChange} autoComplete="off" />
+            {
+                error && <span className='error-msg'>{error}</span>
+            }
         </div>
     )
 }
 
-export const Select = ({name, label, className, value, changeHandler, options, optional}) => {
+export const Select = ({name, label, className, value, error, changeHandler, options, optional}) => {
     const dispatch = useDispatch();
 
     const handleChange = (e) => {
@@ -44,6 +47,9 @@ export const Select = ({name, label, className, value, changeHandler, options, o
                     })
                 }
             </select>
+            {
+                error && <span className='error-msg'>{error}</span>
+            }
         </div>
     )
 }

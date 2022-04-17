@@ -3,7 +3,7 @@ export const formDetails = {
     "lName": "",
     "email": "",
     "password": "",
-    "cno": "",
+    "mno": "",
     "zone": "",
     "area": ""
 };

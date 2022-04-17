@@ -8,14 +8,7 @@ import "./SignUp.css";
 
 const SignUp = () => {
     const currPage = useSelector((state) => state.signup.currPage);
-
-    // TODO
-    // 1. ADD CLASS TO MAKE INPUT ACTIVE -> DONE
-    // 2. ADD TEXT STYLE TO INPUT -> DONE
-    // 3. STORE THE DETAILS IN LOCAL STORAGE -> DONE
-    // 4. MAKE REUSABLE COMPONENTS -> DONE
-    // 5. ADD ERROR HANDLER -> DONE
-    // 6. ADD REDUX TOOLKIT -> DONE
+    
     return  (
         <div className="auth">
             <div className="container">

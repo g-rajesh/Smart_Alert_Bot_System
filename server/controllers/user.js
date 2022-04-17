@@ -1,44 +1,135 @@
-var { initializeApp } = require("firebase/app")
-var {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } = require('firebase/auth')
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBbnxiHXC6qghq0J7rsX9TEF2z_hazlfrc",
-    authDomain: "smart-alert-bot-sytem.firebaseapp.com",
-    databaseURL: "https://smart-alert-bot-sytem-default-rtdb.firebaseio.com",
-    projectId: "smart-alert-bot-sytem",
-    storageBucket: "smart-alert-bot-sytem.appspot.com",
-    messagingSenderId: "301888177188",
-    appId: "1:301888177188:web:33d58986bec223641744b1",
-    measurementId: "G-9JTT1N99MN"
-  };
-
-initializeApp(firebaseConfig);
-const auth = getAuth();
+const { empty_validator, error, isInvalidZone, isInvalidArea, createUser, isEmailAlreadyTaken, isPasswordMatch, getUser } = require("../util/validator");
 
 exports.signup = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { firstName, lastName,  email, password, mobileNumber, zone, area } = req.body;
 
+    let errors;
     try {
-        const { user } = await createUserWithEmailAndPassword(auth, email, password);
-        await sendEmailVerification(user, { url: "http://localhost:3000/" })
-        console.log(user.emailVerified);
+        // Validating if there is any empty fields
+        errors = empty_validator(req.body);
+        if(Object.keys(errors).length != 0) {
+            const emptyError = error("Validation failed", errors, 500);
+            throw emptyError;
+        }
 
-        return res.status(200).json({ user });
+        // Validating the email
+        if(!email.trim().includes("@")) {
+            const emailError = error("Invalid email", { email: "Invalid email" }, 500);
+            throw emailError;
+        }
+
+        // Validating the password
+        if(password.trim().length < 6) {
+            const passwordError = error("Password must be 6 characters long", { password: "Password must be 6 characters long" }, 500);
+            throw passwordError;
+        }
+
+        // Validating mobile number
+        if(mobileNumber.length < 10 || mobileNumber.length > 10) {
+            const mobileError = error("Mobile Number must be 10 digits", { mobileNumber: "Mobile Number must be 10 digits" }, 500);
+            throw mobileError;
+        }
+
+        // Validating Zone
+        if(await isInvalidZone(zone)) {
+            const zoneError = error("A Invalid zone", { zone: "Invalid zone" }, 500);
+            throw zoneError;
+        }
+        // Validating Area
+        if(await isInvalidArea(zone, area)) {
+            const areaError = error("Invalid area", { area: "Invalid area" }, 500);
+            throw areaError;
+        }
+
+        if(await isEmailAlreadyTaken(email)) {
+            const emailError = error("Email is Already in use", { email: "Email is Already in use" }, 500);
+            throw emailError;
+        }
+
+        // hash password
+        req.body.password = await bcrypt.hash(password, 12);
+
+        // creating user
+        const user = await createUser(req.body);
+        console.log(user);
+
+        // creating token
+        const token = jwt.sign({email: user.email}, "TEAM_TNEB", { expiresIn: '1w' });
+
+        return res.status(200).json({
+            message: "User created successfully...",
+            user: { 
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                mobileNumber: user.mobileNumber,
+                isVerified: user.isVerified
+            },
+            token: token
+        });
     } catch(e) {
-        res.status(500).json({ error: e.message });
-    }
+        if (!e.status) {
+            e.status = 500;
+        }
+        next(e);
+    }    
 }
 
 exports.signin = async (req, res, next) => {
     const { email, password } = req.body;
 
+    let errors;
     try {
-        const { user } = await signInWithEmailAndPassword(auth, email, password);
-        console.log(user.emailVerified);
+        // Validating if there is any empty fields
+        errors = empty_validator(req.body);
+        if(Object.keys(errors).length != 0) {
+            const emptyError = error("Validation failed", errors, 500);
+            throw emptyError;
+        }
 
-        return res.status(200).json({ user });
+        // Validating the email
+        if(!email.trim().includes("@")) {
+            const emailError = error("Invalid email", { email: "Invalid email" }, 500);
+            throw emailError;
+        }
+
+        // getting user from db
+        const user = await getUser(email);
+
+        // Check email exist in the database
+        if(!user) {
+            const emailError = error("Email doesn't exist", { email: "Email doesn't exist" }, 500);
+            throw emailError;
+        }
+
+        // Check password match
+        if(!(await isPasswordMatch(user.password, password))) {
+            const passwordError = error("Password doesn't match", { password: "Password doesn't match" }, 500);
+            throw passwordError;
+        }
+
+        // creating token
+        const token = jwt.sign({email: user.email}, "TEAM_TNEB", { expiresIn: '1w' });
+
+        return res.status(200).json({
+            message: "User logged in successfully...",
+            user: { 
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                mobileNumber: user.mobileNumber,
+                isVerified: user.isVerified
+            },
+            token: token
+        });
+
     } catch(e) {
-        res.status(500).json({ error: e.message });
+        if (!e.status) {
+            e.status = 500;
+        }
+        next(e);
     }
-    
 }

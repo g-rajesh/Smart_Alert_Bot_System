@@ -7,11 +7,22 @@ import { changePageHandler, changeHandler, submitHandler } from '../../../app/si
 
 const Personal = () => {
     const formData = useSelector((state) => state.signup.formDetails);
+    const error = useSelector((state) => state.signup.error);
     const currPage = useSelector((state) => state.signup.currPage);
 
     const dispatch = useDispatch();
 
-    const cno = Number.isNaN(formData.cno) ? '' : formData.cno;
+    const classes = { "mno": "", "zone": "", "area": "" }
+    if(formData.mno != "") classes.mno += "active ";
+    if(error.mno != "") classes.mno += "error";
+    
+    if(formData.zone != "") classes.zone += "active ";
+    if(error.zone != "") classes.zone += "error";
+    
+    if(formData.area != "") classes.area += "active ";
+    if(error.area != "") classes.area += "error";
+
+    const mno = Number.isNaN(formData.mno) ? '' : formData.mno;
     const selectedZone = formData.zone;
 
     const handleSubmit = (e) => {
@@ -24,19 +35,21 @@ const Personal = () => {
         <div className='personal-form'>
             <p className="tag">Personal Info</p>
             <Input
-                name="cno"
+                name="mno"
                 type="number"
-                label="Consumer Number"
-                className={formData.cno ? 'active': ''}
-                value={cno}
+                label="Mobile Number"
+                className={classes.mno}
+                value={mno}
+                error={error.mno}
                 changeHandler={changeHandler}
             />
             
             <Select
                 name="zone"
                 label="Select a zone"
-                className={formData.zone ? 'active': ''}
+                className={classes.zone}
                 value={formData.zone}
+                error={error.zone}
                 changeHandler={changeHandler}
                 options={zones}
                 optional="Select a zone"
@@ -47,8 +60,9 @@ const Personal = () => {
                 <Select
                     name="area"
                     label="Select a area"
-                    className={formData.area ? 'active': ''}
+                    className={classes.area}
                     value={formData.area}
+                    error={error.area}
                     changeHandler={changeHandler}
                     options={areas[selectedZone]}
                     optional="Select an area"
