@@ -8,6 +8,12 @@ import "./SignUp.css";
 
 const SignUp = () => {
     const currPage = useSelector((state) => state.signup.currPage);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        
+    }
     
     return  (
         <div className="auth">

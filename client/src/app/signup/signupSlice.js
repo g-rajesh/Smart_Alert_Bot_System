@@ -13,15 +13,7 @@ if(localStorage.getItem("page")) {
 
 const initialState = {
     formDetails: data,
-    error: {
-        "fName": "First Name is required",
-        "lName": "Last Name is required",
-        "email": "Email is required",
-        "password": "Password is required",
-        "mno": "Mobile Number is required",
-        "zone": "Invalid Zone",
-        "area": "Invalid Area"
-    },
+    error: formDetails,
     currPage: page
 };
 

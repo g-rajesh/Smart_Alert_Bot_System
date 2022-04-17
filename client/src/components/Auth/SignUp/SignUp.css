@@ -45,14 +45,13 @@ body {
 .container .form h2 {
     color: #0063DC;
     letter-spacing: 3px;
-    margin-bottom: 2rem;
-    margin-top: 1rem;
+    margin: 1rem 0;
     text-align: center;
 }
 
 .container .form form p {
     color: #333;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     font-size: 1.45rem;
     font-weight: 600;
     letter-spacing: 3px;
@@ -65,7 +64,7 @@ form .grid {
 }
 
 form .form-group {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 form .form-group label{
