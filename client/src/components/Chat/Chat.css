@@ -58,6 +58,15 @@ header .right button {
     cursor: pointer;
 }
 
+header .right input.date {
+    margin-right: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    outline: 0;
+    padding: 0.3rem;
+    font-size: 0.8rem;
+}
+
 .content .messages {
     padding: 1rem;
     height: calc(60vh - 70px);

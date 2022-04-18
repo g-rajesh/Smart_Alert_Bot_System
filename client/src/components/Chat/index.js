@@ -1,4 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom"
 
 import { useSpeechSynthesis } from 'react-speech-kit';
 import moment from 'moment';
@@ -26,6 +28,11 @@ console.log(data);
 
 const Chat = () => {
     const { speak } = useSpeechSynthesis();
+    const user = useSelector(state => state.user.user);
+    const token = useSelector(state => state.user.token);
+    const navigate = useNavigate();
+
+    console.log(user);
 
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState(data);
@@ -34,6 +41,12 @@ const Chat = () => {
     useEffect(() => {
         messageEndRef.current?.scrollIntoView();
     }, [messages]);
+
+    useEffect(() => {
+        if(!user){
+            navigate('/signup')
+        }
+    }, [])
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -51,9 +64,9 @@ const Chat = () => {
         <div className="chat">
             <div className="container">
                 <header>
-                    <p>You: <span>G Rajesh</span></p>
+                    <p>You: <span>{user.fName}</span></p>
                     <div className="right">
-                        {/* <input type="date" /> */}
+                        <input type="date" min="2022-04-18" max="2022-04-25" name='date' id='date' className='date' />
                         <button>Logout</button>
                     </div>
                 </header>

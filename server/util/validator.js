@@ -7,11 +7,21 @@ const { sendVerificationEmail } = require("./firebase");
 const { async } = require("@firebase/util");
 
 
-exports.empty_validator = (data) => {    
-    const errors = {};
+exports.empty_validator = (data, errors) => {    
+    
+    const list = {
+        "fName": "First Name", 
+        "lName": "Last Name",
+        "email": "Email",
+        "password": "Password",
+        "mno": "Mobile Number",
+        "zone": "Zone",
+        "area": "Area"
+    };
+
     for (const [key, value] of Object.entries(data)) {
         if(value == '') {
-            errors[key] = key + " is required";
+            errors[key] = list[key] + " is required";
         }
     }
 

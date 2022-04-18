@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcryptjs");
 const cors = require("cors");
 
 const sequelize = require("./util/database");
@@ -50,14 +51,12 @@ Message2.belongsTo(Zone);
 
 sequelize
      // .sync({ force: true })
-     // .sync({ alter: true })
-     .sync()
+     .sync({ alter: true })
+     // .sync()
      .then((result) => {
           console.log("Connected to Mysql database");
           app.listen(PORT, async () => {
                console.log(`Server starts listening to PORT ${PORT}`);
-
-               // const user = await User.create({})
           });
      })
      .catch((err) => {

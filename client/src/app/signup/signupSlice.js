@@ -1,5 +1,5 @@
 import { createSlice, current } from '@reduxjs/toolkit'
-import { formDetails } from '../../util/data'
+import { formDetails } from '../../Util/data'
 
 let data = formDetails;
 if(localStorage.getItem("signupState")){
@@ -39,6 +39,24 @@ export const signupSlice = createSlice({
             state.formDetails = formDetails;
         },
 
+        changeError: (state, {payload}) => {
+            for (const [key, value] of Object.entries(payload)) {
+
+                if(key === 'fName' || key === 'lName' || key === 'email' || key === 'password'){
+                    if(value !== '') {
+                        state.currPage = 1;
+                        localStorage.setItem("page", JSON.stringify(state.currPage));
+                        break;
+                    }  
+                }
+            }
+            state.error = payload
+        },
+
+        deleteError: (state)=> {
+            state.error = formDetails
+        },
+
         changePageHandler: (state, {payload}) => {
             state.currPage = payload;
             // console.log(state.currPage);
@@ -47,6 +65,6 @@ export const signupSlice = createSlice({
     },
 })
 
-export const { changeHandler, submitHandler, changePageHandler } = signupSlice.actions
+export const { changeHandler, submitHandler, deleteError, changeError, changePageHandler } = signupSlice.actions
 
 export default signupSlice.reducer

@@ -93,8 +93,9 @@ form .form-group input:focus, form input.active, form select.active {
     border: 1px solid #0063DC;
 }
 
-form input.error {
+form input.error, form select.error  {
     border: 1px solid #dc143c;
+    background-color: #fff;
 }
 
 form .form-group > span {

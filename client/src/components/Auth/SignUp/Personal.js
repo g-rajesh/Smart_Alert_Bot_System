@@ -1,11 +1,11 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Input, Select } from '../../../util/Input';
-import { zones, areas } from '../../../util/data';
+import { Input, Select } from '../../../Util/Input';
+import { zones, areas } from '../../../Util/data';
 import { changePageHandler, changeHandler, submitHandler } from '../../../app/signup/signupSlice';
 
-const Personal = () => {
+const Personal = ({handleSubmit}) => {
     const formData = useSelector((state) => state.signup.formDetails);
     const error = useSelector((state) => state.signup.error);
     const currPage = useSelector((state) => state.signup.currPage);
@@ -24,12 +24,6 @@ const Personal = () => {
 
     const mno = Number.isNaN(formData.mno) ? '' : formData.mno;
     const selectedZone = formData.zone;
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        dispatch(submitHandler());
-    }
 
     return (
         <div className='personal-form'>

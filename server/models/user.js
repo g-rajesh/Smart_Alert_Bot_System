@@ -8,11 +8,11 @@ const User = sequelize.define("User", {
         allowNull: false,
         autoIncrement: true,
     },
-    firstName: {
+    fName: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    lastName: {
+    lName: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -25,7 +25,7 @@ const User = sequelize.define("User", {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    mobileNumber: {
+    mno: {
         type: DataTypes.STRING,
         allowNull: false
     },

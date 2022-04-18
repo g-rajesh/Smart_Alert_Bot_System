@@ -1,18 +1,43 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom"
+import { useSelector, useDispatch } from 'react-redux';
 import {Link} from 'react-router-dom';
+import { changeError, deleteError } from '../../../app/signup/signupSlice';
 
 import Account from './Account';
 import Personal from './Personal';
 import "./SignUp.css";
+import { updateUser } from '../../../app/user/userSlice';
 
 const SignUp = () => {
+    const formDetails = useSelector((state) => state.signup.formDetails);
     const currPage = useSelector((state) => state.signup.currPage);
 
-    const handleSubmit = (e) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        dispatch(deleteError);
         
-        
+        const responce = await fetch("http://localhost:8080/user/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formDetails),
+        });
+
+        const result = await responce.json();
+        if(responce.status == 500) {
+            dispatch(changeError(result.data));
+        } else {
+
+            dispatch(updateUser(result))
+            navigate('/chat')
+        }
+        console.log(result);
     }
     
     return  (
@@ -23,7 +48,7 @@ const SignUp = () => {
                     <h2>Sign up</h2>
                     <form>
                     {
-                        currPage == 1 ? <Account /> : <Personal />
+                        currPage == 1 ? <Account /> : <Personal handleSubmit={handleSubmit} />
                     }
                     </form>
                     

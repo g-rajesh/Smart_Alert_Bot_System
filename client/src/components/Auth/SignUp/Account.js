@@ -2,12 +2,13 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { changePageHandler, changeHandler } from '../../../app/signup/signupSlice';
 
-import { Input } from '../../../util/Input';
+import { Input } from '../../../Util/Input';
 
 const Account = () => {
     const formData = useSelector((state) => state.signup.formDetails);
     const error = useSelector((state) => state.signup.error);
     const currPage = useSelector((state) => state.signup.currPage);
+
 
     const classes = { "fName": "", "lName": "", "email": "", "password": "" }
     if(formData.fName != "") classes.fName += "active ";
