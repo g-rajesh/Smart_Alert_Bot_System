@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from "react-router-dom"
 import { useSelector, useDispatch } from 'react-redux';
 import {Link} from 'react-router-dom';
-import { changeError, deleteError } from '../../../app/signup/signupSlice';
+import { changeError, deleteError, submitHandler } from '../../../app/signup/signupSlice';
 
 import Account from './Account';
 import Personal from './Personal';
@@ -10,6 +10,9 @@ import "./SignUp.css";
 import { updateUser } from '../../../app/user/userSlice';
 
 const SignUp = () => {
+    // TODO
+    // ONCE USER ENTERS THE DETAILS, REMOVE THE ERROR MESSAGE
+
     const formDetails = useSelector((state) => state.signup.formDetails);
     const currPage = useSelector((state) => state.signup.currPage);
 
@@ -33,9 +36,9 @@ const SignUp = () => {
         if(responce.status == 500) {
             dispatch(changeError(result.data));
         } else {
-
-            dispatch(updateUser(result))
-            navigate('/chat')
+            dispatch(submitHandler());
+            dispatch(updateUser(result));
+            navigate('/chat');
         }
         console.log(result);
     }

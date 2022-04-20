@@ -12,10 +12,7 @@ if(localStorage.getItem("signinState")){
 
 const initialState = {
     formDetails: data,
-    error: {
-        "email": "",
-        "password": ""
-    }
+    error: formDetails
 };
 
 export const signinSlice = createSlice({
@@ -36,9 +33,17 @@ export const signinSlice = createSlice({
             localStorage.removeItem("signinState");
             state.formDetails = formDetails;
         },
+
+        changeError: (state, {payload}) => {
+            state.error = {...state.error, ...payload}
+        },
+
+        deleteError: (state)=> {
+            state.error = formDetails
+        },
     },
 })
 
-export const { changeHandler, submitHandler } = signinSlice.actions
+export const { changeHandler, submitHandler, changeError, deleteError } = signinSlice.actions
 
 export default signinSlice.reducer

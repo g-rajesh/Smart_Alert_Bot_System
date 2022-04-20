@@ -28,6 +28,21 @@ exports.empty_validator = (data, errors) => {
     return errors;
 }
 
+exports.signin_validator = (data, errors) => {
+    const list = {
+        "email": "Email",
+        "password": "Password"
+    };
+
+    for (const [key, value] of Object.entries(data)) {
+        if(value == '') {
+            errors[key] = list[key] + " is required";
+        }
+    }
+
+    return errors;
+}
+
 exports.error = (e, data, status) => {
     const err = new Error(e);
     err.data = data;

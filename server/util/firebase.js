@@ -1,16 +1,27 @@
-const { initializeApp } = require("firebase/app")
+const { initializeApp } = require("firebase/app");
+require("dotenv").config();
+
 const {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } = require('firebase/auth');
 
+const apiKey = process.env.API_KEY;
+const authDomain = process.env.AUTH_DOMAIN;
+const databaseURL = process.env.DATABASE_URL;
+const projectId = process.env.PROJECT_ID;
+const storageBucket = process.env.STORAGE_BUCKET;
+const messagingSenderId = process.env.MESSAGING_SENDER_ID;
+const appId = process.env.APP_ID;
+const measurementId = process.env.MEASUREMENT_ID;
+
 const firebaseConfig = {
-    apiKey: "AIzaSyBbnxiHXC6qghq0J7rsX9TEF2z_hazlfrc",
-    authDomain: "smart-alert-bot-sytem.firebaseapp.com",
-    databaseURL: "https://smart-alert-bot-sytem-default-rtdb.firebaseio.com",
-    projectId: "smart-alert-bot-sytem",
-    storageBucket: "smart-alert-bot-sytem.appspot.com",
-    messagingSenderId: "301888177188",
-    appId: "1:301888177188:web:33d58986bec223641744b1",
-    measurementId: "G-9JTT1N99MN"
-  };
+    apiKey,
+    authDomain,
+    databaseURL,
+    projectId,
+    storageBucket,
+    messagingSenderId,
+    appId,
+    measurementId
+};
 
 initializeApp(firebaseConfig);
 const auth = getAuth();
@@ -30,7 +41,6 @@ exports.isEmailVerified = async (email, password) => {
     try {
         const { user } = await signInWithEmailAndPassword(auth, email, password);
 
-        console.log(user.emailVerified);
         return user.emailVerified;
     } catch(e) {
         console.log(e);

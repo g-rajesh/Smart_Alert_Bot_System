@@ -2,124 +2,104 @@ import React, {useState, useEffect, useRef} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom"
 
-import { useSpeechSynthesis } from 'react-speech-kit';
-import moment from 'moment';
+import Alert from './Alert';
+import Message from './Message';
+import { logoutHandler, updateUserIsVerified } from '../../app/user/userSlice';
 
 import './Chat.css';
 
-const data = [
-    {id: 1, username: 'Rajesh', message: "Hello Peter", date: new Date().getTime()},
-    {id: 2, username: 'Bot', message: "Varenda", date: new Date().getTime()},
-    {id: 3, username: 'Rajesh', message: "Hello Peter", date: new Date().getTime()},
-    {id: 4, username: 'Rajesh', message: "Varenda", date: new Date().getTime()},
-    {id: 5, username: 'Bot', message: "Hello Peter", date: new Date().getTime()},
-    {id: 6, username: 'Rajesh', message: "Varenda", date: new Date().getTime()},
-    {id: 7, username: 'Bot', message: "Hello Peter", date: new Date().getTime()},
-    {id: 8, username: 'Rajesh', message: "Leaner Meaner St", date: new Date().getTime()},
-    {id: 9, username: 'Rajesh', message: "Varenda", date: new Date().getTime()},
-    {id: 10, username: 'Bot', message: "Hello Peter", date: new Date().getTime()},
-    {id: 11, username: 'Bot', message: "Hello Peter", date: new Date().getTime()},
-    {id: 12, username: 'Bot', message: "Hello Peter", date: new Date().getTime()},
-    {id: 13, username: 'Rajesh', message: "Varenda", date: new Date().getTime()},
-    {id: 14, username: 'Rajesh', message: "Varenda", date: new Date().getTime()},
-]
-
-console.log(data);
-
 const Chat = () => {
-    const { speak } = useSpeechSynthesis();
     const user = useSelector(state => state.user.user);
     const token = useSelector(state => state.user.token);
-    const navigate = useNavigate();
-
-    console.log(user);
-
     const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState(data);
-    const messageEndRef = useRef(null);
+    const [messages, setMessages] = useState([]);
+    
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    useEffect(() => {
-        messageEndRef.current?.scrollIntoView();
-    }, [messages]);
+    const fetchData = async () => {
+        if(!user) return;
+        const responce = await fetch("http://localhost:8080/user/messages", {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            });
+
+        const result = await responce.json();
+        if(responce.status != 200) {
+            handleLogout();
+        } else {
+            const newMessages = result.data.messages;
+            setMessages(newMessages);
+
+            if(!user.isVerified) {
+                const isVerified = result.data.isVerified;
+                dispatch(updateUserIsVerified(isVerified));
+            }
+        }
+    }
+
+    useEffect(()=>{
+        fetchData();
+    }, []);
 
     useEffect(() => {
         if(!user){
-            navigate('/signup')
+            navigate('/signin')
         }
     }, [])
 
     const submitHandler = (e) => {
         e.preventDefault();
-        const newMessage = {
-            id: messages.length+1,
-            username: "Rajesh",
-            message: message
-        }
 
-        setMessages([...messages, newMessage]);
-        setMessage('');
+        console.log(message);
+        // const newMessage = {
+        //     id: messages.length+1,
+        //     username: "Rajesh",
+        //     message: message
+        // }
+
+        // setMessages([...messages, newMessage]);
+        // setMessage('');
     }
 
+    const handleLogout = () => {
+        dispatch(logoutHandler());
+        navigate('/signin');
+    }
+
+    const toDate = new Date().toISOString().slice(0, 10);
+
     return  (
-        <div className="chat">
-            <div className="container">
-                <header>
-                    <p>You: <span>{user.fName}</span></p>
-                    <div className="right">
-                        <input type="date" min="2022-04-18" max="2022-04-25" name='date' id='date' className='date' />
-                        <button>Logout</button>
-                    </div>
-                </header>
-                <div className="content">
-                    <div className="messages">
-                        {
-                            messages.map(({id, username, message}, date) => {
-                                if(username == "Rajesh") {
-                                    return (
-                                        <div className="message right" key={id}>
-                                            <div></div>
-                                            <div className='msg'>
-                                                <div className='msg-text'>
-                                                    <p>{message}</p>
-                                                    <span>{moment(date).format('LT')} &middot; <i className="uil uil-volume-up" onClick={() => speak({ text: message })}></i></span>
-                                                </div>
-                                                <span className='msg-profile'>{username[0]}</span> 
-                                            </div>
-                                        </div>
-                                    )
-                                } else {
-                                    return (
-                                        <div className="message left" key={id}>
-                                            <div className='msg'>
-                                                <span className='msg-profile'>{username[0]}</span> 
-                                                <div className='msg-text'>
-                                                    <p>{message}</p>
-                                                    <span>{moment(date).format('LT')} &middot; <i className="uil uil-volume-up" onClick={() => speak({ text: message })}></i></span>
-                                                </div>
-                                            </div>
-                                            <div></div>
-                                        </div>
-                                    )
-                                }
-                            })
-                        }
-                        <div ref={messageEndRef}></div>
-                    </div>
-                    <div className="send">
-                        <div className="type">
-                            <select name="message" id="message">
-                                <option value="Query">Query</option>
-                                <option value="Request">Request</option>
-                            </select>
+        <>
+            <Alert isVerified={user && user.isVerified} />
+            <div className="chat">
+                <div className="container">
+                    <header>
+                        <p>You: <span>{user && user.fName}</span></p>
+                        <div className="right">
+                            <input type="date" min="2022-04-18" max={toDate} name='date' id='date' className='date' />
+                            <button onClick={handleLogout}>Logout</button>
                         </div>
-                        <div className="type-msg">
-                            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Write a message...' />
-                            <button onClick={submitHandler}>Send</button>
+                    </header>
+                    <div className="content">
+                        <Message messages={messages} />
+                        <div className="send">
+                            <div className="type">
+                                <select name="message" id="message">
+                                    <option value="Query">Query</option>
+                                    <option value="Request">Request</option>
+                                </select>
+                            </div>
+                            <div className="type-msg">
+                                <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Write a message...' />
+                                <button className={user && user.isVerified==0 ? 'disable': ''} onClick={submitHandler}>Send</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

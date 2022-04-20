@@ -89,9 +89,21 @@ form .form-group input {
     font-size: 0.94rem;
 }
 
-form .form-group input:focus, form input.active, form select.active {
+form .form-group input:focus, form input.active {
     background-color: #fff;
     border: 1px solid #0063DC;
+}
+
+form input.error {
+    border: 1px solid #dc143c;
+    background-color: #fff;
+}
+
+form .form-group > span {
+    color: #dc143c;
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 0.4rem;
 }
 
 

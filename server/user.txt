@@ -1,0 +1,30 @@
+const password = await bcrypt.hash("bot123", 12);
+Bot 
+const bot = await User.create({
+     fName: "Bot",
+     lName: "Assistant",
+     email: "bot@gmail.com",
+     password: password,
+     isVerified: 0,
+     mno: "1234567890"
+});
+await bot.save();
+
+// messages
+const message = await Message1.create({
+    from: "Rajesh",
+    message: "We don't have current from the morning",
+    UserId: 13,
+    ZoneId: 1
+});
+
+await message.save();
+
+const message = await Message1.create({
+    from: "Bot",
+    message: "There is a minor problem in the transformer. Power will come back in an hour",
+    UserId: 12,
+    ZoneId: 1
+});
+
+await message.save();

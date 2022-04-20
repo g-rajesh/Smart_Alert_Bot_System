@@ -1,7 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-const { empty_validator, error, isInvalidZone, isInvalidArea, createUser, isEmailAlreadyTaken, isPasswordMatch, getUser } = require("../util/validator");
+const { empty_validator, error, isInvalidZone, isInvalidArea, createUser, isEmailAlreadyTaken, isPasswordMatch, getUser, signin_validator } = require("../util/validator");
 
 exports.signup = async (req, res, next) => {
     const { firstName, lastName,  email, password, mno, zone, area } = req.body;
@@ -20,7 +21,7 @@ exports.signup = async (req, res, next) => {
 
     try {
         // Validating if there is any empty fields
-        newErrors = empty_validator(req.body, errors);
+        let newErrors = empty_validator(req.body, errors);
         let empty = false;
         for (const [key, value] of Object.entries(newErrors)) {
             if(value !== '') {
@@ -75,7 +76,7 @@ exports.signup = async (req, res, next) => {
         console.log(user);
 
         // creating token
-        const token = jwt.sign({email: user.email}, "TEAM_TNEB", { expiresIn: '1w' });
+        const token = jwt.sign({email: user.email}, process.env.JWT_TOKEN, { expiresIn: '1w' });
 
         return res.status(200).json({
             message: "User created successfully...",
@@ -97,13 +98,21 @@ exports.signup = async (req, res, next) => {
 }
 
 exports.signin = async (req, res, next) => {
+    console.log(req.body);
     const { email, password } = req.body;
 
-    let errors;
+    let errors = { "email": "", "password": "" };
     try {
         // Validating if there is any empty fields
-        errors = empty_validator(req.body);
-        if(Object.keys(errors).length !== 0) {
+        let newErrors = signin_validator(req.body, errors);
+        let empty = false;
+        for (const [key, value] of Object.entries(newErrors)) {
+            if(value !== '') {
+                empty = true;
+                break;
+            }
+        }
+        if(empty) {
             const emptyError = error("Validation failed", errors, 500);
             throw emptyError;
         }
@@ -130,15 +139,15 @@ exports.signin = async (req, res, next) => {
         }
 
         // creating token
-        const token = jwt.sign({email: user.email}, "TEAM_TNEB", { expiresIn: '1w' });
+        const token = jwt.sign({email: user.email}, process.env.JWT_TOKEN, { expiresIn: '1w' });
 
         return res.status(200).json({
             message: "User logged in successfully...",
-            user: { 
-                firstName: user.firstName,
-                lastName: user.lastName,
+            user: {
+                fName: user.fName,
+                lName: user.lName,
                 email: user.email,
-                mobileNumber: user.mobileNumber,
+                mno: user.mno,
                 isVerified: user.isVerified
             },
             token: token

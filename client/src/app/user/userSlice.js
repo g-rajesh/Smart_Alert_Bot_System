@@ -1,15 +1,5 @@
 import { createSlice, current } from '@reduxjs/toolkit'
 
-// let data = formDetails;
-// if(localStorage.getItem("signupState")){
-//     data = JSON.parse(localStorage.getItem("signupState"));
-// }
-
-// let page = 1;
-// if(localStorage.getItem("page")) {
-//     page = JSON.parse(localStorage.getItem("page"));
-// }
-
 let user = null
 let token = null
 
@@ -30,16 +20,26 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         updateUser: (state, {payload}) => {
-            console.log(payload);
             state.user = payload.user
             state.token = payload.token
             localStorage.setItem('user', JSON.stringify(payload.user));
             localStorage.setItem('token', JSON.stringify(payload.token));
+        },
 
+        updateUserIsVerified: (state, {payload}) => {
+            state.user = {...state.user, isVerified: payload};
+            localStorage.setItem('user', JSON.stringify(state.user));
+        },
+
+        logoutHandler: (state) => {
+            state.user = null;
+            state.token = null;
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
         }
     },
 })
 
-export const { updateUser } = userSlice.actions
+export const { updateUser, updateUserIsVerified, logoutHandler } = userSlice.actions
 
 export default userSlice.reducer

@@ -1,6 +1,6 @@
 const express = require("express");
-const bcrypt = require("bcryptjs");
 const cors = require("cors");
+require("dotenv").config();
 
 const sequelize = require("./util/database");
 const Official = require("./models/official");
@@ -55,8 +55,8 @@ sequelize
      // .sync()
      .then((result) => {
           console.log("Connected to Mysql database");
-          app.listen(PORT, async () => {
-               console.log(`Server starts listening to PORT ${PORT}`);
+          app.listen(process.env.PORT, async () => {
+               console.log(`Server starts listening to PORT ${process.env.PORT}`);
           });
      })
      .catch((err) => {

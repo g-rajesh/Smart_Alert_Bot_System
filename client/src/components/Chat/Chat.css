@@ -16,6 +16,36 @@ body {
     background-color: #0063DC;
 }
 
+.alert {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.alert a {
+    color: #0063DC;
+    text-decoration: underline;
+}
+
+.alert.display {
+    top: 0;
+}
+
+.times-icon {
+    position: absolute;
+    right: 2rem;
+    font-size: 1.45rem;
+    color: #dc143c;
+    cursor: pointer;
+}
+
 .chat {
     display: flex;
     justify-content: center;
@@ -50,7 +80,7 @@ header p span {
 }
 
 header .right button {
-    color: #ccc;
+    color: #0063DC;
     outline: 0;
     border: 0;
     background-color: #fff;
@@ -193,6 +223,11 @@ header .right input.date {
     color: #fff;
     font-size: 1rem;
     cursor: pointer;
+}
+
+.send .type-msg button.disable {
+    pointer-events: none;
+    background-color: #3389f1;
 }
 
 ::-webkit-scrollbar {
