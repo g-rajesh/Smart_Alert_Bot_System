@@ -16,37 +16,7 @@ body {
     background-color: #0063DC;
 }
 
-.alert {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    width: 100%;
-    height: 40px;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-}
-
-.alert a {
-    color: #0063DC;
-    text-decoration: underline;
-}
-
-.alert.display {
-    top: 0;
-}
-
-.times-icon {
-    position: absolute;
-    right: 2rem;
-    font-size: 1.45rem;
-    color: #dc143c;
-    cursor: pointer;
-}
-
-.chat {
+.dashboard {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,7 +24,7 @@ body {
     height: 100vh;
 }
 
-.chat .container {
+.dashboard .container {
     background-color: #fff;
     width: 700px;
     border-radius: 10px;
@@ -94,18 +64,54 @@ header .right button {
     font-weight: bold;
 }
 
-header .right .refresh-icon {
+header .right .refresh-icon,
+header .right .down-icon {
     color: #ccc;
     margin-right: 1rem;
     font-size: 1.1rem;
     cursor: pointer;
 }
 
-.content .messages {
+header .right .down-icon {
+    font-size: 1.5rem;
+    transition: all 0.2s;
+}
+
+header .right .down-icon.active {
+    transform: rotate(180deg);
+}
+
+.dashboard .container .filter{
+    width: 100%;
+    height: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.2s;
+    display: none;
+}
+
+.dashboard .container .filter.active {
+    display: flex;
+    height: 40px;
+}
+
+.dashboard .container .filter span.active{
+    color: #0063DC;
+}
+
+.messages {
     padding: 1rem;
-    height: calc(60vh - 70px);
+    height: calc(75vh - 70px);
     width: 100%;
     overflow: auto;
+}
+
+.messages.active {
+    height: calc(75vh - 110px);
 }
 
 .messages .dateMessage .date {
@@ -188,66 +194,6 @@ header .right .refresh-icon {
     cursor: pointer;
 }
 
-.content .send {
-    height: 15vh;
-    margin: 0.5rem;
-    margin-top: 0;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    /* padding: 0.5rem; */
-}
-
-.send .type {
-    height: 32px;
-}
-
-.send select {
-    margin: 0.5rem;
-    border: 0;
-    outline: 0;
-    width: 80px;
-    color: #0063DC;
-    font-size: 0.85rem;
-}
-
-.send .type {
-    border-bottom: 1px solid #ccc;
-}
-
-.send .type-msg {
-    width: 100%;
-    height: calc(15vh - 32px);
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-}
-
-.send .type-msg input {
-    width: 100%;
-    padding: 0.5rem 1rem;
-    border: 0;
-    outline: 0;
-    font-size: 1rem;
-    color: #333;
-}
-
-.send .type-msg button {
-    margin-left: 1rem;
-    background-color: #0063DC;
-    padding: 0.35rem 0.8rem;
-    border-radius: 5px;
-    outline: 0;
-    border: 0;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-.send .type-msg button.disable {
-    pointer-events: none;
-    background-color: #3389f1;
-}
-
 ::-webkit-scrollbar {
     width: 10px;
     cursor: pointer;
@@ -267,16 +213,16 @@ header .right .refresh-icon {
 }
 
 @media screen and (max-width: 768px) {
-    .chat .container {
+    .dashboard .container {
         width: 90%;
     }
 }
 
 @media screen and (max-width: 500px) {
-    .chat {
+    .dashboard {
         display: block;
     }
-    .chat .container {
+    .dashboard .container {
         width: 100%;
         height: 100vh;
         border-radius: 0;
@@ -294,16 +240,8 @@ header .right .refresh-icon {
         right: 0.5rem;
     }
 
-    .content .messages {
+    .messages {
         height: calc(85vh - 70px);
-    }
-
-    .content .send {
-        margin: 0;
-        border: 0;
-        border-top: 1px solid #ccc;
-        border-radius: 0;
-        box-shadow: -2px -2px 6px rgba(0, 0, 0, 0.2);
     }
 
     .messages .message {

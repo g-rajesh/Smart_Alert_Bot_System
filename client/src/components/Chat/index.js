@@ -7,12 +7,15 @@ import Message from './Message';
 import { logoutHandler, updateUserIsVerified } from '../../app/user/userSlice';
 
 import './Chat.css';
+import Send from './Send';
 
 const Chat = () => {
     const user = useSelector(state => state.user.user);
     const token = useSelector(state => state.user.token);
+    const [messages, setMessages] = useState({});
+
     const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([]);
+    const [messageType, setMessageType] = useState('Query');
     
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -68,8 +71,6 @@ const Chat = () => {
         navigate('/signin');
     }
 
-    const toDate = new Date().toISOString().slice(0, 10);
-
     return  (
         <>
             <Alert isVerified={user && user.isVerified} />
@@ -78,24 +79,20 @@ const Chat = () => {
                     <header>
                         <p>You: <span>{user && user.fName}</span></p>
                         <div className="right">
-                            <input type="date" min="2022-04-18" max={toDate} name='date' id='date' className='date' />
+                            <i className="uil uil-redo refresh-icon"></i>
                             <button onClick={handleLogout}>Logout</button>
                         </div>
                     </header>
                     <div className="content">
                         <Message messages={messages} />
-                        <div className="send">
-                            <div className="type">
-                                <select name="message" id="message">
-                                    <option value="Query">Query</option>
-                                    <option value="Request">Request</option>
-                                </select>
-                            </div>
-                            <div className="type-msg">
-                                <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Write a message...' />
-                                <button className={user && user.isVerified==0 ? 'disable': ''} onClick={submitHandler}>Send</button>
-                            </div>
-                        </div>
+                        <Send 
+                            messageType={messageType} 
+                            setMessageType={setMessageType} 
+                            message={message} 
+                            setMessage={setMessage} 
+                            user={user} 
+                            submitHandler={submitHandler}
+                        />
                     </div>
                 </div>
             </div>

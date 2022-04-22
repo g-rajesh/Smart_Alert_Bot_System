@@ -16,10 +16,10 @@ const MessageWithUsers = sequelize.define("MessageWithUsers", {
         type: DataTypes.STRING,
         allowNull: false
     },
-    createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: new Date()
-    }
+    date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
+    },
 });
 
 module.exports = MessageWithUsers;

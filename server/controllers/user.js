@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const { empty_validator, error, isInvalidZone, isInvalidArea, createUser, isEmailAlreadyTaken, isPasswordMatch, getUser, signin_validator } = require("../util/validator");
+const { empty_validator, error, isInvalidZone, isInvalidArea, createUser, isEmailAlreadyTaken, isPasswordMatch, getUser, signin_validator, getOfficial } = require("../util/validator");
 
 exports.signup = async (req, res, next) => {
     const { firstName, lastName,  email, password, mno, zone, area } = req.body;
@@ -85,7 +85,8 @@ exports.signup = async (req, res, next) => {
                 lName: user.lName,
                 email: user.email,
                 mno: user.mno,
-                isVerified: user.isVerified
+                isVerified: user.isVerified,
+                type: "user"
             },
             token: token
         });
@@ -123,6 +124,33 @@ exports.signin = async (req, res, next) => {
             throw emailError;
         }
 
+        // 1. Official
+        // checking whether the credential belongs to official's
+        const official = await getOfficial(email);
+        if(official) {
+            // Check password match
+            if(!(await isPasswordMatch(official.password, password))) {
+                const passwordError = error("Password doesn't match", { password: "Password doesn't match" }, 500);
+                throw passwordError;
+            }
+
+            // creating token
+            const token = jwt.sign({email: official.email}, process.env.JWT_TOKEN, { expiresIn: '1w' });
+            
+            return res.status(200).json({
+                message: "Official logged in successfully...",
+                official: {
+                    fName: official.fName,
+                    lName: official.lName,
+                    email: official.email,
+                    mno: official.mno,
+                    type: "official"
+                },
+                token: token
+            });
+        }
+
+        // 2. User
         // getting user from db
         const user = await getUser(email);
 
@@ -148,7 +176,8 @@ exports.signin = async (req, res, next) => {
                 lName: user.lName,
                 email: user.email,
                 mno: user.mno,
-                isVerified: user.isVerified
+                isVerified: user.isVerified,
+                type: "user"
             },
             token: token
         });

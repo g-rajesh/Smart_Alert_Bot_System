@@ -14,6 +14,28 @@ await bot.save();
 const message = await Message1.create({
     from: "Rajesh",
     message: "We don't have current from the morning",
+    date: "2022-04-20",
+    UserId: 13,
+    ZoneId: 1
+});
+
+await message.save();
+
+
+const message = await Message1.create({
+    from: "Bot",
+    message: "There is a minor problem in the transformer. Power will come back in an hour",
+    date: "2022-04-20",
+    UserId: 12,
+    ZoneId: 1
+});
+
+await message.save();
+
+const message = await Message1.create({
+    from: "Rajesh",
+    message: "We don't have current in our area!",
+    date: "2022-04-22",
     UserId: 13,
     ZoneId: 1
 });
@@ -22,8 +44,21 @@ await message.save();
 
 const message = await Message1.create({
     from: "Bot",
-    message: "There is a minor problem in the transformer. Power will come back in an hour",
+    message: "We have notified your problem to the officials. Please wait for their reply.",
+    date: "2022-04-22",
     UserId: 12,
+    ZoneId: 1
+});
+
+await message.save();
+
+
+
+const message = await Message2.create({
+    from: "Rajesh",
+    message: "We don't have current in our area!",
+    date: "2022-04-22",
+    UserId: 13,
     ZoneId: 1
 });
 

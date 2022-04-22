@@ -8,11 +8,11 @@ const Official = sequelize.define("Official", {
           allowNull: false,
           autoIncrement: true,
      },
-     firstName: {
+     fName: {
           type: DataTypes.STRING,
           allowNull: false,
      },
-     lastName: {
+     lName: {
           type: DataTypes.STRING,
           allowNull: false,
      },

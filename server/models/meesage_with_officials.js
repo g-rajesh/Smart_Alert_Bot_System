@@ -16,10 +16,10 @@ const MessageWithOfficials = sequelize.define("MessageWithOfficials", {
         type: DataTypes.STRING,
         allowNull: false
     },
-    createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: new Date()
-    }
+    date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
+    },
 });
 
 module.exports = MessageWithOfficials;

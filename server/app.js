@@ -28,8 +28,8 @@ app.use((error, req, res, next) => {
   return res.status(status).json({ message, data });
 });
 
-Official.hasOne(Zone);
-Zone.belongsTo(Official);
+Zone.hasOne(Official);
+Official.belongsTo(Zone);
 
 Zone.hasMany(Area);
 Area.belongsTo(Zone);
@@ -62,3 +62,10 @@ sequelize
      .catch((err) => {
           console.log(err);
      });
+
+
+// TODO
+// CHECK USER OR OFFICIAL WHILE LOGIN -> DONE
+// WHEN USER SENDS MESSAGE, CHECK MESSAGE AVAILABLE IN DB. IF NOT, THEN ADD IT TO MESSAGE_WITH_OFFICALS
+// 
+

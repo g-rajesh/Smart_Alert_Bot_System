@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
 import { useSelector, useDispatch } from 'react-redux';
 import {Link} from 'react-router-dom';
@@ -6,6 +6,7 @@ import { changeError, deleteError, submitHandler } from '../../../app/signup/sig
 
 import Account from './Account';
 import Personal from './Personal';
+import Preloader from '../../../Util/Preloader';
 import "./SignUp.css";
 import { updateUser } from '../../../app/user/userSlice';
 
@@ -16,12 +17,15 @@ const SignUp = () => {
     const formDetails = useSelector((state) => state.signup.formDetails);
     const currPage = useSelector((state) => state.signup.currPage);
 
+    const [loading, setLoading] = useState(false);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        setLoading(true);
         dispatch(deleteError);
         
         const responce = await fetch("http://localhost:8080/user/signup", {
@@ -33,6 +37,8 @@ const SignUp = () => {
         });
 
         const result = await responce.json();
+
+        setLoading(false);
         if(responce.status == 500) {
             dispatch(changeError(result.data));
         } else {
@@ -44,21 +50,24 @@ const SignUp = () => {
     }
     
     return  (
-        <div className="auth">
-            <div className="container">
-                <h2>TNEB</h2>
-                <div className="form">
-                    <h2>Sign up</h2>
-                    <form>
-                    {
-                        currPage == 1 ? <Account /> : <Personal handleSubmit={handleSubmit} />
-                    }
-                    </form>
-                    
-                    <p className="toggle">Already a user? <Link to="/signin">Sign In here</Link></p>
+        <>
+            { loading && <Preloader text="Creating account for you. Please wait..." /> }
+            <div className="auth">
+                <div className="container">
+                    <h2>TNEB</h2>
+                    <div className="form">
+                        <h2>Sign up</h2>
+                        <form>
+                        {
+                            currPage == 1 ? <Account /> : <Personal handleSubmit={handleSubmit} />
+                        }
+                        </form>
+                        
+                        <p className="toggle">Already a user? <Link to="/signin">Sign In here</Link></p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

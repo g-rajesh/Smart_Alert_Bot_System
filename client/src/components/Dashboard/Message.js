@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { useSpeechSynthesis } from 'react-speech-kit';
 
-const Message = ({messages}) => {
+const Message = ({messages, toggle}) => {
     const user = useSelector(state => state.user.user);
 
     const { speak } = useSpeechSynthesis();
@@ -21,7 +21,7 @@ const Message = ({messages}) => {
     });
 
     return (
-        <div className="messages">
+        <div className={toggle ? "messages active": "messages"}>
             {
                 isMessagesEmpty ? <span className='alert-msg'>No messages yet!</span> :
                 Object.keys(messages).map(key => {

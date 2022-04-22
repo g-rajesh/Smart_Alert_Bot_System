@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { changeHandler, deleteError, changeError, submitHandler } from '../../../app/signin/signinSlice';
 import { updateUser } from '../../../app/user/userSlice';
 import { Input } from '../../../Util/Input';
+import Preloader from '../../../Util/Preloader';
 
 import "./SignIn.css";
 
@@ -12,12 +13,15 @@ const SignIn = () => {
     const formData = useSelector((state) => state.signin.formDetails);
     const error = useSelector(state => state.signin.error);
 
+    const [loading, setLoading] = useState(false);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        setLoading(true);
         dispatch(deleteError());
 
         const responce = await fetch("http://localhost:8080/user/signin", {
@@ -29,6 +33,7 @@ const SignIn = () => {
         });
         const result = await responce.json();
 
+        setLoading(false);
         if(responce.status == 500) {
             dispatch(changeError(result.data));
         } else {
@@ -47,40 +52,43 @@ const SignIn = () => {
     if(error.password != "") classes.password += "error";
 
     return  (
-        <div className="auth">
-            <div className="container">
-                <h2>TNEB</h2>
-                <div className="form">
-                    <h2>Sign In</h2>
-                    <form>
-                        <Input
-                            name="email"
-                            type="email"
-                            label="Email"
-                            className={classes.email}
-                            value={formData.email}
-                            error={error.email}
-                            changeHandler={changeHandler}
-                        />
+        <>
+            { loading && <Preloader text="Authenticating user..." /> }
+            <div className="auth">
+                <div className="container">
+                    <h2>TNEB</h2>
+                    <div className="form">
+                        <h2>Sign In</h2>
+                        <form>
+                            <Input
+                                name="email"
+                                type="email"
+                                label="Email"
+                                className={classes.email}
+                                value={formData.email}
+                                error={error.email}
+                                changeHandler={changeHandler}
+                            />
 
-                        <Input
-                            name="password"
-                            type="password"
-                            label="Password"
-                            className={classes.password}
-                            value={formData.password}
-                            error={error.password}
-                            changeHandler={changeHandler}
-                        />
-                        <div className='btn-class'>
-                            <button className="btn" onClick={handleSubmit}>Sign In</button>
-                        </div>
-                    </form>
-                    
-                    <p className="toggle">New User? <Link to="/signup">Create account here</Link></p>
+                            <Input
+                                name="password"
+                                type="password"
+                                label="Password"
+                                className={classes.password}
+                                value={formData.password}
+                                error={error.password}
+                                changeHandler={changeHandler}
+                            />
+                            <div className='btn-class'>
+                                <button className="btn" onClick={handleSubmit}>Sign In</button>
+                            </div>
+                        </form>
+                        
+                        <p className="toggle">New User? <Link to="/signup">Create account here</Link></p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

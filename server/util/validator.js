@@ -5,6 +5,7 @@ const Area = require("../models/area");
 const User = require("../models/user");
 const { sendVerificationEmail } = require("./firebase");
 const { async } = require("@firebase/util");
+const Official = require("../models/official");
 
 
 exports.empty_validator = (data, errors) => {    
@@ -63,8 +64,9 @@ exports.isInvalidArea = async (zone, area) => {
 }
 
 exports.isEmailAlreadyTaken = async (email) => {
+    const official = await Official.findOne({ where: { email } });
     const user = await User.findOne({ where: { email } });
-    return user != null;
+    return user != null || official != null;
 }
 
 exports.createUser = async (data) => {
@@ -78,6 +80,10 @@ exports.createUser = async (data) => {
     const isVerified = await sendVerificationEmail(user.email, user.password);
 
     return user;
+}
+
+exports.getOfficial = async (email) => {
+    return await Official.findOne({ where: { email } });
 }
 
 exports.getUser = async (email) => {
