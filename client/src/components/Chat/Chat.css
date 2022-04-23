@@ -74,17 +74,17 @@ body {
     color: #ccc;
 }
 
-header p span {
+.chat .container header p span {
     color: #0063DC;
     font-weight: 500;
 }
 
-header .right {
+.chat .container header .right {
     display: flex;
     align-items: center;
 }
 
-header .right button {
+.chat .container header .right button {
     color: #0063DC;
     outline: 0;
     border: 0;
@@ -94,7 +94,7 @@ header .right button {
     font-weight: bold;
 }
 
-header .right .refresh-icon {
+.chat .container header .right .refresh-icon {
     color: #ccc;
     margin-right: 1rem;
     font-size: 1.1rem;

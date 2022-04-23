@@ -1,36 +1,42 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom"
 
-import Message from './Message';
-import { logoutHandler, updateUserIsVerified } from '../../app/user/userSlice';
+import Messages from './Messages';
+import { logoutHandler } from '../../app/reducers/officialSlice';
 
 import './Dashboard.css';
+import Status from './Status';
 
 const Dashboard = () => {
     const user = useSelector(state => state.user.user);
-    const token = useSelector(state => state.user.token);
+    const official = useSelector(state => state.official.official);
+    const token = useSelector(state => state.official.token);
     
     const [messages, setMessages] = useState({});
-    const [toggle, setToggle] = useState(false);
+    const [filter, setFilter] = useState('Chat');
+    const [loading, setLoading] = useState(true);
     
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const fetchData = async () => {
-        if(!user) return;
-        const responce = await fetch("http://localhost:8080/user/adminMessages", {
+        if(!official) return;
+
+        setLoading(true);
+        const response = await fetch("http://localhost:8080/user/officialMessages", {
                                 headers: {
                                     Authorization: `Bearer ${token}`,
                                 },
                             });
 
-        const result = await responce.json();
-        if(responce.status != 200) {
+        const result = await response.json();
+        // console.log(result);
+        setLoading(false);
+        if(response.status !== 200) {
             handleLogout();
         } else {
-            const newMessages = result.data.messages;
-            // console.log(newMessages);
+            const newMessages = result.messages;
             setMessages(newMessages);
         }
     }
@@ -40,37 +46,53 @@ const Dashboard = () => {
     }, []);
 
     useEffect(() => {
-        if(!user){
-            navigate('/signin')
+        if(!official && user){
+            navigate('/chat')
         }
-    }, [])
+
+        if(!official && !user) {
+            navigate("/signin");
+        }
+    }, []);
 
     const handleLogout = () => {
         dispatch(logoutHandler());
         navigate('/signin');
     }
 
+    const filterHandler = (filter) => {
+        if(filter === "Chat") {
+            return <Messages messages={messages} loading={loading} />
+        } else if(filter === "Status") {
+            return <Status handleLogout={handleLogout} />
+        }
+
+        return null;
+    }
+
     return  (
         <div className="dashboard">
             <div className="container">
                 <header>
-                    <p>You: <span>{user && user.fName}</span></p>
+                    <p>You: <span>{official && official.fName}</span></p>
                     <div className="right">
-                        <i className="uil uil-redo refresh-icon"></i>
-                        <i 
-                            className={toggle ? "uil uil-angle-down down-icon active": "uil uil-angle-down down-icon"} 
-                            onClick={()=>setToggle(!toggle)}
-                        ></i>
+                        <i className="uil uil-redo refresh-icon" onClick={fetchData}></i>
+                        <select 
+                            name="filter" 
+                            id="filter" 
+                            className='filter-type' 
+                            value={filter} 
+                            onChange={(e)=>setFilter(e.target.value)}
+                        >
+                            <option value="Chat">Chat</option>
+                            <option value="Status">Status</option>
+                        </select>
                         <button onClick={handleLogout}>Logout</button>
                     </div>
                 </header>
-                <section className={toggle ? 'filter active' : 'filter'}>
-                    <span className='active'>Chat</span>
-                    <span>Call</span>
-                    <span>Status</span>
-                    <span>Info</span>
-                </section>
-                <Message messages={messages} toggle={toggle} />
+                {
+                    filterHandler(filter)
+                }
             </div>
         </div>
     );

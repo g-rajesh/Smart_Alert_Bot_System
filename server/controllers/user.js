@@ -80,7 +80,7 @@ exports.signup = async (req, res, next) => {
 
         return res.status(200).json({
             message: "User created successfully...",
-            user: { 
+            data: { 
                 fName: user.fName,
                 lName: user.lName,
                 email: user.email,
@@ -139,7 +139,7 @@ exports.signin = async (req, res, next) => {
             
             return res.status(200).json({
                 message: "Official logged in successfully...",
-                official: {
+                data: {
                     fName: official.fName,
                     lName: official.lName,
                     email: official.email,
@@ -171,7 +171,7 @@ exports.signin = async (req, res, next) => {
 
         return res.status(200).json({
             message: "User logged in successfully...",
-            user: {
+            data: {
                 fName: user.fName,
                 lName: user.lName,
                 email: user.email,

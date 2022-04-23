@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Send = ({messageType, setMessageType, message, setMessage, user, submitHandler}) => {
-    console.log(user);
+    // console.log(user);
     return (
         <div className="send">
             <div className="type">

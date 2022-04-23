@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { Input, Select } from '../../../Util/Input';
 import { zones, areas } from '../../../Util/data';
-import { changePageHandler, changeHandler, submitHandler } from '../../../app/signup/signupSlice';
+import { changePageHandler, changeHandler, submitHandler } from '../../../app/reducers/signupSlice';
 
 const Personal = ({handleSubmit}) => {
     const formData = useSelector((state) => state.signup.formDetails);

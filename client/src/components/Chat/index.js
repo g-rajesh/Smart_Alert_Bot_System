@@ -4,24 +4,27 @@ import { useNavigate } from "react-router-dom"
 
 import Alert from './Alert';
 import Message from './Message';
-import { logoutHandler, updateUserIsVerified } from '../../app/user/userSlice';
+import { logoutHandler, updateUserIsVerified } from '../../app/reducers/userSlice';
 
 import './Chat.css';
 import Send from './Send';
 
 const Chat = () => {
+    const official = useSelector(state => state.official.official);
     const user = useSelector(state => state.user.user);
     const token = useSelector(state => state.user.token);
     const [messages, setMessages] = useState({});
 
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('Query');
+    const [loading, setLoading] = useState(true);
     
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const fetchData = async () => {
         if(!user) return;
+        setLoading(true);
         const responce = await fetch("http://localhost:8080/user/messages", {
                                 headers: {
                                     Authorization: `Bearer ${token}`,
@@ -29,6 +32,8 @@ const Chat = () => {
                             });
 
         const result = await responce.json();
+
+        setLoading(false);
         if(responce.status != 200) {
             handleLogout();
         } else {
@@ -47,23 +52,40 @@ const Chat = () => {
     }, []);
 
     useEffect(() => {
-        if(!user){
+        if(!user && official){
+            navigate('/dashboard')
+        }
+
+        if(!user && !official){
             navigate('/signin')
         }
     }, [])
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
+        const formData = {
+            message: message,
+            type: messageType
+        };
 
-        console.log(message);
-        // const newMessage = {
-        //     id: messages.length+1,
-        //     username: "Rajesh",
-        //     message: message
-        // }
+        const responce = await fetch("http://localhost:8080/user/addMessage", {
+                                method: "POST",
+                                headers: {
+                                    "Authorization": `Bearer ${token}`,
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(formData),
+                            });
 
-        // setMessages([...messages, newMessage]);
-        // setMessage('');
+        const result = await responce.json();
+
+        console.log(result);
+        if(responce.status != 200) {
+            handleLogout();
+        } else {
+            const newMessages = result.data.messages;
+            setMessages(newMessages);
+        }
     }
 
     const handleLogout = () => {
@@ -79,12 +101,12 @@ const Chat = () => {
                     <header>
                         <p>You: <span>{user && user.fName}</span></p>
                         <div className="right">
-                            <i className="uil uil-redo refresh-icon"></i>
+                            <i className="uil uil-redo refresh-icon" onClick={fetchData}></i>
                             <button onClick={handleLogout}>Logout</button>
                         </div>
                     </header>
                     <div className="content">
-                        <Message messages={messages} />
+                        <Message messages={messages} loading={loading} />
                         <Send 
                             messageType={messageType} 
                             setMessageType={setMessageType} 

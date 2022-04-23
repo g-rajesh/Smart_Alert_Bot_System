@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { changePageHandler, changeHandler } from '../../../app/signup/signupSlice';
+import { changePageHandler, changeHandler } from '../../../app/reducers/signupSlice';
 
 import { Input } from '../../../Util/Input';
 

@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
 import { useSelector, useDispatch } from 'react-redux';
 import {Link} from 'react-router-dom';
-import { changeError, deleteError, submitHandler } from '../../../app/signup/signupSlice';
+import { changeError, deleteError, submitHandler } from '../../../app/reducers/signupSlice';
 
 import Account from './Account';
 import Personal from './Personal';
 import Preloader from '../../../Util/Preloader';
 import "./SignUp.css";
-import { updateUser } from '../../../app/user/userSlice';
+import { updateUser } from '../../../app/reducers/userSlice';
 
 const SignUp = () => {
     // TODO

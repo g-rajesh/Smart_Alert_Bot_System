@@ -54,6 +54,15 @@ header .right {
     align-items: center;
 }
 
+header .right .filter-type {
+    border: 1px solid #ccc;
+    outline: 0;
+    border-radius: 4px;
+    color: #333;
+    margin-right: 1rem;
+    padding: 0.3rem 0.4rem;
+}
+
 header .right button {
     color: #0063DC;
     outline: 0;
@@ -92,6 +101,7 @@ header .right .down-icon.active {
     box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.2);
     transition: all 0.2s;
     display: none;
+    cursor: pointer;
 }
 
 .dashboard .container .filter.active {
@@ -103,17 +113,18 @@ header .right .down-icon.active {
     color: #0063DC;
 }
 
-.messages {
+.messages , .status{
     padding: 1rem;
-    height: calc(75vh - 70px);
+    height: calc(80vh - 70px);
     width: 100%;
     overflow: auto;
 }
 
-.messages.active {
-    height: calc(75vh - 110px);
+.messages.active, .status.active {
+    height: calc(80vh - 110px);
 }
 
+/* messages */
 .messages .dateMessage .date {
     display: flex;
     justify-content: center;
@@ -181,9 +192,20 @@ header .right .down-icon.active {
     margin-left: 0.5rem;
 }
 
+
+.msg-text .expand {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.expand .expand-text {
+    color: #0063DC;
+    text-decoration: underline;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
 .msg-text span {
-    display: block;
-    text-align: right;
     font-size: 0.7rem;
     color: #333;
     font-weight: 600;
@@ -192,6 +214,77 @@ header .right .down-icon.active {
 .msg-text span i {
     font-size: 0.8rem;
     cursor: pointer;
+}
+
+.msg-text .userDetails {
+    margin-top: 0.5rem;
+    display: none;
+}
+
+.msg-text .userDetails.active {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.msg-text .userDetails > span {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.msg-text .userDetails > div .phone {
+    margin-right: 1rem;
+}
+
+.msg-text .userDetails .phone,
+.msg-text .userDetails .spam {
+    font-size: 1.2rem;
+}
+
+.msg-text .userDetails .phone {
+    color: #0063DC;
+}
+
+.msg-text .userDetails .spam {
+    color: #dc143c;
+}
+
+/* status */
+.status > p {
+    text-align: center;
+    color: #0063DC;
+    font-size: 1.3rem;
+}
+
+.status form .btn.disable {
+    background-color: #3389f1;
+    pointer-events: none;
+}
+
+.status form .btn:hover{
+    background-color: #0b58b6;
+}
+
+.status form .success-msg {
+    background-color: #19bb19;
+    color: #0b630b;
+    text-align: center;
+    padding: 0.2rem 0;
+    border-radius: 4px;
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    animation: scale 0.3s forwards;
+}
+
+@keyframes scale {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
 }
 
 ::-webkit-scrollbar {

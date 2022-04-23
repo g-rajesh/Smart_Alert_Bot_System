@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { updateOfficial } from '../../../app/reducers/officialSlice';
 
-import { changeHandler, deleteError, changeError, submitHandler } from '../../../app/signin/signinSlice';
-import { updateUser } from '../../../app/user/userSlice';
+import { changeHandler, deleteError, changeError, submitHandler } from '../../../app/reducers/signinSlice';
+import { updateUser } from '../../../app/reducers/userSlice';
 import { Input } from '../../../Util/Input';
 import Preloader from '../../../Util/Preloader';
 
@@ -38,10 +39,16 @@ const SignIn = () => {
             dispatch(changeError(result.data));
         } else {
             dispatch(submitHandler());
-            dispatch(updateUser(result));
-            navigate('/chat');
+
+            if(result.data.type === "user") {
+                dispatch(updateUser(result));
+                navigate('/chat');
+            } else {
+                dispatch(updateOfficial(result));
+                navigate('/dashboard');
+            }
         }
-        console.log(result);
+        // console.log(result);
     }
 
     const classes = { "email": "", "password": "" };

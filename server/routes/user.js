@@ -11,6 +11,9 @@ router.post("/signup", userController.signup);
 router.post("/signin", userController.signin);
 router.get("/messages", auth, messageController.getMessages);
 router.post("/addMessage", auth, messageController.addMessage);
-router.get("/adminMessages", auth, messageController.getAdminMessages);
+
+router.get("/officialMessages", auth, messageController.getOfficalMessages);
+router.get("/getAreas", auth, messageController.fetchAreas);
+router.post("/updateStatus", auth, messageController.updateArea);
 
 module.exports = router;

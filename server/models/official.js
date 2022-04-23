@@ -25,7 +25,7 @@ const Official = sequelize.define("Official", {
           type: DataTypes.STRING,
           allowNull: false,
      },
-     mobileNumber: {
+     mno: {
           type: DataTypes.STRING,
           allowNull: false
      }

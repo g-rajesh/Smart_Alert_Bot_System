@@ -20,9 +20,9 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         updateUser: (state, {payload}) => {
-            state.user = payload.user
+            state.user = payload.data
             state.token = payload.token
-            localStorage.setItem('user', JSON.stringify(payload.user));
+            localStorage.setItem('user', JSON.stringify(payload.data));
             localStorage.setItem('token', JSON.stringify(payload.token));
         },
 

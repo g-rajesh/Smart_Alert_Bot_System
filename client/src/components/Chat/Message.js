@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { useSpeechSynthesis } from 'react-speech-kit';
 
-const Message = ({messages}) => {
+const Message = ({messages, loading}) => {
     const user = useSelector(state => state.user.user);
 
     const { speak } = useSpeechSynthesis();
@@ -20,10 +20,21 @@ const Message = ({messages}) => {
         }
     });
 
+    if(loading) {
+        return <div className="messages">
+            <span className='alert-msg'>Loading messages...</span>
+        </div>
+    }
+
+    if(isMessagesEmpty) {
+        return <div className="messages">
+            <span className='alert-msg'>No messages yet!</span>
+        </div>
+    }
+
     return (
         <div className="messages">
             {
-                isMessagesEmpty ? <span className='alert-msg'>No messages yet!</span> :
                 Object.keys(messages).map(key => {
                     return (
                         <div className="dateMessage" key={key}>
