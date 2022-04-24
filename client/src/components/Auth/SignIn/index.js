@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { updateOfficial } from '../../../app/reducers/officialSlice';
 
 import { changeHandler, deleteError, changeError, submitHandler } from '../../../app/reducers/signinSlice';
 import { updateUser } from '../../../app/reducers/userSlice';
@@ -11,7 +10,6 @@ import Preloader from '../../../Util/Preloader';
 import "./SignIn.css";
 
 const SignIn = () => {
-    const official = useSelector(state => state.official.official);
     const user = useSelector(state => state.user.user);
 
     const formData = useSelector((state) => state.signin.formDetails);
@@ -23,10 +21,10 @@ const SignIn = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(official) {
+        if(user && user.type == "official") {
             navigate('/dashboard');
         }
-        if(user) {
+        if(user && user.type == "user") {
             navigate('/chat');
         }
     }, []);
@@ -51,12 +49,11 @@ const SignIn = () => {
             dispatch(changeError(result.data));
         } else {
             dispatch(submitHandler());
-
+            
+            dispatch(updateUser(result));
             if(result.data.type === "user") {
-                dispatch(updateUser(result));
                 navigate('/chat');
             } else {
-                dispatch(updateOfficial(result));
                 navigate('/dashboard');
             }
         }

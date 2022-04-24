@@ -3,15 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom"
 
 import Messages from './Messages';
-import { logoutHandler } from '../../app/reducers/officialSlice';
+import { logoutHandler } from '../../app/reducers/userSlice';
 
 import './Dashboard.css';
 import Status from './Status';
 
 const Dashboard = () => {
     const user = useSelector(state => state.user.user);
-    const official = useSelector(state => state.official.official);
-    const token = useSelector(state => state.official.token);
+    const token = useSelector(state => state.user.token);
     
     const [messages, setMessages] = useState({});
     const [filter, setFilter] = useState('Chat');
@@ -21,7 +20,7 @@ const Dashboard = () => {
     const dispatch = useDispatch();
 
     const fetchData = async () => {
-        if(!official) return;
+        if(!user || user.type=="user") return;
 
         setLoading(true);
         const response = await fetch("http://localhost:8080/user/officialMessages", {
@@ -38,21 +37,23 @@ const Dashboard = () => {
         } else {
             const newMessages = result.messages;
             setMessages(newMessages);
+
+            console.log(result.messages);
         }
     }
 
-    useEffect(()=>{
-        fetchData();
-    }, []);
-
     useEffect(() => {
-        if(!official && user){
-            navigate('/chat')
-        }
-
-        if(!official && !user) {
+        if(!user) {
             navigate("/signin");
         }
+
+        if(user && user.type == "user"){
+            navigate('/chat')
+        }
+    }, []);
+
+    useEffect(()=>{
+        fetchData();
     }, []);
 
     const handleLogout = () => {
@@ -74,7 +75,7 @@ const Dashboard = () => {
         <div className="dashboard">
             <div className="container">
                 <header>
-                    <p>You: <span>{official && official.fName}</span></p>
+                    <p>You: <span>{user && user.fName}</span></p>
                     <div className="right">
                         <i className="uil uil-redo refresh-icon" onClick={fetchData}></i>
                         <select 

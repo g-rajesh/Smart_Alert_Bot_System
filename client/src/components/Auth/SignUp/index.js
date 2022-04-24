@@ -13,7 +13,6 @@ import { updateUser } from '../../../app/reducers/userSlice';
 const SignUp = () => {
     // TODO
     // ONCE USER ENTERS THE DETAILS, REMOVE THE ERROR MESSAGE
-    const official = useSelector(state => state.official.official);
     const user = useSelector(state => state.user.user);
 
     const formDetails = useSelector((state) => state.signup.formDetails);
@@ -25,10 +24,10 @@ const SignUp = () => {
     const navigate = useNavigate();
     
     useEffect(() => {
-        if(official) {
+        if(user && user.type == "official") {
             navigate('/dashboard');
         }
-        if(user) {
+        if(user && user.type == "user") {
             navigate('/chat');
         }
     }, []);

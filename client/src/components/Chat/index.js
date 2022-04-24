@@ -10,7 +10,6 @@ import './Chat.css';
 import Send from './Send';
 
 const Chat = () => {
-    const official = useSelector(state => state.official.official);
     const user = useSelector(state => state.user.user);
     const token = useSelector(state => state.user.token);
     const [messages, setMessages] = useState({});
@@ -23,7 +22,7 @@ const Chat = () => {
     const dispatch = useDispatch();
 
     const fetchData = async () => {
-        if(!user) return;
+        if(!user || user.type=="official") return;
         setLoading(true);
         const responce = await fetch("http://localhost:8080/user/messages", {
                                 headers: {
@@ -47,19 +46,20 @@ const Chat = () => {
         }
     }
 
+
+    useEffect(() => {        
+        if(!user) {
+            navigate("/signin");
+        }
+
+        if(user && user.type === "official"){
+            navigate('/dashboard')
+        }
+    }, []);
+
     useEffect(()=>{
         fetchData();
     }, []);
-
-    useEffect(() => {
-        if(!user && official){
-            navigate('/dashboard')
-        }
-
-        if(!user && !official){
-            navigate('/signin')
-        }
-    }, [])
 
     const submitHandler = async (e) => {
         e.preventDefault();

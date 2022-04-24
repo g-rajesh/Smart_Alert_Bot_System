@@ -21,19 +21,19 @@ const Message = ({messages, loading}) => {
     });
 
     if(loading) {
-        return <div className="messages">
+        return <div className="feedbacks">
             <span className='alert-msg'>Loading messages...</span>
         </div>
     }
 
     if(isMessagesEmpty) {
-        return <div className="messages">
+        return <div className="feedbacks">
             <span className='alert-msg'>No messages yet!</span>
         </div>
     }
 
     return (
-        <div className="messages">
+        <div className="feedbacks">
             {
                 Object.keys(messages).map(key => {
                     return (
@@ -42,10 +42,10 @@ const Message = ({messages, loading}) => {
                                 { messages[key].length ? <span>{moment(key).format('ll')}</span> : null}
                             </div>
                             {
-                                messages[key].map(({id, from, message, createdAt, UserId}) => {
-                                    if(UserId === user.id) {
+                                messages[key].map(({id, from, message, createdAt, userId, userType}) => {
+                                    if(userId === user.id) {
                                         return (
-                                            <div className="message right" key={id}>
+                                            <div className="fb right" key={id}>
                                                 <div></div>
                                                 <div className='msg'>
                                                     <div className='msg-text'>
@@ -58,7 +58,7 @@ const Message = ({messages, loading}) => {
                                         )
                                     } else {
                                         return (
-                                            <div className="message left" key={id}>
+                                            <div className="fb left" key={id}>
                                                 <div className='msg'>
                                                     <span className='msg-profile'>{from[0]}</span> 
                                                     <div className='msg-text'>
@@ -82,33 +82,3 @@ const Message = ({messages, loading}) => {
 }
 
 export default Message;
-
-
-// dateMessage.map(({id, from, message, createdAt}) => {
-//     if(from == user.fName) {
-//         return (
-//             <div className="message right" key={id}>
-//                 <div></div>
-//                 <div className='msg'>
-//                     <div className='msg-text'>
-//                         <p>{message}</p>
-//                         <span>{moment(createdAt).format('LT')} &middot; <i className="uil uil-volume-up" onClick={() => speak({ text: message })}></i></span>
-//                     </div>
-//                     <span className='msg-profile'>{from[0]}</span> 
-//                 </div>
-//             </div>
-//         )
-//     } else {
-//         return (
-//             <div className="message left" key={id}>
-//                 <div className='msg'>
-//                     <span className='msg-profile'>{from[0]}</span> 
-//                     <div className='msg-text'>
-//                         <p>{message}</p>
-//                         <span>{moment(createdAt).format('LT')} &middot; <i className="uil uil-volume-up" onClick={() => speak({ text: message })}></i></span>
-//                     </div>
-//                 </div>
-//                 <div></div>
-//             </div>
-//         )
-//     }

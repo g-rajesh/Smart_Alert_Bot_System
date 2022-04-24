@@ -11,7 +11,7 @@ let initialData = {
 }
 
 const Status = (handleLogout) => {
-    const token = useSelector(state => state.official.token);
+    const token = useSelector(state => state.user.token);
 
     const [formData, setFormData] = useState(initialData);
     const [areas, setAreas] = useState([]);
