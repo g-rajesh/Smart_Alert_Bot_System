@@ -12,7 +12,7 @@ if(localStorage.getItem('token')){
 
 const initialState = {
     user,
-    token
+    token,
 };
 
 export const userSlice = createSlice({

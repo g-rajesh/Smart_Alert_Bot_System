@@ -44,17 +44,17 @@ body {
     color: #ccc;
 }
 
-header p span {
+.dashboard header p span {
     color: #0063DC;
     font-weight: 500;
 }
 
-header .right {
+.dashboard header .right {
     display: flex;
     align-items: center;
 }
 
-header .right .filter-type {
+.dashboard header .right .filter-type {
     border: 1px solid #ccc;
     outline: 0;
     border-radius: 4px;
@@ -63,7 +63,7 @@ header .right .filter-type {
     padding: 0.3rem 0.4rem;
 }
 
-header .right button {
+.dashboard header .right button {
     color: #0063DC;
     outline: 0;
     border: 0;
@@ -73,20 +73,20 @@ header .right button {
     font-weight: bold;
 }
 
-header .right .refresh-icon,
-header .right .down-icon {
+.dashboard header .right .refresh-icon,
+.dashboard header .right .down-icon {
     color: #ccc;
     margin-right: 1rem;
     font-size: 1.1rem;
     cursor: pointer;
 }
 
-header .right .down-icon {
+.dashboard header .right .down-icon {
     font-size: 1.5rem;
     transition: all 0.2s;
 }
 
-header .right .down-icon.active {
+.dashboard header .right .down-icon.active {
     transform: rotate(180deg);
 }
 
@@ -225,14 +225,38 @@ header .right .down-icon.active {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
 }
 
-.msg-text .userDetails > span {
+.msg-text .userDetails > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.msg-text .userDetails > div i{
+    cursor: pointer;
+}
+
+.msg-text .userDetails > div .spam {
+    color: #dc143c;
+}
+
+.msg-text .userDetails > div .phone {
+    color: #0063DC;
+}
+
+.msg-text .userDetails > div .house {
+    color: #006466;
+}
+
+/* .msg-text .userDetails > span {
     font-size: 0.85rem;
     font-weight: 500;
     color: #333;
-}
+} */
 
+/* 
 .msg-text .userDetails > div .phone {
     margin-right: 1rem;
 }
@@ -248,7 +272,7 @@ header .right .down-icon.active {
 
 .msg-text .userDetails .spam {
     color: #dc143c;
-}
+} */
 
 /* status */
 .status > p {

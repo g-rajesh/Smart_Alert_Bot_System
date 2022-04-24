@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
 import { useSelector, useDispatch } from 'react-redux';
 import {Link} from 'react-router-dom';
@@ -13,6 +13,8 @@ import { updateUser } from '../../../app/reducers/userSlice';
 const SignUp = () => {
     // TODO
     // ONCE USER ENTERS THE DETAILS, REMOVE THE ERROR MESSAGE
+    const official = useSelector(state => state.official.official);
+    const user = useSelector(state => state.user.user);
 
     const formDetails = useSelector((state) => state.signup.formDetails);
     const currPage = useSelector((state) => state.signup.currPage);
@@ -21,6 +23,15 @@ const SignUp = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        if(official) {
+            navigate('/dashboard');
+        }
+        if(user) {
+            navigate('/chat');
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

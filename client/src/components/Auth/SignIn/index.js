@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { updateOfficial } from '../../../app/reducers/officialSlice';
@@ -11,6 +11,9 @@ import Preloader from '../../../Util/Preloader';
 import "./SignIn.css";
 
 const SignIn = () => {
+    const official = useSelector(state => state.official.official);
+    const user = useSelector(state => state.user.user);
+
     const formData = useSelector((state) => state.signin.formDetails);
     const error = useSelector(state => state.signin.error);
 
@@ -18,6 +21,15 @@ const SignIn = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(official) {
+            navigate('/dashboard');
+        }
+        if(user) {
+            navigate('/chat');
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

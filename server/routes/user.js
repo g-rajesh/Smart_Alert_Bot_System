@@ -12,6 +12,9 @@ router.post("/signin", userController.signin);
 router.get("/messages", auth, messageController.getMessages);
 router.post("/addMessage", auth, messageController.addMessage);
 
+router.get("/getFeedback", auth, messageController.getFeedback);
+router.post("/addFeedback", auth, messageController.addFeedback);
+
 router.get("/officialMessages", auth, messageController.getOfficalMessages);
 router.get("/getAreas", auth, messageController.fetchAreas);
 router.post("/updateStatus", auth, messageController.updateArea);

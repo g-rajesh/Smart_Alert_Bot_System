@@ -88,8 +88,39 @@ header .right .btn2 a {
     margin-bottom: 0.8rem;
 } 
 
-.home .container .left p {
-    margin-bottom: 2.5rem;
+.home .container .left .question {
+    width: 80%;
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.home .left .question .query,
+.home .left .question .request {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home .left .question i {
+    font-size: 1.5rem;
+    color: #0063DC;
+}
+
+.home .left .question span {
+    margin-bottom: 1rem;
+    font-weight: 500;
+    font-size: 1.2rem;
+}
+
+.home .left .question p {
+    font-size: 1rem;
+    text-align: center;
+}
+
+.home .container .left .btns {
+    display: flex;
 }
 
 .home .container .left .btns a {
@@ -105,6 +136,20 @@ header .right .btn2 a {
     color: #0063DC;
     margin-right: 2rem;
 }
+
+/* .home .container .left .btns a {
+    background-color: #0063DC;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+.home .container .left .btns a:first-child {
+    border: 1px solid #0063DC;
+    background-color: #fff;
+    color: #0063DC;
+    margin-right: 2rem;
+} */
 
 @media screen and (max-width: 768px) {
     .home .container {
@@ -126,6 +171,28 @@ header .right .btn2 a {
     .home .container .left p {
         font-size: 1rem;
     }
+
+    .home .container .left .question {
+        width: 90%;
+        justify-content: space-between;
+    }
+
+    .home .left .question i {
+        font-size: 1rem;
+    }
+
+    .home .left .question span {
+        font-size: 1rem;
+    }
+
+    .home .left .question p {
+        font-size: 0.8rem;
+    }
+
+    .home .container .left .btns a {
+        font-size: 0.8rem;
+        padding: 0.2rem;
+    }
 }
 
 @media screen and (max-width: 450px) {
@@ -137,11 +204,7 @@ header .right .btn2 a {
         padding: 0 1rem;
     }
     .home .container .left h2 {
-        font-size: 1.25rem;
-    }
-
-    .home .container .left p {
-        font-size: 0.9rem;
+        font-size: 1.5rem;
     }
 
     .home .container .left .btns a {

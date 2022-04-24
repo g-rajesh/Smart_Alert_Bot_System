@@ -5,6 +5,7 @@ const Official = require("../models/official");
 const { Sequelize } = require("sequelize");
 const { isEmailVerified } = require("../util/firebase");
 const MessageWithOfficials = require("../models/meesage_with_officials");
+const Feedback = require("../models/feedback");
 
 const fetchUserMessages = async (ZoneId) => {
     const dates = await MessageWithUsers.findAll({
@@ -98,32 +99,10 @@ exports.getOfficalMessages = async (req, res, next) => {
             message.push(newMessage);
         }
 
-
-        // let message = await fullMessage.map(async msg => {
-        //     let values = msg.dataValues;
-        //     console.log(81, values);
-        //     let newMessage = {};
-        //     newMessage.message = values.message;
-        //     newMessage.date = values.date;
-        //     newMessage.createAt = values.createAt;
-        //     newMessage.user = {};
-
-        //     let user = await User.findOne({where: {id: values.UserId}});
-        //     newMessage.user.fName = user.fName;
-        //     newMessage.user.lName = user.lName;
-        //     newMessage.user.email = user.email;
-        //     newMessage.user.mno = user.mno;
-            
-        //     let area = await Area.findOne({where: {id: user.AreaId}});
-        //     newMessage.user.area = area.name;
-
-        //     return newMessage;
-        // })
-
         messages[date] = message;
     }
 
-    console.log(messages);
+    // console.log(messages);
 
     return res.status(200).json({ messages });
 }
@@ -275,6 +254,123 @@ exports.updateArea = async (req, res, next) => {
         return res.status(200).json({
             success: "Updated successfully"
         });
+    } catch(err) {
+        if(!err.status) err.status=500;
+        next(err);
+    }
+}
+
+const fetchFeeedback = async (ZoneId) => {
+    const dates = await Feedback.findAll({
+        attributes: [
+            [Sequelize.fn('DISTINCT', Sequelize.col('date')) ,'date']
+        ],
+        order: [['date', 'ASC']]
+    });
+
+    const feedbacks = {};
+    for(let i = 0; i < dates.length; i++) {
+        const {date} = dates[i].dataValues;
+        let fb = await Feedback.findAll({
+            where: { ZoneId, date },
+            order: [['createdAt', 'ASC']]
+        });
+
+        let message = [];
+        for(let j=0; j<fb.length; j++) {
+            let values = fb[j].dataValues;
+            let newMessage = {};
+            newMessage.id = values.id;
+            newMessage.from = values.from;
+            newMessage.message = values.message;
+            newMessage.date = values.date;
+            newMessage.createdAt = values.createdAt;
+            newMessage.userType = values.userType;
+
+            message.push(newMessage);
+        }
+
+        feedbacks[date] = message;
+    }
+
+    return feedbacks;
+}
+
+exports.getFeedback = async (req, res, next) => {
+    const email = req.email;
+    try {
+        let userType = 0;
+        let user;
+        user = await User.findOne({where: {email}});
+        if(!user) {
+            user = await Official.findOne({where: {email}});
+            userType = 1;
+
+            if(!user) {
+                const notFound = new Error("User not found");
+                notFound.status = 500;
+                throw notFound;
+            }
+        }
+
+        let ZoneId;
+        if(userType == 1) {
+            ZoneId = user.ZoneId;
+        } else {
+            const area = await Area.findOne({where: {id: user.AreaId}});
+            ZoneId = area.ZoneId;
+        }
+
+        const feedbacks = await fetchFeeedback(ZoneId);
+
+        return res.status(200).json(feedbacks);
+    } catch(err) {
+        if(!err.status) err.status = 500;
+        next(err);
+    }
+}
+
+exports.addFeedback = async (req, res, next) => {
+    const today = new Date().toISOString().slice(0, 10);
+    const email = req.email;
+    const { message } = req.body;
+
+    try {
+        let userType = 0;
+        let user;
+        user = await User.findOne({where: {email}});
+        if(!user) {
+            user = await Official.findOne({where: {email}});
+            userType = 1;
+
+            if(!user) {
+                const notFound = new Error("User not found");
+                notFound.status = 500;
+                throw notFound;
+            }
+        }
+
+        let ZoneId;
+        if(userType == 1) {
+            ZoneId = user.ZoneId;
+        } else {
+            const area = await Area.findOne({where: {id: user.AreaId}});
+            ZoneId = area.ZoneId;
+        }
+
+        const feedback = await Feedback.create({
+            from: user.fName,
+            message: message,
+            date: today,
+            userType: userType,
+            ZoneId: ZoneId
+        });
+        await feedback.save();
+
+        const feedbacks = await fetchFeeedback(ZoneId);
+
+        return res.status(200).json(feedbacks);
+
     } catch(err) {
         if(!err.status) err.status=500;
         next(err);

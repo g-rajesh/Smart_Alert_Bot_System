@@ -29,10 +29,17 @@ const Message = ({msg}) => {
                         <span>{moment(createdAt).format('LT')} &middot; <i className="uil uil-volume-up" onClick={() => speak({ text: message })}></i></span>
                     </div>
                     <div className={more ? "userDetails active": "userDetails"}>
-                        <span>{user.fName}</span>
-                        <div>
-                            <i className="uil uil-phone phone"></i>
+                        <div className="user-name">
+                            <span>{user.fName}</span>
                             <i className="uil uil-exclamation-circle spam"></i>
+                        </div>
+                        <div className="user-contact">
+                            <span>{user.mno}</span>
+                            <i className="uil uil-phone phone"></i>
+                        </div>
+                        <div className="user-area">
+                            <span>{user.area}</span>
+                            <i className="uil uil-estate house"></i>
                         </div>
                     </div>
                 </div>
