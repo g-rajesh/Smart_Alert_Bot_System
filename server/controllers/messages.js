@@ -1,4 +1,5 @@
 const Area = require("../models/area");
+const Zone = require("../models/zone");
 const MessageWithUsers = require("../models/message_with_users");
 const User = require("../models/user");
 const Official = require("../models/official");
@@ -117,6 +118,8 @@ exports.addMessage = async (req, res, next) => {
 
     let message;
 
+    console.log(user.fName);
+
     message = await MessageWithUsers.create({
         from: user.fName,
         message: req.body.message,
@@ -214,7 +217,8 @@ exports.updateArea = async (req, res, next) => {
             throw notFound;
         }
 
-        if(area == "All") {
+        console.log();
+        if(area === "All") {
             await Area.update(
                 { problem, restoration }, 
                 { where: { ZoneId: official.ZoneId }}

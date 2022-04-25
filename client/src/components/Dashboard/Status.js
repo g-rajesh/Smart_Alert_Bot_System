@@ -26,6 +26,7 @@ const Status = (handleLogout) => {
                                 });
 
         const result = await response.json();
+        console.log(result);
         if(response.status !== 200) {
             handleLogout();
         } else {
@@ -70,6 +71,7 @@ const Status = (handleLogout) => {
         if(response.status !== 200) {
             handleLogout();
         } else {
+            console.log(result);
             setFormData(initialData);
             setSuccess(result.success);
         }

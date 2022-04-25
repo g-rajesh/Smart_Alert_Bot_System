@@ -21,7 +21,8 @@ const Feedback = () => {
     const dispatch = useDispatch();
 
     const fetchData = async () => {
-        if(!user || user.type=="official") return;
+        if(!user) return;
+        console.log("Called");
         setLoading(true);
         const responce = await fetch("http://localhost:8080/user/getFeedback", {
                                 headers: {

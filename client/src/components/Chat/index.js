@@ -85,6 +85,7 @@ const Chat = () => {
         } else {
             const newMessages = result.data.messages;
             setMessages(newMessages);
+            setMessage('');
         }
     }
 
