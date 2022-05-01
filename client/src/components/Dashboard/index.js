@@ -1,21 +1,20 @@
-import React, {useState, useEffect} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from "react-router-dom"
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import {FiSend} from 'react-icons/fi'
 
 import Messages from './Messages';
-import { logoutHandler } from '../../app/reducers/userSlice';
+import Profile from './Profile';
+import { logoutHandler, updateUserIsVerified } from '../../app/reducers/userSlice';
 
-import './Dashboard.css';
-import Status from './Status';
-
-const Dashboard = () => {
+const Feedback = () => {
     const user = useSelector(state => state.user.user);
     const token = useSelector(state => state.user.token);
-    
     const [messages, setMessages] = useState({});
-    const [filter, setFilter] = useState('Chat');
+    const [selectedUser, setSelectedUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    
+    const [toggleUpDown, setToggleUpDown] = useState(false);
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -41,62 +40,44 @@ const Dashboard = () => {
             console.log(result.messages);
         }
     }
-
-    useEffect(() => {
-        if(!user) {
-            navigate("/signin");
-        }
-
-        if(user && user.type == "user"){
-            navigate('/chat')
-        }
-    }, []);
-
+    
     useEffect(()=>{
         fetchData();
     }, []);
 
+    useEffect(() => {        
+        if(!user || user.type === "user") {
+            navigate("/signin");
+        }
+    }, []);
+    
     const handleLogout = () => {
         dispatch(logoutHandler());
         navigate('/signin');
     }
 
-    const filterHandler = (filter) => {
-        if(filter === "Chat") {
-            return <Messages messages={messages} loading={loading} />
-        } else if(filter === "Status") {
-            return <Status handleLogout={handleLogout} />
-        }
-
-        return null;
-    }
-
-    return  (
-        <div className="dashboard">
-            <div className="container">
-                <header>
-                    <p>You: <span>{user && user.fName}</span></p>
-                    <div className="right">
-                        <i className="uil uil-redo refresh-icon" onClick={fetchData}></i>
-                        <select 
-                            name="filter" 
-                            id="filter" 
-                            className='filter-type' 
-                            value={filter} 
-                            onChange={(e)=>setFilter(e.target.value)}
-                        >
-                            <option value="Chat">Chat</option>
-                            <option value="Status">Status</option>
-                        </select>
-                        <button onClick={handleLogout}>Logout</button>
+    return (
+        <>
+            <section className="dashboard" id="dashboard">
+                <div className="dashboard-container">
+                    <div className="left">
+                        <Messages 
+                            messages={messages}
+                            setSelectedUser={setSelectedUser} 
+                            loading={loading}
+                            setToggleUpDown={setToggleUpDown} 
+                        />
                     </div>
-                </header>
-                {
-                    filterHandler(filter)
-                }
-            </div>
-        </div>
-    );
+                    <div className={toggleUpDown ? "right active" : "right"}>
+                        <Profile 
+                            selectedUser={selectedUser} 
+                            setToggleUpDown={setToggleUpDown} 
+                        />
+                    </div>
+                </div>
+            </section>
+        </>
+    )
 }
 
-export default Dashboard;
+export default Feedback

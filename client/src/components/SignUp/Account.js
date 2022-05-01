@@ -1,8 +1,8 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { changePageHandler, changeHandler } from '../../../app/reducers/signupSlice';
+import { changePageHandler, changeHandler } from '../../app/reducers/signupSlice';
 
-import { Input } from '../../../Util/Input';
+import { Input } from '../../Util/Input';
 
 const Account = () => {
     const formData = useSelector((state) => state.signup.formDetails);
@@ -27,7 +27,7 @@ const Account = () => {
 
     return (
         <div className='account-form'>
-            <p className="tag">Account Info</p>
+            <p className="tag">ACCOUNT INFO</p>
             <div className="grid">
                 <Input
                     name="fName"

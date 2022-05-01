@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { changeHandler, deleteError, changeError, submitHandler } from '../../../app/reducers/signinSlice';
-import { updateUser } from '../../../app/reducers/userSlice';
-import { Input } from '../../../Util/Input';
-import Preloader from '../../../Util/Preloader';
-
-import "./SignIn.css";
+import { changeHandler, deleteError, changeError, submitHandler } from '../../app/reducers/signinSlice';
+import { updateUser } from '../../app/reducers/userSlice';
+import { Input } from '../../Util/Input';
+import Preloader from '../../Util/Preloader';
 
 const SignIn = () => {
     const user = useSelector(state => state.user.user);
@@ -70,11 +68,9 @@ const SignIn = () => {
     return  (
         <>
             { loading && <Preloader text="Authenticating user..." /> }
-            <div className="auth">
-                <div className="container">
-                    <h2>TNEB</h2>
+            <section className="signin" id="signin">
+                <div className="signin-container">
                     <div className="form">
-                        <h2>Sign In</h2>
                         <form>
                             <Input
                                 name="email"
@@ -100,13 +96,12 @@ const SignIn = () => {
                             </div>
                         </form>
                         
-                        <p className="toggle">New User? <Link to="/signup">Create account here</Link></p>
+                        <p className="toggler">New User? <Link to="/signup">Create account here</Link></p>
                     </div>
                 </div>
-            </div>
+            </section>
         </>
     );
 }
 
 export default SignIn;
-

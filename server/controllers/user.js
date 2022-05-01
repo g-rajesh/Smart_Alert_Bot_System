@@ -1,13 +1,12 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Area = require("../models/area");
 require("dotenv").config();
 
 const { empty_validator, error, isInvalidZone, isInvalidArea, createUser, isEmailAlreadyTaken, isPasswordMatch, getUser, signin_validator, getOfficial } = require("../util/validator");
 
 exports.signup = async (req, res, next) => {
-    const { firstName, lastName,  email, password, mno, zone, area } = req.body;
-
-    console.log(req.body);
+    const { fName, lName,  email, password, mno, zone, area } = req.body;
 
     const errors = {
         "fName": "", 
@@ -73,10 +72,13 @@ exports.signup = async (req, res, next) => {
 
         // creating user
         const user = await createUser(req.body);
-        console.log(user);
+        // console.log(user);
 
         // creating token
         const token = jwt.sign({email: user.email}, process.env.JWT_TOKEN, { expiresIn: '1w' });
+
+        // getting user's area
+        let userArea = await Area.findByPk(user.AreaId);
 
         return res.status(200).json({
             message: "User created successfully...",
@@ -87,6 +89,7 @@ exports.signup = async (req, res, next) => {
                 email: user.email,
                 mno: user.mno,
                 isVerified: user.isVerified,
+                area: userArea.name,
                 type: "user"
             },
             token: token
@@ -100,7 +103,7 @@ exports.signup = async (req, res, next) => {
 }
 
 exports.signin = async (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     const { email, password } = req.body;
 
     let errors = { "email": "", "password": "" };
@@ -171,6 +174,9 @@ exports.signin = async (req, res, next) => {
 
         // creating token
         const token = jwt.sign({email: user.email}, process.env.JWT_TOKEN, { expiresIn: '1w' });
+        
+        // getting user's area
+        const area = await Area.findByPk(user.AreaId);
 
         return res.status(200).json({
             message: "User logged in successfully...",
@@ -181,6 +187,7 @@ exports.signin = async (req, res, next) => {
                 email: user.email,
                 mno: user.mno,
                 isVerified: user.isVerified,
+                area: area.name,
                 type: "user"
             },
             token: token

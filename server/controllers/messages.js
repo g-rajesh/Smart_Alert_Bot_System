@@ -29,8 +29,6 @@ const fetchUserMessages = async (ZoneId) => {
 
 exports.getMessages = async (req, res, next) => {
 
-    console.log("Called");
-
     const user = await User.findOne({ where: { email: req.email } });
     // Verifying whether the user is verified his account
     if(!user.isVerified) {
@@ -46,7 +44,7 @@ exports.getMessages = async (req, res, next) => {
     const area = await Area.findByPk(user.AreaId);
 
     const messages = await fetchUserMessages(area.ZoneId);
-    console.log(messages);
+    // console.log(messages);
 
     return res.status(200).json({
         data: {
@@ -95,6 +93,7 @@ exports.getOfficalMessages = async (req, res, next) => {
             newMessage.user.lName = user.lName;
             newMessage.user.email = user.email;
             newMessage.user.mno = user.mno;
+            newMessage.user.isVerified = user.isVerified;
             
             let area = await Area.findOne({where: {id: user.AreaId}});
             newMessage.user.area = area.name;
@@ -118,7 +117,7 @@ exports.addMessage = async (req, res, next) => {
 
     let message;
 
-    console.log(user.fName);
+    // console.log(user.fName);
 
     message = await MessageWithUsers.create({
         from: user.fName,
@@ -217,7 +216,7 @@ exports.updateArea = async (req, res, next) => {
             throw notFound;
         }
 
-        console.log();
+        // console.log();
         if(area === "All") {
             await Area.update(
                 { problem, restoration }, 
@@ -300,7 +299,7 @@ const fetchFeeedback = async (ZoneId) => {
                 user = await Official.findOne({where: {email: values.email}});
             }
 
-            newMessage.userId = user.id;
+            newMessage.UserId = user.id;
 
             message.push(newMessage);
         }

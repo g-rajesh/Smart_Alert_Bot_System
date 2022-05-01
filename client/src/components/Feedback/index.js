@@ -1,28 +1,25 @@
-import React, {useState, useEffect, useRef} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from "react-router-dom"
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import {FiSend} from 'react-icons/fi'
 
-import Alert from './Alert';
-import Message from './Message';
+import Messages from './Messages';
+import Profile from './Profile';
 import { logoutHandler, updateUserIsVerified } from '../../app/reducers/userSlice';
-
-import './Feedback.css';
-import Send from './Send';
 
 const Feedback = () => {
     const user = useSelector(state => state.user.user);
     const token = useSelector(state => state.user.token);
-    const [messages, setMessages] = useState({});
-
     const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState({});
     const [loading, setLoading] = useState(true);
-    
+    const [toggleUpDown, setToggleUpDown] = useState(false);
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const fetchData = async () => {
-        if(!user) return;
-        console.log("Called");
+        if(!user || user.type=="official") return;
         setLoading(true);
         const responce = await fetch("http://localhost:8080/user/getFeedback", {
                                 headers: {
@@ -40,16 +37,15 @@ const Feedback = () => {
             setMessages(result);
         }
     }
-
+    
+    useEffect(()=>{
+        fetchData();
+    }, []);
 
     useEffect(() => {        
         if(!user) {
             navigate("/signin");
         }
-    }, []);
-
-    useEffect(()=>{
-        fetchData();
     }, []);
 
     const submitHandler = async (e) => {
@@ -77,36 +73,36 @@ const Feedback = () => {
         }
     }
 
+    
     const handleLogout = () => {
         dispatch(logoutHandler());
         navigate('/signin');
     }
 
-    return  (
+    return (
         <>
-            <Alert isVerified={user && user.isVerified} />
-            <div className="feedback">
-                <div className="container">
-                    <header>
-                        <p>You: <span>{user && user.fName}</span></p>
-                        <div className="right">
-                            <i className="uil uil-redo refresh-icon" onClick={fetchData}></i>
-                            <button onClick={handleLogout}>Logout</button>
-                        </div>
-                    </header>
-                    <div className="content">
-                        <Message messages={messages} loading={loading} />
-                        <Send 
-                            message={message} 
-                            setMessage={setMessage} 
-                            user={user} 
-                            submitHandler={submitHandler}
-                        />
+            <section className="chat" id="chat">
+                <div className="chat-container">
+                    <div className="left">
+                        <Messages messages={messages} loading={loading} setToggleUpDown={setToggleUpDown} />
+                        
+                        <form className="send-msg" onSubmit={submitHandler}>
+                            <input 
+                                type="text" 
+                                value={message}
+                                onChange={(e)=>setMessage(e.target.value)}
+                                placeholder='Write a message...' 
+                            />
+                            <FiSend className={!message || (user && user.isVerified==0) ? 'send-icon disable': 'send-icon'}  onClick={submitHandler} />
+                        </form>
+                    </div>
+                    <div className={toggleUpDown ? "right active" : "right"}>
+                        <Profile setToggleUpDown={setToggleUpDown} />
                     </div>
                 </div>
-            </div>
+            </section>
         </>
-    );
+    )
 }
 
-export default Feedback;
+export default Feedback

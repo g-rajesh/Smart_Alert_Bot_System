@@ -1,9 +1,9 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Input, Select } from '../../../Util/Input';
-import { zones, areas } from '../../../Util/data';
-import { changePageHandler, changeHandler, submitHandler } from '../../../app/reducers/signupSlice';
+import { Input, Select } from '../../Util/Input';
+import { zones, areas } from '../../Util/data';
+import { changePageHandler, changeHandler, submitHandler } from '../../app/reducers/signupSlice';
 
 const Personal = ({handleSubmit}) => {
     const formData = useSelector((state) => state.signup.formDetails);
@@ -27,7 +27,7 @@ const Personal = ({handleSubmit}) => {
 
     return (
         <div className='personal-form'>
-            <p className="tag">Personal Info</p>
+            <p className="tag">PERSONAL INFO</p>
             <Input
                 name="mno"
                 type="number"

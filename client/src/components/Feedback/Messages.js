@@ -1,9 +1,10 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import {FaHeadset, FaChevronUp} from 'react-icons/fa'
 import { useSpeechSynthesis } from 'react-speech-kit';
 
-const Message = ({messages, loading}) => {
+const Messages = ({messages, loading, setToggleUpDown}) => {
     const user = useSelector(state => state.user.user);
 
     const { speak } = useSpeechSynthesis();
@@ -21,19 +22,19 @@ const Message = ({messages, loading}) => {
     });
 
     if(loading) {
-        return <div className="feedbacks">
+        return <div className="messages">
             <span className='alert-msg'>Loading messages...</span>
         </div>
     }
 
     if(isMessagesEmpty) {
-        return <div className="feedbacks">
+        return <div className="messages">
             <span className='alert-msg'>No messages yet!</span>
         </div>
     }
 
     return (
-        <div className="feedbacks">
+        <div className="messages">
             {
                 Object.keys(messages).map(key => {
                     return (
@@ -42,15 +43,15 @@ const Message = ({messages, loading}) => {
                                 { messages[key].length ? <span>{moment(key).format('ll')}</span> : null}
                             </div>
                             {
-                                messages[key].map(({id, from, message, createdAt, userId, userType}) => {
-                                    if(userId === user.id) {
+                                messages[key].map(({id, from, message, createdAt, UserId}) => {
+                                    if(UserId === user.id) {
                                         return (
-                                            <div className="fb right" key={id}>
+                                            <div className="message rm" key={id}>
                                                 <div></div>
                                                 <div className='msg'>
                                                     <div className='msg-text'>
                                                         <p>{message}</p>
-                                                        <span>{moment(createdAt).format('LT')} &middot; <i className="uil uil-volume-up" onClick={() => speak({ text: message })}></i></span>
+                                                        <span>{moment(createdAt).format('LT')} &middot; <FaHeadset className="vol-icon" onClick={() => speak({ text: message })}/></span>
                                                     </div>
                                                     <span className='msg-profile'>{from[0]}</span> 
                                                 </div>
@@ -58,12 +59,12 @@ const Message = ({messages, loading}) => {
                                         )
                                     } else {
                                         return (
-                                            <div className="fb left" key={id}>
+                                            <div className="message lm" key={id}>
                                                 <div className='msg'>
                                                     <span className='msg-profile'>{from[0]}</span> 
                                                     <div className='msg-text'>
                                                         <p>{message}</p>
-                                                        <span>{moment(createdAt).format('LT')} &middot; <i className="uil uil-volume-up" onClick={() => speak({ text: message })}></i></span>
+                                                        <span>{moment(createdAt).format('LT')} &middot;  <FaHeadset className="vol-icon" onClick={() => speak({ text: message })}/></span>
                                                     </div>
                                                 </div>
                                                 <div></div>
@@ -77,8 +78,13 @@ const Message = ({messages, loading}) => {
                 })
             }
             <div ref={messageEndRef}></div>
+            <div className="up-toggle">
+                {
+                    <FaChevronUp className="up-icon" onClick={()=>setToggleUpDown(true)} />
+                }
+            </div>
         </div>
     );
 }
 
-export default Message;
+export default Messages;

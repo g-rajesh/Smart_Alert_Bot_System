@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom"
-import { useSelector, useDispatch } from 'react-redux';
-import {Link} from 'react-router-dom';
-import { changeError, deleteError, submitHandler } from '../../../app/reducers/signupSlice';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { NavLink, useNavigate } from 'react-router-dom'
+import Account from './Account'
+import Personal from './Personal'
+import Preloader from '../../Util/Preloader';
 
-import Account from './Account';
-import Personal from './Personal';
-import Preloader from '../../../Util/Preloader';
-import "./SignUp.css";
-import { updateUser } from '../../../app/reducers/userSlice';
+import { changeError, deleteError, submitHandler } from '../../app/reducers/signupSlice';
+import { updateUser } from '../../app/reducers/userSlice';
 
 const SignUp = () => {
-    // TODO
-    // ONCE USER ENTERS THE DETAILS, REMOVE THE ERROR MESSAGE
     const user = useSelector(state => state.user.user);
 
     const formDetails = useSelector((state) => state.signup.formDetails);
@@ -22,12 +18,12 @@ const SignUp = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    
+
     useEffect(() => {
-        if(user && user.type == "official") {
+        if(user && user.type === "official") {
             navigate('/dashboard');
         }
-        if(user && user.type == "user") {
+        if(user && user.type === "user") {
             navigate('/chat');
         }
     }, []);
@@ -58,28 +54,25 @@ const SignUp = () => {
         }
         console.log(result);
     }
-    
-    return  (
+
+    return (
         <>
             { loading && <Preloader text="Creating account for you. Please wait..." /> }
-            <div className="auth">
-                <div className="container">
-                    <h2>TNEB</h2>
+            <section className="signup" id="signup">
+                <div className="signup-container">
                     <div className="form">
-                        <h2>Sign up</h2>
                         <form>
                         {
                             currPage == 1 ? <Account /> : <Personal handleSubmit={handleSubmit} />
                         }
                         </form>
                         
-                        <p className="toggle">Already a user? <Link to="/signin">Sign In here</Link></p>
+                        <p className="toggler">Already a user? <NavLink to="/signin">Sign In here</NavLink></p>
                     </div>
                 </div>
-            </div>
+            </section>
         </>
-    );
+    )
 }
 
-export default SignUp;
-
+export default SignUp

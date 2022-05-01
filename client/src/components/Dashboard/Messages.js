@@ -1,10 +1,13 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import {FaVolumeUp, FaChevronUp} from 'react-icons/fa'
 import { useSpeechSynthesis } from 'react-speech-kit';
-import Message from './Message';
 
-const Messages = ({messages, loading}) => {
+const Messages = ({messages, setSelectedUser, loading, setToggleUpDown}) => {
+    const user = useSelector(state => state.user.user);
+
+    const { speak } = useSpeechSynthesis();
     const messageEndRef = useRef(null);
 
     useEffect(() => {
@@ -18,26 +21,25 @@ const Messages = ({messages, loading}) => {
         }
     });
 
-    // console.log(messages);
-
     if(loading) {
-        return (
-            <div className="messages active">
-                <span className='alert-msg'>Loading messages...</span>
-            </div>
-        )
+        return <div className="messages">
+            <span className='alert-msg'>Loading messages...</span>
+        </div>
     }
 
     if(isMessagesEmpty) {
-        return (
-            <div className="messages active">
-                <span className='alert-msg'>No messages yet!</span>
-            </div>
-        )
+        return <div className="messages">
+            <span className='alert-msg'>No messages yet!</span>
+        </div>
+    }
+
+    const handleMore = (user) => {
+        setSelectedUser(user);
+        setToggleUpDown(true);
     }
 
     return (
-        <div className="messages active">
+        <div className="messages">
             {
                 Object.keys(messages).map(key => {
                     return (
@@ -46,8 +48,22 @@ const Messages = ({messages, loading}) => {
                                 { messages[key].length ? <span>{moment(key).format('ll')}</span> : null}
                             </div>
                             {
-                                messages[key].map(message => {
-                                    return <Message msg={message} key={message.id} />
+                                messages[key].map(({id, user, message, createdAt }) => {
+                                    return (
+                                        <div className="message lm" key={id}>
+                                            <div className='msg'>
+                                                <span className='msg-profile'>{user.fName[0]}</span> 
+                                                <div className='msg-text'>
+                                                    <p>{message}</p>
+                                                    <div className="u-prof">
+                                                        <span onClick={()=>handleMore(user)}>More</span>
+                                                        <span>{moment(createdAt).format('LT')} &middot;  <FaVolumeUp className="vol-icon" onClick={() => speak({ text: message })}/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div></div>
+                                        </div>
+                                    )
                                 })
                             }
                         </div>
