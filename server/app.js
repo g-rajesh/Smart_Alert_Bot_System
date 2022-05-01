@@ -53,6 +53,8 @@ Message2.belongsTo(Zone);
 Zone.hasMany(Feedback);
 Feedback.belongsTo(Zone);
 
+// mail password to env
+
 sequelize
      // .sync({ force: true })
      // .sync({ alter: true })
@@ -66,10 +68,4 @@ sequelize
      .catch((err) => {
           console.log(err);
      });
-
-
-// TODO
-// CHECK USER OR OFFICIAL WHILE LOGIN -> DONE
-// WHEN USER SENDS MESSAGE, CHECK MESSAGE AVAILABLE IN DB. IF NOT, THEN ADD IT TO MESSAGE_WITH_OFFICALS
-// 
 
