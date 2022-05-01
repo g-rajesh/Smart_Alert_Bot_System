@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 const Home = () => {
     return (
@@ -6,8 +7,8 @@ const Home = () => {
             <div className="home-container">
                 <div className="left">
                     <h2>Smart Alert Bot System</h2>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laudantium recusandae suscipit atque amet fuga iusto ad ex reiciendis, animi earum.</p>
-                    <a className='btn' href=''>Register now</a>
+                    <p>An idea to provide information about the power cut and the resumption of power supply to the people in an area. This application will be used as a mediator between TNEB official and people where users can either raise a query like <b>There is power cut in our area. When does it resume?</b> or a request like <b>An fire accident happened in my area, so please stop power supply in our area</b> and the bot will respond back to the user instantly.</p>
+                    <NavLink className='btn' to="/signup">Register now</NavLink>
                 </div>
                 <div className="right">
                     <div className="messages">

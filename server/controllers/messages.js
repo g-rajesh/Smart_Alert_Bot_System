@@ -3,10 +3,11 @@ const Zone = require("../models/zone");
 const MessageWithUsers = require("../models/message_with_users");
 const User = require("../models/user");
 const Official = require("../models/official");
-const { Sequelize } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
 const { isEmailVerified } = require("../util/firebase");
 const MessageWithOfficials = require("../models/meesage_with_officials");
 const Feedback = require("../models/feedback");
+const { sendMail } = require("./functions");
 
 const fetchUserMessages = async (ZoneId) => {
     const dates = await MessageWithUsers.findAll({
@@ -233,6 +234,13 @@ exports.updateArea = async (req, res, next) => {
             );
         }
 
+        if(type !== "Change") {
+            await Zone.update(
+                { problem, restoration }, 
+                { where: { id: official.ZoneId }}
+            );
+        }
+
         let message;
         if(type==="Change") {
             message = problem + ". " + restoration;
@@ -244,6 +252,32 @@ exports.updateArea = async (req, res, next) => {
             if(area !== "All") {
                 message = "In " + area + ", " + message;
             }
+        }
+
+        let users = [];
+        if(area !== "All") {
+            let findArea = await Area.findOne({where: {name: area, ZoneId: official.ZoneId}});
+            let AreaId = findArea.dataValues.id;
+            let fetchedUsers = await User.findAll({where: { AreaId }})
+
+            users = fetchedUsers.map(user => {
+                return user.dataValues.email
+            });
+        } else {
+            let findArea = await Area.findAll({where: {ZoneId: official.ZoneId}});
+            let AreaIds = findArea.map(fArea => {
+                return fArea.dataValues.id;
+            });
+
+            let fetchedUsers = await User.findAll({where: { AreaId: { [Op.in]: AreaIds } }});
+            users = fetchedUsers.map(user => {
+                return user.dataValues.email
+            });
+        }
+
+        if(users.length !== 0) {
+            let to = users.toString();
+            await sendMail(to, "From TNEB, regarding power cut issue", message);
         }
         
         const bot = await User.findOne({ where: { email: "bot@gmail.com" } });
