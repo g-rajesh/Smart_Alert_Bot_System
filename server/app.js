@@ -10,6 +10,7 @@ const Area = require("./models/area");
 const Message1 = require("./models/message_with_users");
 const Message2 = require("./models/meesage_with_officials");
 const Feedback = require("./models/feedback");
+const Socket = require("./models/socket");
 
 const userRoutes = require("./routes/user");
 
@@ -53,12 +54,15 @@ Message2.belongsTo(Zone);
 Zone.hasMany(Feedback);
 Feedback.belongsTo(Zone);
 
+User.hasOne(Socket);
+Socket.belongsTo(User);
+
 // mail password to env
 
 sequelize
      // .sync({ force: true })
-     // .sync({ alter: true })
-     .sync()
+     .sync({ alter: true })
+     // .sync()
      .then((result) => {
           console.log("Connected to Mysql database");
           app.listen(process.env.PORT, async () => {
