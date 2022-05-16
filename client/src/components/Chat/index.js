@@ -100,6 +100,7 @@ const Chat = () => {
                         <Messages messages={messages} loading={loading} setToggleUpDown={setToggleUpDown} />
                         
                         <form className="send-msg" onSubmit={submitHandler}>
+                            <span>Warning</span>
                             <input 
                                 type="text" 
                                 value={message}

@@ -2,7 +2,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0,0,0,0.8);
     width: 100%;
     height: 100vh;
 }
@@ -22,6 +22,7 @@
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
     font-weight: bolder;
+    color: #fff;
 }
 
 .preloader .content .loader {
