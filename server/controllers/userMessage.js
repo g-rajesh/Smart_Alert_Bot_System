@@ -4,6 +4,7 @@ const User = require("../models/user");
 const { Sequelize } = require("sequelize");
 const { isEmailVerified } = require("../util/firebase");
 const MessageWithOfficials = require("../models/meesage_with_officials");
+const { detectSpam } = require("./functions");
 
 const fetchUserMessages = async (ZoneId) => {
     const dates = await MessageWithUsers.findAll({
@@ -57,10 +58,17 @@ exports.addMessage = async (req, res, next) => {
     const user = await User.findOne({ where: { email: req.email } });
     const area = await Area.findByPk(user.AreaId);
 
+    // detect spam
+    const isSpam = detectSpam(req.body.message);
+    if(isSpam) {
+        return res.status(200).json({
+            data: {
+                isSpam: true,
+            }
+        });
+    }
+
     let message;
-
-    // console.log(user.fName);
-
     message = await MessageWithUsers.create({
         from: user.fName,
         message: req.body.message,
@@ -113,7 +121,8 @@ exports.addMessage = async (req, res, next) => {
     return res.status(200).json({
         data: {
             messages: messages,
-            isVerified: user.isVerified
+            isVerified: user.isVerified,
+            isSpam: false
         }
     });
 }

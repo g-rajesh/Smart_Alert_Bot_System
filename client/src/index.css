@@ -670,6 +670,78 @@ form select.error  {
     }
 }
 
+/* Warning */
+.warning {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.warning-msg {
+    padding: 1rem;
+    width: 500px;
+    background-color: #fff;
+    border-radius: 5px;
+    animation: scale1 0.2s ease-in-out;
+}
+
+@keyframes scale1 {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.warning-msg span {
+    display: block;
+}
+
+.warning-msg span.f1 {
+    display: flex;
+    align-items: center;
+    color: #fdb022;
+    margin-bottom: 1rem;
+}
+
+.warning-msg span.f1 .warning-icon {
+    margin-right: 0.5rem;
+}
+
+.warning-msg p {
+    margin-bottom: 1.5rem;
+}
+
+.warning-msg .warning-btns {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.warning-msg .warning-btns button {
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-right: 1rem;
+}
+
+.warning-msg .warning-btns a {
+    background-color: #0730cb;
+    color: #fff;
+    border-radius: 5px;
+    padding: 0.4rem 1rem;
+}
+
 /* media queries */
 @media screen and (max-width: 1024px) {
     .home-container .messages {

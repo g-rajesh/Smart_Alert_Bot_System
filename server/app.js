@@ -61,8 +61,8 @@ Socket.belongsTo(User);
 
 sequelize
      // .sync({ force: true })
-     .sync({ alter: true })
-     // .sync()
+     // .sync({ alter: true })
+     .sync()
      .then((result) => {
           console.log("Connected to Mysql database");
           app.listen(process.env.PORT, async () => {

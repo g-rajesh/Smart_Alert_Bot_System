@@ -6,6 +6,7 @@ import {FiSend} from 'react-icons/fi'
 import Messages from './Messages';
 import Profile from './Profile';
 import { logoutHandler, updateUserIsVerified } from '../../app/reducers/userSlice';
+import Warning from './Warning';
 
 const Chat = () => {
     const user = useSelector(state => state.user.user);
@@ -14,6 +15,7 @@ const Chat = () => {
     const [messages, setMessages] = useState({});
     const [loading, setLoading] = useState(true);
     const [toggleUpDown, setToggleUpDown] = useState(false);
+    const [showWarning, setShowWarning] = useState(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -81,9 +83,13 @@ const Chat = () => {
         if(responce.status != 200) {
             handleLogout();
         } else {
-            const newMessages = result.data.messages;
-            setMessages(newMessages);
-            setMessage('');
+            if(result.data.isSpam) {
+                setShowWarning(true);
+            } else {
+                const newMessages = result.data.messages;
+                setMessages(newMessages);
+                setMessage('');
+            }
         }
     }
     
@@ -94,13 +100,13 @@ const Chat = () => {
 
     return (
         <>
+            {showWarning && <Warning message={message} setShowWarning={setShowWarning} />}
             <section className="chat" id="chat">
                 <div className="chat-container">
                     <div className="left">
                         <Messages messages={messages} loading={loading} setToggleUpDown={setToggleUpDown} />
                         
                         <form className="send-msg" onSubmit={submitHandler}>
-                            <span>Warning</span>
                             <input 
                                 type="text" 
                                 value={message}

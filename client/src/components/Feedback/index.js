@@ -42,6 +42,13 @@ const Feedback = () => {
         fetchData();
     }, []);
 
+    useEffect(()=>{
+        if(localStorage.getItem("feedback")) {
+            setMessage(JSON.parse(localStorage.getItem("feedback")));
+            localStorage.removeItem("feedback");
+        }
+    }, []);
+
     useEffect(() => {        
         if(!user) {
             navigate("/signin");
