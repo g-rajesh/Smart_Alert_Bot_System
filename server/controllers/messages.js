@@ -39,6 +39,7 @@ const fetchFeeedback = async (ZoneId) => {
     const feedbacks = {};
     for(let i = 0; i < dates.length; i++) {
         const {date} = dates[i].dataValues;
+        console.log(date);
         let fb = await Feedback.findAll({
             where: { ZoneId, date },
             order: [['createdAt', 'ASC']]

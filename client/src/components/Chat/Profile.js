@@ -30,7 +30,7 @@ const Profile = ({setToggleUpDown}) => {
                 <p><FaPhoneAlt className='bt-icon phone-icon' /> {user && user.mno}</p>
                 <p><MdAlternateEmail className='bt-icon email-icon' /> {user && user.email}</p>
                 <p><FaHome className='bt-icon home-icon' /> {user && user.area}</p>
-                <span className='attend-call'>Join call</span>
+                {/* <span className='attend-call'>Join call</span> */}
             </div>
             <div className="close" onClick={()=>setToggleUpDown(false)}><FaTimes className='close-icon' /></div>
         </div>

@@ -20,10 +20,20 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         updateUser: (state, {payload}) => {
+            payload.data.viewCall = false;
+            payload.data.attend = false;
             state.user = payload.data
             state.token = payload.token
             localStorage.setItem('user', JSON.stringify(payload.data));
             localStorage.setItem('token', JSON.stringify(payload.token));
+        },
+
+        updateViewCall: (state, {payload}) => {
+            state.user.viewCall = payload
+        },
+
+        updateAttend: (state, {payload}) => {
+            state.user.attend = payload
         },
 
         updateUserIsVerified: (state, {payload}) => {
@@ -40,6 +50,6 @@ export const userSlice = createSlice({
     },
 })
 
-export const { updateUser, updateUserIsVerified, logoutHandler } = userSlice.actions
+export const { updateUser, updateUserIsVerified, logoutHandler, updateViewCall, updateAttend } = userSlice.actions
 
 export default userSlice.reducer

@@ -1,10 +1,13 @@
 import React from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { FaPhoneAlt, FaHome, FaTimes, FaChevronRight } from 'react-icons/fa'
 import { MdAlternateEmail } from 'react-icons/md'
+import { updateViewCall } from '../../app/reducers/userSlice';
 
 const Profile = ({selectedUser, setToggleUpDown}) => {
+
+    const dispatch = useDispatch();
 
     if(!selectedUser) {
         return (
@@ -12,6 +15,10 @@ const Profile = ({selectedUser, setToggleUpDown}) => {
                 <span>No user selected</span>
             </div>
         )
+    }
+
+    const viewCall = () => {
+        dispatch(updateViewCall(true));
     }
 
     return (
@@ -37,7 +44,7 @@ const Profile = ({selectedUser, setToggleUpDown}) => {
                 <p><FaPhoneAlt className='bt-icon phone-icon' /> {selectedUser && selectedUser.mno}</p>
                 <p><MdAlternateEmail className='bt-icon email-icon' /> {selectedUser && selectedUser.email}</p>
                 <p><FaHome className='bt-icon home-icon' /> {selectedUser && selectedUser.area}</p>
-                <span className='attend-call'>Join call</span>
+                <span className='attend-call' onClick={viewCall}>Join call</span>
             </div>
             <div className="close" onClick={()=>setToggleUpDown(false)}><FaTimes className='close-icon' /></div>
         </div>
