@@ -1,6 +1,10 @@
 const express = require("express");
+const { createServer } = require("http");
 const cors = require("cors");
 require("dotenv").config();
+
+// socket connection imports
+const { Server } = require("socket.io");
 
 const sequelize = require("./util/database");
 const Official = require("./models/official");
@@ -15,19 +19,69 @@ const Socket = require("./models/socket");
 const userRoutes = require("./routes/user");
 
 const app = express();
-const PORT = 8080;
 
+// http connection
 app.use(express.json());
 app.use(cors());
 
+// socket server connection
+const httpServer = createServer(app);
+const io = new Server(httpServer);
+httpServer.listen(process.env.PORT_S, () => {
+     console.log(`Socket listenting at PORT ${process.env.PORT_S}`);
+});
+
+let uid = null
+let officialId = null
+io.on('connection', (soc) => {
+     // user sends his uid to
+     soc.on('uid', (data) => {
+          uid = data.uid
+          db[uid] = soc.id
+          console.log('db: ', db)
+     })
+
+     // receive officals ID
+     soc.on('officialId', (data) => {
+          officialId = data.officialId
+          db[officialId] = soc.id
+          console.log('db: ', db)
+     })
+
+     // event emitted by official when we calls user
+     soc.on('callUser', (data) => {
+          // fetch socket id from db using this uid
+          let socketId = db[data.uid]
+          
+          let officialId = data.officialId
+
+          let newData = {
+               officialId: officialId
+          }
+          // inform user that official is on call
+          io.to(socketId).emit('officialOnCall', newData)
+     })
+
+     soc.on('endCallByOfficial', (data)=> {
+          let socId = db[data.uid]
+          io.to(socId).emit('officialEndedCall')
+     })
+
+     soc.on('endCallByUser', (data) => {
+          let socId = db[data.officialId]
+          io.to(socId).emit('userEndedCall')
+     })
+})
+
+// http connection implementation
 app.use("/user", userRoutes);
 
 app.use((error, req, res, next) => {
-  console.log(error);
-  const status = error.status || 500;
-  const message = error.message;
-  const data = error.data;
-  return res.status(status).json({ message, data });
+     console.log(error);
+     const status = error.status || 500;
+     const message = error.message;
+     const data = error.data;
+     return res.status(status).json({ message, data });
 });
 
 Zone.hasOne(Official);
@@ -66,7 +120,7 @@ sequelize
      .then((result) => {
           console.log("Connected to Mysql database");
           app.listen(process.env.PORT, async () => {
-               console.log(`Server starts listening to PORT ${process.env.PORT}`);
+               console.log(`Server starts listening at PORT ${process.env.PORT}`);
           });
      })
      .catch((err) => {

@@ -42,6 +42,7 @@ exports.getOfficalMessages = async (req, res, next) => {
             newMessage.user = {};
 
             let user = await User.findOne({where: {id: values.UserId}});
+            newMessage.user.id = user.id;
             newMessage.user.fName = user.fName;
             newMessage.user.lName = user.lName;
             newMessage.user.email = user.email;

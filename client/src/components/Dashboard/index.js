@@ -7,7 +7,7 @@ import Messages from './Messages';
 import Profile from './Profile';
 import { logoutHandler, updateUserIsVerified } from '../../app/reducers/userSlice';
 
-const Feedback = () => {
+const Dashboard = ({socket}) => {
     const user = useSelector(state => state.user.user);
     const token = useSelector(state => state.user.token);
     const [messages, setMessages] = useState({});
@@ -36,6 +36,8 @@ const Feedback = () => {
         } else {
             const newMessages = result.messages;
             setMessages(newMessages);
+
+            console.log(newMessages);
 
             console.log(result.messages);
         }
@@ -72,6 +74,7 @@ const Feedback = () => {
                         <Profile 
                             selectedUser={selectedUser} 
                             setToggleUpDown={setToggleUpDown} 
+                            socket={socket}
                         />
                     </div>
                 </div>
@@ -80,4 +83,4 @@ const Feedback = () => {
     )
 }
 
-export default Feedback
+export default Dashboard;

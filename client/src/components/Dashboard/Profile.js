@@ -1,13 +1,17 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { FaPhoneAlt, FaHome, FaTimes, FaChevronRight } from 'react-icons/fa'
 import { MdAlternateEmail } from 'react-icons/md'
 import { updateViewCall } from '../../app/reducers/userSlice';
 
+import { handleSocketConnection } from '../../Util/officialVoiceCall'
+
 const Profile = ({selectedUser, setToggleUpDown}) => {
 
     const dispatch = useDispatch();
+
+    console.log(selectedUser);
 
     if(!selectedUser) {
         return (
@@ -19,6 +23,7 @@ const Profile = ({selectedUser, setToggleUpDown}) => {
 
     const viewCall = () => {
         dispatch(updateViewCall(true));
+        handleSocketConnection(socket, selectedUser.id)
     }
 
     return (
