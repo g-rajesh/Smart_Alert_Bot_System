@@ -7,7 +7,7 @@ import { updateViewCall } from '../../app/reducers/userSlice';
 
 import { handleSocketConnection } from '../../Util/officialVoiceCall'
 
-const Profile = ({selectedUser, setToggleUpDown}) => {
+const Profile = ({selectedUser, setToggleUpDown, user, socket}) => {
 
     const dispatch = useDispatch();
 
@@ -23,7 +23,7 @@ const Profile = ({selectedUser, setToggleUpDown}) => {
 
     const viewCall = () => {
         dispatch(updateViewCall(true));
-        handleSocketConnection(socket, selectedUser.id)
+        handleSocketConnection(socket, selectedUser, user.id)
     }
 
     return (

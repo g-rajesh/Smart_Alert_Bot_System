@@ -1,12 +1,15 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../util/database");
 
-const Socket = sequelize.define("Socket", {
+const SocketOfficial = sequelize.define("SocketOfficial", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
         autoIncrement: true,
+    },
+    userId: {
+        type: DataTypes.INTEGER,
     },
     socketId: {
         type: DataTypes.STRING,
@@ -14,4 +17,4 @@ const Socket = sequelize.define("Socket", {
     },
 });
 
-module.exports = Socket;
+module.exports = SocketOfficial;

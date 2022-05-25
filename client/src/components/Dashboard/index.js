@@ -73,7 +73,8 @@ const Dashboard = ({socket}) => {
                     <div className={toggleUpDown ? "right active" : "right"}>
                         <Profile 
                             selectedUser={selectedUser} 
-                            setToggleUpDown={setToggleUpDown} 
+                            setToggleUpDown={setToggleUpDown}
+                            user={user}
                             socket={socket}
                         />
                     </div>

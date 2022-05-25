@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ImUser, ImPhone, ImPhoneHangUp } from 'react-icons/im'
 
 import { updateAttend, updateViewCall } from '../app/reducers/userSlice';
+import { handleVoiceCallEnd } from './officialVoiceCall';
 
 const CallUser = () => {
     
@@ -31,6 +32,8 @@ const CallUser = () => {
     const cutCall = () => {
         dispatch(updateAttend(false));
         dispatch(updateViewCall(false));
+
+        handleVoiceCallEnd();
     }
 
     // page change -> time resets(change)

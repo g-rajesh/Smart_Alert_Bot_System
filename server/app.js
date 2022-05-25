@@ -14,7 +14,8 @@ const Area = require("./models/area");
 const Message1 = require("./models/message_with_users");
 const Message2 = require("./models/meesage_with_officials");
 const Feedback = require("./models/feedback");
-const Socket = require("./models/socket");
+const SocketUser = require("./models/socketUser");
+const SocketOfficial = require("./models/socketOfficial");
 
 const userRoutes = require("./routes/user");
 
@@ -35,41 +36,96 @@ let uid = null
 let officialId = null
 io.on('connection', (soc) => {
      // user sends his uid to
-     soc.on('uid', (data) => {
+
+     soc.on('uid', async (data) => {
           uid = data.uid
-          db[uid] = soc.id
-          console.log('db: ', db)
+          // db[uid] = soc.id --> insert user soc id into socketUser
+          
+          try {
+               let socUser = await SocketUser.findOne({ where: { UserId: uid } });
+               if(!socUser) {
+                    socUser = await SocketUser.create({
+                         UserId: uid,
+                         socketId: soc.id,
+                    });
+                    await socUser.save();
+               } else {
+                    await SocketUser.update(
+                         { socketId: soc.id },
+                         { where: { UserId: uid } }
+                    );
+               }
+          } catch(err) {
+               console.log("user sends his uid: ", err);
+          }
      })
 
      // receive officals ID
-     soc.on('officialId', (data) => {
+     soc.on('officialId', async (data) => {
           officialId = data.officialId
-          db[officialId] = soc.id
-          console.log('db: ', db)
+          
+          try{
+               let socOfficial = await SocketOfficial.findOne({ where: { OfficialId: officialId } });
+
+               if(!socOfficial) {
+                    socOfficial = await SocketOfficial.create({
+                         OfficialId: officialId,
+                         socketId: soc.id,
+                    });
+                    await socOfficial.save();
+               } else {
+                    await SocketOfficial.update(
+                         { socketId: soc.id },
+                         { where: { OfficialId: officialId } }
+                    );
+               }
+
+          } catch(e){
+               console.log('officialID event err:',err);
+          }
+          
      })
 
      // event emitted by official when we calls user
-     soc.on('callUser', (data) => {
+     soc.on('callUser', async (data) => {
           // fetch socket id from db using this uid
-          let socketId = db[data.uid]
-          
-          let officialId = data.officialId
+          try {
+               let socket = await SocketUser.findOne({where: {UserId: data.uid}});
+               let socketId = socket.dataValues.socketId;
 
-          let newData = {
-               officialId: officialId
+               let officialId = data.officialId
+
+               let newData = {
+                    officialId: officialId
+               }
+               // inform user that official is on call
+               io.to(socketId).emit('officialOnCall', newData)
+          } catch(err) {
+               console.log("event emitted by official when we calls user", err);
           }
-          // inform user that official is on call
-          io.to(socketId).emit('officialOnCall', newData)
      })
 
-     soc.on('endCallByOfficial', (data)=> {
-          let socId = db[data.uid]
-          io.to(socId).emit('officialEndedCall')
+     soc.on('endCallByOfficial', async (data)=> {
+          try {
+               let socket = await SocketUser.findOne({where: {UserId: data.uid}});
+               let socketId = socket.dataValues.socketId;
+     
+               io.to(socketId).emit('officialEndedCall')
+          } catch (err) {
+               console.log("endCallByOfficial", err);
+          }
      })
 
-     soc.on('endCallByUser', (data) => {
-          let socId = db[data.officialId]
-          io.to(socId).emit('userEndedCall')
+     soc.on('endCallByUser', async (data) => {
+          try{
+               let socket = await SocketUser.findOne({where: {OfficialId: data.officialId}});
+               let socketId = socket.dataValues.socketId;
+
+               io.to(socketId).emit('userEndedCall')
+          }
+          catch(err){
+               console.log('end call by user error: ', err);
+          }
      })
 })
 
@@ -108,8 +164,11 @@ Message2.belongsTo(Zone);
 Zone.hasMany(Feedback);
 Feedback.belongsTo(Zone);
 
-User.hasOne(Socket);
-Socket.belongsTo(User);
+User.hasOne(SocketUser);
+SocketUser.belongsTo(User);
+
+Official.hasOne(SocketOfficial);
+SocketOfficial.belongsTo(Official);
 
 // mail password to env
 

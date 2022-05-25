@@ -6,13 +6,27 @@ let rtc = {
     client: null
 };
 
+let tokenServerURL = "http://localhost:8080/user/rtcToken"
+
+let options = {
+    channel: '',
+    uid: '',    // official id
+    role: 'publisher',
+    tokenType: 'uid'
+}
+
 let data = {
     uid: null,
     officialId: options.uid
 }
 
-const handleSocketConnection = async (socket, id) => { 
-    data.uid = id
+let socket;
+
+const handleSocketConnection = async (socket, user, officialId) => { 
+    socket = socket
+    data.uid = user.id
+    options.channel = user.email.split('@')[0]
+    options.uid = officialId
     console.log(' official initiated call')
     
     socket.emit('callUser', data)

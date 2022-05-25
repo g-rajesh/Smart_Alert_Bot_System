@@ -17,6 +17,8 @@ import CallUser from "../Util/CallUser";
 import CallOfficial from "../Util/CallOfficial";
 
 import { handeVoiceCallStart, handleOfficialEndCall } from '../Util/userVoiceCall';
+import { handleUserEndedcall } from '../Util/officialVoiceCall';
+
 
 const Root = () => {
     const user = useSelector(state => state.user.user);
@@ -34,20 +36,20 @@ const Root = () => {
         
         socket = io( "http://localhost:9080", { upgrade: false, transports: ['websocket'] });
         if(type === "official") {
-            // let data = { uid: 98765,  officialId: user.id }
+            let data = { officialId: user.id }
 
-            // socket.on('connect', () => {
-            //     socketId = socket.id
-            //     console.log(socketId)
-            //     socket.emit('officialId', data)
+            socket.on('connect', () => {
+                socket.emit('officialId', data)
+                console.log(' offical socket connected !')
 
-            //     socket.on('userEndedCall', () => {
-            //         handleUserEndedcall()
-            //     })
-            // })
+                socket.on('userEndedCall', () => {
+                    handleUserEndedcall()
+                })
+                
+            })
         } else if(type === "user"){
             let socketId ;
-
+            console.log('user type is user')
             let data = { uid: user.id, fName: user.fName };
 
             socket.on('connect', () => {            
