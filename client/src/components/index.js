@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route } from "react-router-dom"
 
 import AgoraRTC from "agora-rtc-sdk-ng"
@@ -18,15 +18,17 @@ import CallOfficial from "../Util/CallOfficial";
 
 import { handeVoiceCallStart, handleOfficialEndCall } from '../Util/userVoiceCall';
 import { handleUserEndedcall } from '../Util/officialVoiceCall';
+import { updateAttend, updateUserRTC, updateUserSocket, updateViewCall } from '../app/reducers/userSlice';
 
 
 const Root = () => {
     const user = useSelector(state => state.user.user);
+    const dispatch = useDispatch();
 
     const type = user ? user.type : null;
 
     let rtc = {
-        localAudioTrack: null,
+        // localAudioTrack: null,
         client: null
     };
 
@@ -48,26 +50,39 @@ const Root = () => {
                 await rtc.client.unsubscribe(user);
             });
         })
+
+        // dispatch(updateUserRTC(rtc))
+
         
         socket = io( "http://localhost:9080", { upgrade: false, transports: ['websocket'] });
+
         if(type === "official") {
             let data = { officialId: user.id }
 
             socket.on('connect', () => {
+                // dispatch(updateUserSocket(socket))
                 socket.emit('officialId', data)
                 console.log(' offical socket connected !')
 
                 socket.on('userEndedCall', () => {
+                    dispatch(updateViewCall(false))
                     handleUserEndedcall(rtc)
                 })
-                
+
+                socket.on("userAttended", ()=>{
+                    dispatch(updateAttend(true))
+                    console.log('user attended our call')
+                })
             })
+
         } else if(type === "user"){
             let socketId ;
             console.log('user type is user')
             let data = { uid: user.id, fName: user.fName };
 
-            socket.on('connect', () => {            
+            socket.on('connect', () => {      
+                // dispatch(updateUserSocket(socket))
+
                 socketId = socket.id
                 console.log('user connected! ', socketId)
 
@@ -75,25 +90,32 @@ const Root = () => {
 
                 socket.on('officialOnCall', (data) => {
                     officialId = data.officialId
+                    console.log('off id inside socket', data)
+                    localStorage.setItem('officialId', JSON.stringify(officialId))
 
                     // update db row wrt to user & official -> insert offId in the uId row
                     console.log('official on call: ', officialId)
 
-                    window.alert('official on call')
+                    // window.alert('official on call')
+                    dispatch(updateViewCall(true))
 
                     // open the pop up with a button with ATTEND and END button
                     // When ATTEND button is clicked, initialise voice call.
-                    handeVoiceCallStart(rtc, user.id, user.email)
+                    // handeVoiceCallStart(rtc, user.id, user.email)
 
                     // when END button is clicked, end voice call.
                 })
 
                 socket.on('officialEndedCall', () => {
                     // official ended call
+                    dispatch(updateViewCall(false))
                     handleOfficialEndCall(rtc)
                 })
             })
         }
+
+
+
     }
 
     

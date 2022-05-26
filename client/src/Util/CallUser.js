@@ -4,7 +4,7 @@ import { ImUser, ImPhone, ImPhoneHangUp } from 'react-icons/im'
 
 // import { useSpeechSynthesis } from 'react-speech-kit';
 import { updateAttend, updateViewCall } from '../app/reducers/userSlice';
-import { handleVoiceCallEnd } from './userVoiceCall';
+import { handleVoiceCallEnd, handeVoiceCallStart } from './userVoiceCall';
 
 const CallUser = ({rtc, socket, officialId}) => {
     
@@ -61,6 +61,7 @@ const CallUser = ({rtc, socket, officialId}) => {
         dispatch(updateAttend(true));
         setSeconds(0);
         setMinutes(0);
+        handeVoiceCallStart(rtc, socket, user.id, user.email)
     }
 
     const cutCall = () => {

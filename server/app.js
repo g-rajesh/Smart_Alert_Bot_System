@@ -98,11 +98,21 @@ io.on('connection', (soc) => {
                let newData = {
                     officialId: officialId
                }
+               console.log('callUser: ', newData)
                // inform user that official is on call
                io.to(socketId).emit('officialOnCall', newData)
           } catch(err) {
                console.log("event emitted by official when we calls user", err);
           }
+     })
+
+     soc.on("userAttendedCall", async (data)=> {
+          console.log('data', data)
+          officialId = data.officialId
+          let socOfficial = await SocketOfficial.findOne({ where: { OfficialId: officialId } })
+          let sockId = socOfficial.dataValues.socketId
+          console.log('user atttended call is emiitter to : ', sockId)
+          io.to(sockId).emit("userAttended")
      })
 
      soc.on('endCallByOfficial', async (data)=> {
@@ -118,9 +128,8 @@ io.on('connection', (soc) => {
 
      soc.on('endCallByUser', async (data) => {
           try{
-               let socket = await SocketUser.findOne({where: {OfficialId: data.officialId}});
+               let socket = await SocketOfficial.findOne({where: {OfficialId: data.officialId}});
                let socketId = socket.dataValues.socketId;
-
                io.to(socketId).emit('userEndedCall')
           }
           catch(err){

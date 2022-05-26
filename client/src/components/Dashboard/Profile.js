@@ -22,8 +22,9 @@ const Profile = ({selectedUser, setToggleUpDown, user, socket, rtc}) => {
     }
 
     const viewCall = () => {
-        dispatch(updateViewCall(true));
+        console.log('offical calling rtc: ', rtc )
         handleSocketConnection(rtc, socket, selectedUser, user.id)
+        dispatch(updateViewCall(true));
     }
 
     return (

@@ -1,5 +1,6 @@
 import AgoraRTC from "agora-rtc-sdk-ng"
 import axios from "axios";
+import userSlice from "../app/reducers/userSlice";
 
 // require("dotenv").config();
 
@@ -13,7 +14,7 @@ import axios from "axios";
 //     tokenType: 'uid'
 // };
 
-const handeVoiceCallStart = async (rtc, id, email) => {
+const handeVoiceCallStart = async (rtc, socket, id, email) => {
     let channel = email.split('@')[0];
     let options = {
         appId: "78396c152c624a65b212ca2922a1fa6c",
@@ -30,6 +31,14 @@ const handeVoiceCallStart = async (rtc, id, email) => {
         tokenType: options.tokenType
     }    
     let token;
+
+    let data = {
+        officialId: JSON.parse(localStorage.getItem('officialId'))
+    }
+    console.log('offid: ', data.officialId)
+    console.log('socket: ', socket.id)
+    socket.emit("userAttendedCall", data)
+
     await axios.post("http://localhost:8080/user/rtcToken", body, {
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -47,6 +56,7 @@ const handeVoiceCallStart = async (rtc, id, email) => {
 
     await rtc.client.join(options.appId, options.channel, token, options.uid);
     rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+    console.log('rtc 12345', rtc.localAudioTrack)
     await rtc.client.publish([rtc.localAudioTrack]);
     console.log("publish success!");
 
@@ -60,6 +70,7 @@ const handleOfficialEndCall = async (rtc) => {
 }
 
 const handleVoiceCallEnd = async (rtc, socket, officialId) => {
+    console.log("user end call socket id: " , socket.id)
     rtc.localAudioTrack.close();
     await rtc.client.leave();
     window.alert('you (user) disconected the call !')

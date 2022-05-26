@@ -22,6 +22,8 @@ export const userSlice = createSlice({
         updateUser: (state, {payload}) => {
             payload.data.viewCall = false;
             payload.data.attend = false;
+            payload.data.rtc = null;
+            payload.data.socket = null;
             state.user = payload.data
             state.token = payload.token
             localStorage.setItem('user', JSON.stringify(payload.data));
@@ -29,11 +31,26 @@ export const userSlice = createSlice({
         },
 
         updateViewCall: (state, {payload}) => {
-            state.user.viewCall = payload
+            state.user.viewCall = payload;
+            localStorage.setItem('user', JSON.stringify(user))
+        },
+
+        updateUserSocket: (state, {payload}) => {
+            state.user.socket = payload
+            console.log('socke payload" ', payload)
+            localStorage.setItem('user', JSON.stringify(state.user));
+        },
+
+        updateUserRTC: (state, {payload}) => {
+            // console.log('paload', payload)
+            // state.user.rtc = payload
+            console.log('user statte:', current(state.user))
+            localStorage.setItem('rtc', payload);
         },
 
         updateAttend: (state, {payload}) => {
-            state.user.attend = payload
+            state.user.attend = payload;
+            localStorage.setItem('user', JSON.stringify(user))
         },
 
         updateUserIsVerified: (state, {payload}) => {
@@ -50,6 +67,6 @@ export const userSlice = createSlice({
     },
 })
 
-export const { updateUser, updateUserIsVerified, logoutHandler, updateViewCall, updateAttend } = userSlice.actions
+export const { updateUser, updateUserIsVerified, logoutHandler, updateViewCall, updateAttend, updateUserSocket, updateUserRTC } = userSlice.actions
 
 export default userSlice.reducer

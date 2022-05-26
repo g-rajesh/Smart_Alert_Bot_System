@@ -14,7 +14,7 @@ let options = {
 
 let data = {
     uid: null,
-    officialId: options.uid
+    officialId: null
 }
 
 let socket;
@@ -24,7 +24,8 @@ const handleSocketConnection = async (rtc, socket, user, officialId) => {
     data.uid = user.id
     options.channel = user.email.split('@')[0]
     options.uid = officialId
-    console.log(' official initiated call')
+    data.officialId = options.uid
+    console.log(' official initiated call rtc: ', rtc)
     
     socket.emit('callUser', data)
 
