@@ -6,7 +6,7 @@ import { ImUser, ImPhone, ImPhoneHangUp } from 'react-icons/im'
 import { updateAttend, updateViewCall } from '../app/reducers/userSlice';
 import { handleVoiceCallEnd } from './userVoiceCall';
 
-const CallUser = ({socket, officialId}) => {
+const CallUser = ({rtc, socket, officialId}) => {
     
     // const { speak } = useSpeechSynthesis();
 
@@ -67,7 +67,7 @@ const CallUser = ({socket, officialId}) => {
         dispatch(updateAttend(false));
         dispatch(updateViewCall(false));
 
-        handleVoiceCallEnd(socket, officialId)
+        handleVoiceCallEnd(rtc, socket, officialId)
     }
 
     return (

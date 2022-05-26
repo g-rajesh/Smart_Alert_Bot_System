@@ -33,6 +33,21 @@ const Root = () => {
     let socket, officialId
 
     if(type) {
+        rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+        rtc.client.on("user-published", async (user, mediaType) => {
+            await rtc.client.subscribe(user, mediaType);
+            console.log("subscribe success");
+
+            if (mediaType === "audio") {
+                const remoteAudioTrack = user.audioTrack;
+                remoteAudioTrack.play();
+            }
+
+            rtc.client.on("user-unpublished", async (user) => {
+                console.log('unsubscribed user: ', user.uid)
+                await rtc.client.unsubscribe(user);
+            });
+        })
         
         socket = io( "http://localhost:9080", { upgrade: false, transports: ['websocket'] });
         if(type === "official") {
@@ -43,7 +58,7 @@ const Root = () => {
                 console.log(' offical socket connected !')
 
                 socket.on('userEndedCall', () => {
-                    handleUserEndedcall()
+                    handleUserEndedcall(rtc)
                 })
                 
             })
@@ -68,46 +83,26 @@ const Root = () => {
 
                     // open the pop up with a button with ATTEND and END button
                     // When ATTEND button is clicked, initialise voice call.
-                    handeVoiceCallStart(user.id, user.email)
+                    handeVoiceCallStart(rtc, user.id, user.email)
 
                     // when END button is clicked, end voice call.
                 })
 
                 socket.on('officialEndedCall', () => {
                     // official ended call
-                    handleOfficialEndCall()
+                    handleOfficialEndCall(rtc)
                 })
             })
         }
     }
 
-    useEffect(() => {
-        if(type){
-            rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-            rtc.client.on("user-published", async (user, mediaType) => {
-                await rtc.client.subscribe(user, mediaType);
-                console.log("subscribe success");
-    
-                if (mediaType === "audio") {
-                    const remoteAudioTrack = user.audioTrack;
-                    remoteAudioTrack.play();
-                }
-    
-                rtc.client.on("user-unpublished", async (user) => {
-                    console.log('unsubscribed user: ', user.uid)
-                    await rtc.client.unsubscribe(user);
-                });
-            })
-        }
-        
-    }, [type])
     
     const callHandler = (type) => {
         switch(type) {
             case "user":
-                return <CallUser socket={socket} officialId={officialId} />
+                return <CallUser socket={socket} officialId={officialId} rtc={rtc} />
             case "official":
-                return <CallOfficial />
+                return <CallOfficial rtc={rtc} />
         }
     }
 
@@ -119,9 +114,9 @@ const Root = () => {
                 <Route path="/" element={ <Home /> } />
                 <Route path="signup" element={ <SignUp /> } />
                 <Route path="signin" element={ <SignIn /> } />
-                <Route path="chat" element={ <Chat/> } />
+                <Route path="chat" element={ <Chat rtc={rtc} /> } />
                 <Route path="feedback" element={ <Feedback /> } />
-                <Route path="dashboard" element={ <Dashboard socket={socket} />  } />
+                <Route path="dashboard" element={ <Dashboard socket={socket} rtc={rtc} />  } />
                 <Route path="status" element={ <Status /> } />
             </Routes>
             {

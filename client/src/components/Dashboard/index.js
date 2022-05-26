@@ -7,7 +7,7 @@ import Messages from './Messages';
 import Profile from './Profile';
 import { logoutHandler, updateUserIsVerified } from '../../app/reducers/userSlice';
 
-const Dashboard = ({socket}) => {
+const Dashboard = ({socket, rtc}) => {
     const user = useSelector(state => state.user.user);
     const token = useSelector(state => state.user.token);
     const [messages, setMessages] = useState({});
@@ -76,6 +76,7 @@ const Dashboard = ({socket}) => {
                             setToggleUpDown={setToggleUpDown}
                             user={user}
                             socket={socket}
+                            rtc={rtc}
                         />
                     </div>
                 </div>

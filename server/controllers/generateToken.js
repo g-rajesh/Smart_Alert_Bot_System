@@ -1,7 +1,8 @@
 const {RtcTokenBuilder, RtcRole} = require('agora-access-token');
 require("dotenv").config();
 
-exports.generateRTCToken = async (req, resp) => {
+
+exports.generateRTCToken = (req, resp) => {
     console.log("Called");
     const {channelName, uid} = req.body
     resp.header('Access-Control-Allow-Origin', '*');
@@ -29,17 +30,19 @@ exports.generateRTCToken = async (req, resp) => {
         expireTime = parseInt(expireTime, 10);
     }
 
+    const APP_ID_AGORA = process.env.APP_ID_AGORA;
+    const APP_CERTIFICATE = process.env.APP_CERTIFICATE
     const currentTime = Math.floor(Date.now() / 1000);
     const privilegeExpireTime = currentTime + expireTime;
     let token = null;
     if (req.body.tokenType === 'userAccount') {
-        token = RtcTokenBuilder.buildTokenWithAccount(process.env.APP_ID, process.env.APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime)
+        token = RtcTokenBuilder.buildTokenWithAccount(APP_ID_AGORA, APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime)
     } else if (req.body.tokenType === 'uid') {
-        token = RtcTokenBuilder.buildTokenWithUid(process.env.APP_ID, process.env.APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime)
+        token = RtcTokenBuilder.buildTokenWithUid(APP_ID_AGORA, APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime)
     }  else {
         return resp.status(500).json({ 'error': 'token type is invalid' });
     }
 
-    console.log('token: ', token)
+    // console.log('token: ', token)
     return resp.json({ 'rtcToken': token });
 }

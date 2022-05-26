@@ -5,7 +5,7 @@ import { ImUser, ImPhone, ImPhoneHangUp } from 'react-icons/im'
 import { updateAttend, updateViewCall } from '../app/reducers/userSlice';
 import { handleVoiceCallEnd } from './officialVoiceCall';
 
-const CallUser = () => {
+const CallOfficial = ({rtc}) => {
     
     const [seconds, setSeconds] = useState(0);
     const [minutes, setMinutes] = useState(0);
@@ -32,8 +32,8 @@ const CallUser = () => {
     const cutCall = () => {
         dispatch(updateAttend(false));
         dispatch(updateViewCall(false));
-
-        handleVoiceCallEnd();
+        console.log('offical ended call ')
+        handleVoiceCallEnd(rtc);
     }
 
     // page change -> time resets(change)
@@ -59,4 +59,4 @@ const CallUser = () => {
     )
 }
 
-export default CallUser;
+export default CallOfficial;
