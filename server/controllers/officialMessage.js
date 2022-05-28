@@ -17,51 +17,56 @@ exports.getOfficalMessages = async (req, res, next) => {
         next(error);
     }
 
-    const dates = await MessageWithOfficials.findAll({
-        attributes: [
-            [Sequelize.fn('DISTINCT', Sequelize.col('date')) ,'date']
-        ],
-        order: [['date', 'ASC']]
-    });
-    const messages = {};
-    for(let i = 0; i < dates.length; i++) {
-        const {date} = dates[i].dataValues;
-        let fullMessage = await MessageWithOfficials.findAll({
-            where: { ZoneId: official.ZoneId, date: date },
-            order: [['createdAt', 'ASC']]
+    try {
+        const dates = await MessageWithOfficials.findAll({
+            attributes: [
+                [Sequelize.fn('DISTINCT', Sequelize.col('date')) ,'date']
+            ],
+            order: [['date', 'ASC']]
         });
-
-        let message = [];
-        for(let j=0; j<fullMessage.length; j++) {
-            let values = fullMessage[j].dataValues;
-            let newMessage = {};
-            newMessage.id = values.id;
-            newMessage.message = values.message;
-            newMessage.date = values.date;
-            newMessage.createdAt = values.createdAt;
-            newMessage.type = values.type;
-            newMessage.user = {};
-
-            let user = await User.findOne({where: {id: values.UserId}});
-            newMessage.user.id = user.id;
-            newMessage.user.fName = user.fName;
-            newMessage.user.lName = user.lName;
-            newMessage.user.email = user.email;
-            newMessage.user.mno = user.mno;
-            newMessage.user.isVerified = user.isVerified;
-            
-            let area = await Area.findOne({where: {id: user.AreaId}});
-            newMessage.user.area = area.name;
-
-            message.push(newMessage);
+        const messages = {};
+        for(let i = 0; i < dates.length; i++) {
+            const {date} = dates[i].dataValues;
+            let fullMessage = await MessageWithOfficials.findAll({
+                where: { ZoneId: official.ZoneId, date: date },
+                order: [['createdAt', 'ASC']]
+            });
+    
+            let message = [];
+            for(let j=0; j<fullMessage.length; j++) {
+                let values = fullMessage[j].dataValues;
+                let newMessage = {};
+                newMessage.id = values.id;
+                newMessage.message = values.message;
+                newMessage.date = values.date;
+                newMessage.createdAt = values.createdAt;
+                newMessage.type = values.type;
+                newMessage.user = {};
+    
+                let user = await User.findOne({where: {id: values.UserId}});
+                newMessage.user.id = user.id;
+                newMessage.user.fName = user.fName;
+                newMessage.user.lName = user.lName;
+                newMessage.user.email = user.email;
+                newMessage.user.mno = user.mno;
+                newMessage.user.isVerified = user.isVerified;
+                
+                let area = await Area.findOne({where: {id: user.AreaId}});
+                newMessage.user.area = area.name;
+    
+                message.push(newMessage);
+            }
+    
+            messages[date] = message;
         }
-
-        messages[date] = message;
+    
+        // console.log(messages);
+    
+        return res.status(200).json({ messages });
+    } catch (err) {
+        if(!err.status) err.status=500;
+        next(err);
     }
-
-    // console.log(messages);
-
-    return res.status(200).json({ messages });
 }
 
 exports.updateArea = async (req, res, next) => {

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route } from "react-router-dom"
+import ReactAudioPlayer from 'react-audio-player';
 
 import AgoraRTC from "agora-rtc-sdk-ng"
 import io from "socket.io-client";
@@ -15,6 +16,7 @@ import Dashboard from "./Dashboard";
 import Status from "./Status"; 
 import CallUser from "../Util/CallUser";
 import CallOfficial from "../Util/CallOfficial";
+import calling from "../audio/calling.mp3";
 
 import { handleOfficialEndCall } from '../Util/userVoiceCall';
 import { handleUserEndedcall } from '../Util/officialVoiceCall';
@@ -105,9 +107,6 @@ const Root = () => {
                 })
             })
         }
-
-
-
     }
 
     
@@ -120,6 +119,10 @@ const Root = () => {
         }
     }
 
+    let isPlaying = false;
+    if(user && user.type==="user" && user.viewCall && !user.attend) {
+        isPlaying = true;
+    }
 
     return (
         <>
@@ -135,6 +138,14 @@ const Root = () => {
             </Routes>
             {
                 user && user.viewCall && callHandler(type)
+            }
+            {
+                isPlaying && 
+                <ReactAudioPlayer
+                    src={calling}
+                    autoPlay="true"
+                    loop="true"
+                />
             }
         </>
     )

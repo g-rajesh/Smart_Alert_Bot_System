@@ -1,9 +1,11 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
+import ReactAudioPlayer from 'react-audio-player';
 
 import { FaPhoneAlt, FaHome, FaTimes, FaChevronRight } from 'react-icons/fa'
 import { MdAlternateEmail } from 'react-icons/md'
 import { updateViewCall } from '../../app/reducers/userSlice';
+import calling from "../../audio/calling.mp3";
 
 import { handleSocketConnection } from '../../Util/officialVoiceCall'
 
@@ -24,6 +26,11 @@ const Profile = ({selectedUser, setToggleUpDown, user, socket, rtc}) => {
         await handleSocketConnection(rtc, socket, selectedUser, user.id)
         console.log('socket connection -> voice call start , rtc: ', rtc.localAudioTrack)
         dispatch(updateViewCall(true));
+    }
+
+    let isPlaying = false;
+    if(user.viewCall && !user.attend) {
+        isPlaying = true;
     }
 
     return (
@@ -52,6 +59,14 @@ const Profile = ({selectedUser, setToggleUpDown, user, socket, rtc}) => {
                 <span className='attend-call' onClick={viewCall}>Join call</span>
             </div>
             <div className="close" onClick={()=>setToggleUpDown(false)}><FaTimes className='close-icon' /></div>
+            {/* {
+                isPlaying && 
+                <ReactAudioPlayer
+                    src={calling}
+                    autoPlay="true"
+                    loop="true"
+                />
+            } */}
         </div>
     )
 }
