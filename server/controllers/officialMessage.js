@@ -39,6 +39,7 @@ exports.getOfficalMessages = async (req, res, next) => {
             newMessage.message = values.message;
             newMessage.date = values.date;
             newMessage.createdAt = values.createdAt;
+            newMessage.type = values.type;
             newMessage.user = {};
 
             let user = await User.findOne({where: {id: values.UserId}});
@@ -78,7 +79,6 @@ exports.updateArea = async (req, res, next) => {
             throw notFound;
         }
 
-        // console.log();
         if(area === "All") {
             await Area.update(
                 { problem, restoration }, 

@@ -21,6 +21,19 @@ const Messages = ({messages, setSelectedUser, loading, setToggleUpDown}) => {
         }
     });
 
+    const findClass = (type) => {
+        switch(type) {
+            case 1:
+                return "msg-text one"
+            case 2:
+                return "msg-text two"
+            case 3:
+                return "msg-text three"
+            case 4:
+                return "msg-text four"
+        }
+    }
+
     if(loading) {
         return <div className="messages">
             <span className='alert-msg'>Loading messages...</span>
@@ -48,12 +61,12 @@ const Messages = ({messages, setSelectedUser, loading, setToggleUpDown}) => {
                                 { messages[key].length ? <span>{moment(key).format('ll')}</span> : null}
                             </div>
                             {
-                                messages[key].map(({id, user, message, createdAt }) => {
+                                messages[key].map(({id, user, message, createdAt, type }) => {
                                     return (
                                         <div className="message lm" key={id}>
                                             <div className='msg'>
                                                 <span className='msg-profile'>{user.fName[0]}</span> 
-                                                <div className='msg-text'>
+                                                <div className={findClass(type)}>
                                                     <p>{message}</p>
                                                     <div className="u-prof">
                                                         <span onClick={()=>handleMore(user)}>More</span>

@@ -292,6 +292,11 @@ form select.error  {
     letter-spacing: 2px;
 }
 
+.signin-container form .btn.disable {
+    pointer-events: none;
+    background-color: #4567df;
+}
+
 .signup-container .account-form p,
 .signup-container .personal-form p,
 .signin-container .account-form p,
@@ -421,9 +426,22 @@ form select.error  {
 
 .messages .message .msg .msg-text {
     width: fit-content;
-    border: 1px solid #f4f5f9;
+    border: 2px solid #f4f5f9;
     padding: 0.5rem;
     border-radius: 6px;
+}
+
+.messages .message .msg .msg-text.one, 
+.messages .message .msg .msg-text.two {
+    border-color: #0730cb;
+}
+
+.messages .message .msg .msg-text.three {
+    border-color: #dda557;
+}
+
+.messages .message .msg .msg-text.four {
+    border-color: #d5093d;
 }
 
 .messages .message.rm .msg .msg-text {

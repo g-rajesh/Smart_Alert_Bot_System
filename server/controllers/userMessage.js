@@ -89,17 +89,16 @@ exports.addMessage = async (req, res, next) => {
     };
     if(prediction === 1) {
         // check response available in db or not (User saying they don't have power)
-        await checkAndSendMessage(data, bot, area);
+        await checkAndSendMessage(data, bot, area, prediction);
     } else if(prediction === 2) {
         // (User saying low voltage problem)
-        
-        await notifyOfficial(data, bot);
+        await notifyOfficial(data, bot, prediction);
     } else if(prediction === 3) {
         // make call or inform user about official (bcoz of some reason )
-        await notifyOfficialWithReason(data, bot);
+        await notifyOfficialWithReason(data, bot, prediction);
     } else if(prediction == 4) {
         // (User requesting for power cut in case of emergency)
-        await alertOfficial(data, bot);
+        await alertOfficial(data, bot, prediction);
     }    
   
     const messages = await fetchUserMessages(area.ZoneId);

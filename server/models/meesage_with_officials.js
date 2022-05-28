@@ -16,6 +16,10 @@ const MessageWithOfficials = sequelize.define("MessageWithOfficials", {
         type: DataTypes.STRING,
         allowNull: false
     },
+    type: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
     date: {
         type: DataTypes.DATEONLY,
         allowNull: false

@@ -71,7 +71,6 @@ const handleUserEndedcall = async () => {
 }
 
 const handleVoiceCallEnd = async () => {
-
     rtc_new.localAudioTrack.close();
     await rtc_new.client.leave().then().catch(e => console.log('rtc error: ', e))
     // window.alert('you (official) has disconnected the call !')

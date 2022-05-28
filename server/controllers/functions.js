@@ -56,7 +56,7 @@ exports.detectSpam = (message) => {
 }
 
 // related to user sending message
-exports.checkAndSendMessage = async (data, bot, area) => {
+exports.checkAndSendMessage = async (data, bot, area, prediction) => {
     let message;
     message = await MessageWithUsers.create(data);
     await message.save();
@@ -70,13 +70,13 @@ exports.checkAndSendMessage = async (data, bot, area) => {
         data.from = bot.fName;
         data.UserId = bot.id;
         // bot reply message
-        message = await MessageWithUsers.create(data);
+        message = await MessageWithUsers.create({...data, type: prediction});
         await message.save();
 
     } else {
         // 2. IF NOT, 
         // a. ADD THAT QUERY INTO MESSAGE_WITH_OFFICIALS
-        message = await MessageWithOfficials.create(data);
+        message = await MessageWithOfficials.create({...data, type: prediction});
         await message.save();
         
         // b. ADD NOTIFIED MESSAGE INTO MESSAGE_WITH_USERS
@@ -94,12 +94,12 @@ exports.checkAndSendMessage = async (data, bot, area) => {
     }
 }
 
-exports.notifyOfficial = async (data, bot) => {
+exports.notifyOfficial = async (data, bot, prediction) => {
     let message;
     message = await MessageWithUsers.create(data);
     await message.save();
 
-    message = await MessageWithOfficials.create(data);
+    message = await MessageWithOfficials.create({...data, type: prediction});
     await message.save();
     
     data.from = bot.fName;
@@ -109,12 +109,12 @@ exports.notifyOfficial = async (data, bot) => {
     await message.save();
 }
 
-exports.notifyOfficialWithReason = async (data, bot) => {
+exports.notifyOfficialWithReason = async (data, bot, prediction) => {
     let message;
     message = await MessageWithUsers.create(data);
     await message.save();
 
-    message = await MessageWithOfficials.create(data);
+    message = await MessageWithOfficials.create({...data, type: prediction});
     await message.save();
     
     data.from = bot.fName;
@@ -124,12 +124,12 @@ exports.notifyOfficialWithReason = async (data, bot) => {
     await message.save();
 }
 
-exports.alertOfficial = async (data, bot) => {
+exports.alertOfficial = async (data, bot, prediction) => {
     let message;
     message = await MessageWithUsers.create(data);
     await message.save();
 
-    message = await MessageWithOfficials.create(data);
+    message = await MessageWithOfficials.create({...data, type: prediction});
     await message.save();
     
     data.from = bot.fName;
