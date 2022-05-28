@@ -16,9 +16,9 @@ import Status from "./Status";
 import CallUser from "../Util/CallUser";
 import CallOfficial from "../Util/CallOfficial";
 
-import { handeVoiceCallStart, handleOfficialEndCall } from '../Util/userVoiceCall';
+import { handleOfficialEndCall } from '../Util/userVoiceCall';
 import { handleUserEndedcall } from '../Util/officialVoiceCall';
-import { updateAttend, updateUserRTC, updateUserSocket, updateViewCall } from '../app/reducers/userSlice';
+import { updateAttend, updateViewCall } from '../app/reducers/userSlice';
 
 
 const Root = () => {
@@ -28,7 +28,7 @@ const Root = () => {
     const type = user ? user.type : null;
 
     let rtc = {
-        localAudioTrack: null,
+        // localAudioTrack: null,
         client: null
     };
 
@@ -36,10 +36,8 @@ const Root = () => {
 
     if(type) {
         rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-
         rtc.client.on("user-published", async (user, mediaType) => {
             await rtc.client.subscribe(user, mediaType);
-            
             console.log("subscribe success");
 
             if (mediaType === "audio") {
@@ -53,6 +51,8 @@ const Root = () => {
             });
         })
 
+        // dispatch(updateUserRTC(rtc))
+
         
         socket = io( "http://localhost:9080", { upgrade: false, transports: ['websocket'] });
 
@@ -60,12 +60,13 @@ const Root = () => {
             let data = { officialId: user.id }
 
             socket.on('connect', () => {
+                // dispatch(updateUserSocket(socket))
                 socket.emit('officialId', data)
                 console.log(' offical socket connected !')
 
                 socket.on('userEndedCall', () => {
                     dispatch(updateViewCall(false))
-                    handleUserEndedcall(rtc)
+                    handleUserEndedcall()
                 })
 
                 socket.on("userAttended", ()=>{
@@ -79,7 +80,7 @@ const Root = () => {
             console.log('user type is user')
             let data = { uid: user.id, fName: user.fName };
 
-            socket.on('connect', () => {
+            socket.on('connect', () => {    
 
                 socketId = socket.id
                 console.log('user connected! ', socketId)
@@ -97,8 +98,10 @@ const Root = () => {
                 })
 
                 socket.on('officialEndedCall', () => {
+                    // official ended call
+                    console.log('officalEndedCall emit received')
                     dispatch(updateViewCall(false))
-                    handleOfficialEndCall(rtc)
+                    handleOfficialEndCall()
                 })
             })
         }
@@ -111,7 +114,7 @@ const Root = () => {
     const callHandler = (type) => {
         switch(type) {
             case "user":
-                return <CallUser socket={socket} officialId={officialId} rtc={rtc} />
+                return <CallUser socket={socket} rtc={rtc} />
             case "official":
                 return <CallOfficial rtc={rtc} />
         }

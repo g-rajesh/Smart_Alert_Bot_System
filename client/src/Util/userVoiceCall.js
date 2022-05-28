@@ -14,7 +14,13 @@ import userSlice from "../app/reducers/userSlice";
 //     tokenType: 'uid'
 // };
 
+let rtc_new = {
+    client: null,
+    localAudioTrack: null
+}
+
 const handeVoiceCallStart = async (rtc, socket, id, email) => {
+    rtc_new.client = rtc.client
     let channel = email.split('@')[0];
     let options = {
         appId: "78396c152c624a65b212ca2922a1fa6c",
@@ -54,30 +60,30 @@ const handeVoiceCallStart = async (rtc, socket, id, email) => {
 
         console.log('options; ', options)
 
-    await rtc.client.join(options.appId, options.channel, token, options.uid);
-    rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-    console.log('rtc 12345', rtc.localAudioTrack)
-    await rtc.client.publish([rtc.localAudioTrack]);
+    await rtc_new.client.join(options.appId, options.channel, token, options.uid);
+    rtc_new.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+    console.log('rtc 12345', rtc_new.localAudioTrack)
+    await rtc.client.publish([rtc_new.localAudioTrack]);
     console.log("publish success!");
 
     //notify the user and pop up a modal with a button 'connect' to join the voice call channel
 }
 
-const handleOfficialEndCall = async (rtc) => {
-    rtc.localAudioTrack.close();
-    await rtc.client.leave();
-    window.alert('official ended call !')
+const handleOfficialEndCall = async () => {
+    console.log('official ended call !')
+    rtc_new.localAudioTrack.close();
+    await rtc_new.client.leave();
 }
 
-const handleVoiceCallEnd = async (rtc, socket, officialId) => {
+const handleVoiceCallEnd = async (socket) => {
     console.log("user end call socket id: " , socket.id)
-    rtc.localAudioTrack.close();
-    await rtc.client.leave();
-    window.alert('you (user) disconected the call !')
+    rtc_new.localAudioTrack.close();
+    await rtc_new.client.leave();
+    // window.alert('you (user) disconected the call !')
 
     // to notify the offical that user has cut the call
     let newData = {
-        officialId: officialId
+        officialId: JSON.parse(localStorage.getItem('officialId'))
     }
     socket.emit('endCallByUser', newData)
 }

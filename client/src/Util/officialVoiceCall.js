@@ -17,24 +17,27 @@ let data = {
     officialId: null
 }
 
-let socket;
+let socket_new;
 
-const handleSocketConnection = async (rtc, socket, user, officialId) => { 
-    socket = socket
+let rtc_new = {
+    client: null,
+    localAudioTrack: null
+}
+
+const handleSocketConnection = async (rtc, socket, user, officialId) => {
+    socket_new = socket
     data.uid = user.id
     options.channel = user.email.split('@')[0]
     options.uid = officialId
     data.officialId = options.uid
-    console.log(' official initiated call rtc: ', rtc)
-    
-    socket.emit('callUser', data)
-
+    socket_new.emit('callUser', data)
+    rtc_new.client = rtc.client
     // initiate the voice call
-    handeVoiceCallStart(rtc)
+    handeVoiceCallStart()
 }
 
 
-const handeVoiceCallStart = async (rtc) => {
+const handeVoiceCallStart = async () => {
     const body = {
         channelName: options.channel,
         uid: options.uid,
@@ -55,25 +58,26 @@ const handeVoiceCallStart = async (rtc) => {
             console.log('fetch token error: ', err)
         })
 
-    await rtc.client.join(options.appId, options.channel, token, options.uid);
-    rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-    await rtc.client.publish([rtc.localAudioTrack]).then().catch(e => console.log('rtc error: ', e));
-    console.log("publish success!");
+    await rtc_new.client.join(options.appId, options.channel, token, options.uid);
+    rtc_new.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+    await rtc_new.client.publish([rtc_new.localAudioTrack]).then().catch(e => console.log('rtc error: ', e));
+    console.log("publish success! rtc: ", rtc_new.localAudioTrack);
 }
 
-const handleUserEndedcall = async (rtc) => {
-    rtc.localAudioTrack.close();
-    await rtc.client.leave().then().catch(e => console.log('rtc error: ', e));
-    window.alert('User has ended the call !')
+const handleUserEndedcall = async () => {
+    console.log('User has ended the call !')
+    rtc_new.localAudioTrack.close();
+    await rtc_new.client.leave().then().catch(e => console.log('rtc error: ', e));
 }
 
-const handleVoiceCallEnd = async (rtc) => {
-    console.log('offical end rtc: ', rtc)
-    rtc.localAudioTrack.close();
-    await rtc.client.leave().then().catch(e => console.log('rtc error: ', e))
-    window.alert('you (official) has disconnected the call !')
+const handleVoiceCallEnd = async () => {
+
+    rtc_new.localAudioTrack.close();
+    await rtc_new.client.leave().then().catch(e => console.log('rtc error: ', e))
+    // window.alert('you (official) has disconnected the call !')
     // notify user that official has cut the call
-    socket.emit('endCallByOfficial', data)
+    console.log('socket: ', socket_new)
+    socket_new.emit('endCallByOfficial', data)
 }
 
 export {handleSocketConnection, handeVoiceCallStart, handleUserEndedcall, handleVoiceCallEnd}

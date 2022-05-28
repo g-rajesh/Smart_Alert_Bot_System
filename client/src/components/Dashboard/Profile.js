@@ -11,8 +11,6 @@ const Profile = ({selectedUser, setToggleUpDown, user, socket, rtc}) => {
 
     const dispatch = useDispatch();
 
-    console.log(selectedUser);
-
     if(!selectedUser) {
         return (
             <div className="profile">
@@ -21,9 +19,10 @@ const Profile = ({selectedUser, setToggleUpDown, user, socket, rtc}) => {
         )
     }
 
-    const viewCall = () => {
-        console.log('offical calling rtc: ', rtc )
-        handleSocketConnection(rtc, socket, selectedUser, user.id)
+    const viewCall = async () => {
+        console.log('offical calling rtc: ', rtc.localAudioTrack )
+        await handleSocketConnection(rtc, socket, selectedUser, user.id)
+        console.log('socket connection -> voice call start , rtc: ', rtc.localAudioTrack)
         dispatch(updateViewCall(true));
     }
 

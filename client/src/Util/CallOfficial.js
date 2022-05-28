@@ -32,7 +32,7 @@ const CallOfficial = ({rtc}) => {
     const cutCall = () => {
         dispatch(updateAttend(false));
         dispatch(updateViewCall(false));
-        console.log('offical ended call ')
+        console.log('offical ended call rtc: ', rtc.localAudioTrack)
         handleVoiceCallEnd(rtc);
     }
 

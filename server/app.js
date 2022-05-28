@@ -39,6 +39,7 @@ io.on('connection', (soc) => {
 
      soc.on('uid', async (data) => {
           uid = data.uid
+          // db[uid] = soc.id --> insert user soc id into socketUser
           
           try {
                let socUser = await SocketUser.findOne({ where: { UserId: uid } });
@@ -115,10 +116,10 @@ io.on('connection', (soc) => {
      })
 
      soc.on('endCallByOfficial', async (data)=> {
+          console.log('end call by official, ',data)
           try {
                let socket = await SocketUser.findOne({where: {UserId: data.uid}});
                let socketId = socket.dataValues.socketId;
-     
                io.to(socketId).emit('officialEndedCall')
           } catch (err) {
                console.log("endCallByOfficial", err);
