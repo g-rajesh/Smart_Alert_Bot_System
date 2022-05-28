@@ -31,6 +31,10 @@ const Navbar = () => {
         dispatch(logoutHandler());
     }
 
+    const clickHandler = () => {
+        setToggle(!toggle);
+    }
+
     const navLink = () => {
         let type = "initial";
         if(user && user.type === "user") type = "user";
@@ -39,28 +43,28 @@ const Navbar = () => {
             case "initial":
                 return (
                     <>
-                        <li><NavLink to="/">Home</NavLink></li>
-                        <li><NavLink to="/chat">Chat</NavLink></li>
-                        <li><NavLink to="/feedback">Feedback</NavLink></li>
-                        <li><NavLink to="/signin">Sign In</NavLink></li>
-                        <li><NavLink to="/signup">Sign Up</NavLink></li>
+                        <li><NavLink onClick={clickHandler} to="/">Home</NavLink></li>
+                        <li><NavLink onClick={clickHandler} to="/chat">Chat</NavLink></li>
+                        <li><NavLink onClick={clickHandler} to="/feedback">Feedback</NavLink></li>
+                        <li><NavLink onClick={clickHandler} to="/signin">Sign In</NavLink></li>
+                        <li><NavLink onClick={clickHandler} to="/signup">Sign Up</NavLink></li>
                     </>
                 )
             case "user":
                 return (
                     <>
-                        <li><NavLink to="/">Home</NavLink></li>
-                        <li><NavLink to="/chat">Chat</NavLink></li>
-                        <li><NavLink to="/feedback">Feedback</NavLink></li>
+                        <li><NavLink onClick={clickHandler} to="/">Home</NavLink></li>
+                        <li><NavLink onClick={clickHandler} to="/chat">Chat</NavLink></li>
+                        <li><NavLink onClick={clickHandler} to="/feedback">Feedback</NavLink></li>
                         <li onClick={handleLogout}><NavLink to="/signin">Logout</NavLink></li>
                     </>
                 )
             case "official":
                 return (
                     <>
-                        <li><NavLink to="/">Home</NavLink></li>
-                        <li><NavLink to="/dashboard">Dashboard</NavLink></li>
-                        <li><NavLink to="/status">Status</NavLink></li>
+                        <li><NavLink onClick={clickHandler} to="/">Home</NavLink></li>
+                        <li><NavLink onClick={clickHandler} to="/dashboard">Dashboard</NavLink></li>
+                        <li><NavLink onClick={clickHandler} to="/status">Status</NavLink></li>
                         <li onClick={handleLogout}><NavLink to="/signin">Logout</NavLink></li>
                     </>
                 )

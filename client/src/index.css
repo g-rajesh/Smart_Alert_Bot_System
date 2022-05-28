@@ -110,7 +110,7 @@ header .toggle .times-icon {
     flex-direction: column;
     width: 100%;
     height: 100%;
-    padding-top: 5rem;
+    padding-top: 7rem;
 }
 
 .home-container .left h2{
@@ -125,18 +125,75 @@ header .toggle .times-icon {
     margin-bottom: 1.5rem;
 }
 
-.home-container .left .btn {
+.home-container .left .list {
+    display: flex;
+    justify-content: space-between;
+}
+
+.home-container .left .list p {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.home-container .left .list p .ic{
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.home-container .left .list p .inquiry-icon {
+    color: #0730cb;
+}
+
+.home-container .left .list p .query-icon {
+    color: #0088cc;
+}
+
+.home-container .left .list p .inform-icon {
+    font-size: 1.3rem;
+    color: #dda557;
+}
+
+.home-container .left .list p .request-icon {
+    color: #d5093d;
+}
+
+.home-container .left .reg-form {
+    width: 80%;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid #0730cb;
+    border-radius: 6px;
+}
+
+.home-container .left .reg-form input {
+    border: 0;
+    outline: 0;
+    width: 80%;
+    padding: 0.45rem 1rem;
+    font-size: 1rem;
+}
+
+.home-container .left .reg-form a {
+    width: 20%;
     background-color: #0730cb;
     color: #fff;
-    padding: 0.45rem 1rem;
-    border-radius: 5px;
-    display: block;
-    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .home-container .right {
     width: 100%;
     height: 100%;
+}
+
+.home-container .right img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
 }
 
 .home-container .messages {
@@ -900,6 +957,10 @@ form select.error  {
     .home-container {
         grid-template-columns: 1fr;
         gap: 0;
+    }
+
+    .home-container .left .reg-form {
+        width: 100%;
     }
 
     .signup .signup-container {

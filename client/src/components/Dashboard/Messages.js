@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef} from 'react'
 import { useSelector } from 'react-redux';
 import moment from 'moment';
-import {FaVolumeUp, FaChevronUp} from 'react-icons/fa'
+import {FaVolumeUp} from 'react-icons/fa'
 import { useSpeechSynthesis } from 'react-speech-kit';
 
 const Messages = ({messages, setSelectedUser, loading, setToggleUpDown}) => {

@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import { useSelector } from 'react-redux';
 import moment from 'moment';
-import {FaHeadset, FaChevronUp} from 'react-icons/fa'
+import { FaVolumeUp, FaChevronUp} from 'react-icons/fa'
 import { useSpeechSynthesis } from 'react-speech-kit';
 
 const Messages = ({messages, loading, setToggleUpDown}) => {
@@ -51,7 +51,7 @@ const Messages = ({messages, loading, setToggleUpDown}) => {
                                                 <div className='msg'>
                                                     <div className='msg-text'>
                                                         <p>{message}</p>
-                                                        <span>{moment(createdAt).format('LT')} &middot; <FaHeadset className="vol-icon" onClick={() => speak({ text: message })}/></span>
+                                                        <span>{moment(createdAt).format('LT')} &middot; <FaVolumeUp className="vol-icon" onClick={() => speak({ text: message })}/></span>
                                                     </div>
                                                     <span className='msg-profile'>{from[0]}</span> 
                                                 </div>
@@ -64,7 +64,7 @@ const Messages = ({messages, loading, setToggleUpDown}) => {
                                                     <span className='msg-profile'>{from[0]}</span> 
                                                     <div className='msg-text'>
                                                         <p>{message}</p>
-                                                        <span>{moment(createdAt).format('LT')} &middot;  <FaHeadset className="vol-icon" onClick={() => speak({ text: message })}/></span>
+                                                        <span>{moment(createdAt).format('LT')} &middot;  <FaVolumeUp className="vol-icon" onClick={() => speak({ text: message })}/></span>
                                                     </div>
                                                 </div>
                                                 <div></div>
