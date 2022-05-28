@@ -28,7 +28,7 @@ const Root = () => {
     const type = user ? user.type : null;
 
     let rtc = {
-        // localAudioTrack: null,
+        localAudioTrack: null,
         client: null
     };
 
@@ -36,8 +36,10 @@ const Root = () => {
 
     if(type) {
         rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+
         rtc.client.on("user-published", async (user, mediaType) => {
             await rtc.client.subscribe(user, mediaType);
+            
             console.log("subscribe success");
 
             if (mediaType === "audio") {
@@ -51,8 +53,6 @@ const Root = () => {
             });
         })
 
-        // dispatch(updateUserRTC(rtc))
-
         
         socket = io( "http://localhost:9080", { upgrade: false, transports: ['websocket'] });
 
@@ -60,7 +60,6 @@ const Root = () => {
             let data = { officialId: user.id }
 
             socket.on('connect', () => {
-                // dispatch(updateUserSocket(socket))
                 socket.emit('officialId', data)
                 console.log(' offical socket connected !')
 
@@ -80,8 +79,7 @@ const Root = () => {
             console.log('user type is user')
             let data = { uid: user.id, fName: user.fName };
 
-            socket.on('connect', () => {      
-                // dispatch(updateUserSocket(socket))
+            socket.on('connect', () => {
 
                 socketId = socket.id
                 console.log('user connected! ', socketId)
@@ -93,21 +91,12 @@ const Root = () => {
                     console.log('off id inside socket', data)
                     localStorage.setItem('officialId', JSON.stringify(officialId))
 
-                    // update db row wrt to user & official -> insert offId in the uId row
                     console.log('official on call: ', officialId)
 
-                    // window.alert('official on call')
                     dispatch(updateViewCall(true))
-
-                    // open the pop up with a button with ATTEND and END button
-                    // When ATTEND button is clicked, initialise voice call.
-                    // handeVoiceCallStart(rtc, user.id, user.email)
-
-                    // when END button is clicked, end voice call.
                 })
 
                 socket.on('officialEndedCall', () => {
-                    // official ended call
                     dispatch(updateViewCall(false))
                     handleOfficialEndCall(rtc)
                 })

@@ -2,25 +2,26 @@ const {RtcTokenBuilder, RtcRole} = require('agora-access-token');
 require("dotenv").config();
 
 
-exports.generateRTCToken = (req, resp) => {
+exports.generateRTCToken = (req, res, next) => {
     console.log("Called");
     const {channelName, uid} = req.body
-    resp.header('Access-Control-Allow-Origin', '*');
+    
+    res.header('Access-Control-Allow-Origin', '*');
 
     if (!channelName) {
-        return resp.status(500).json({ 'error': 'channel is required' });
+        return res.status(500).json({ 'error': 'channel is required' });
     }
 
     if(!uid || uid === '') {
-        return resp.status(500).json({ 'error': 'uid is required' });
+        return res.status(500).json({ 'error': 'uid is required' });
     }
 
     if (req.body.role === 'publisher') {
         role = RtcRole.PUBLISHER;
     } else if (req.body.role === 'audience') {
         role = RtcRole.SUBSCRIBER
-    }  else {
-        return resp.status(500).json({ 'error': 'role is incorrect' });
+    } else {
+        return res.status(500).json({ 'error': 'role is incorrect' });
     }
 
     let expireTime = req.query.expiry;
@@ -40,9 +41,9 @@ exports.generateRTCToken = (req, resp) => {
     } else if (req.body.tokenType === 'uid') {
         token = RtcTokenBuilder.buildTokenWithUid(APP_ID_AGORA, APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime)
     }  else {
-        return resp.status(500).json({ 'error': 'token type is invalid' });
+        return res.status(500).json({ 'error': 'token type is invalid' });
     }
 
     // console.log('token: ', token)
-    return resp.json({ 'rtcToken': token });
+    return res.json({ 'rtcToken': token });
 }

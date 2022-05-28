@@ -8,9 +8,10 @@ app = Flask("Team_TNEB")
 loaded_model = joblib.load("model")
 loaded_vect = joblib.load("vectorizer")
 
-@app.route("/user", methods=["POST"])
+@app.route("/user/predict", methods=["POST"])
 def user():
     body = request.get_json()
+    print(body)
 
     l = [body["message"]]
     df = pd.DataFrame(l, columns=["Query"])

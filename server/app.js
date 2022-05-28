@@ -39,7 +39,6 @@ io.on('connection', (soc) => {
 
      soc.on('uid', async (data) => {
           uid = data.uid
-          // db[uid] = soc.id --> insert user soc id into socketUser
           
           try {
                let socUser = await SocketUser.findOne({ where: { UserId: uid } });

@@ -1,10 +1,12 @@
+const axios = require('axios').default;
+
 const Area = require("../models/area");
 const MessageWithUsers = require("../models/message_with_users");
 const User = require("../models/user");
 const { Sequelize } = require("sequelize");
 const { isEmailVerified } = require("../util/firebase");
 const MessageWithOfficials = require("../models/meesage_with_officials");
-const { detectSpam } = require("./functions");
+const { detectSpam, checkAndSendMessage, notifyOfficial, notifyOfficialWithReason, alertOfficial } = require("./functions");
 
 const fetchUserMessages = async (ZoneId) => {
     const dates = await MessageWithUsers.findAll({
@@ -57,6 +59,8 @@ exports.addMessage = async (req, res, next) => {
 
     const user = await User.findOne({ where: { email: req.email } });
     const area = await Area.findByPk(user.AreaId);
+    // finding the bot of this zone
+    const bot = await User.findOne({ where: { email: "bot@gmail.com" } });
 
     // detect spam
     const isSpam = detectSpam(req.body.message);
@@ -68,54 +72,35 @@ exports.addMessage = async (req, res, next) => {
         });
     }
 
-    let message;
-    message = await MessageWithUsers.create({
+    // finding message type
+    let formData = {message: req.body.message};
+    const result = await axios.post("http://localhost:9090/user/predict", formData);
+    const prediction = parseInt(result.data.prediction);
+
+    console.log(prediction);
+    // prediction -> 1,2,3,4
+
+    let data = {
         from: user.fName,
         message: req.body.message,
         date: today,
         UserId: user.id,
         ZoneId: area.ZoneId
-    });
-    await message.save();
-
-    // finding the bot of this zone
-    const bot = await User.findOne({ where: { email: "bot@gmail.com" } });    
-    
-    // TODO
-    // 1. PROBLEM WITH SOLUTION AVAILABLE IN THIS AREA?
-    if(area.problem) {
-        let newMessage = area.problem + ". " + area.restoration;
-        // bot reply message
-        message = await MessageWithUsers.create({
-            from: bot.fName,
-            message: newMessage,
-            date: today,
-            UserId: bot.id,
-            ZoneId: area.ZoneId
-        });
-        await message.save();
-
-    } else {
-        // 2. IF NOT, 
-        // a. ADD THAT QUERY INTO MESSAGE_WITH_OFFICIALS
-        message = await MessageWithOfficials.create({
-            from: user.fName,
-            message: req.body.message,
-            date: today,
-            UserId: user.id,
-            ZoneId: area.ZoneId
-        });
-        await message.save();
-        // b. ADD NOTIFIED MESSAGE INTO MESSAGE_WITH_USERS
-        message = await MessageWithUsers.create({
-            from: bot.fName,
-            message: "We have notified your problem to the officials. Please wait for their reply.",
-            date: today,
-            UserId: bot.id,
-            ZoneId: area.ZoneId
-        });
-        await message.save();
-    }
+    };
+    if(prediction === 1) {
+        // check response available in db or not (User saying they don't have power)
+        await checkAndSendMessage(data, bot, area);
+    } else if(prediction === 2) {
+        // (User saying low voltage problem)
+        
+        await notifyOfficial(data, bot);
+    } else if(prediction === 3) {
+        // make call or inform user about official (bcoz of some reason )
+        await notifyOfficialWithReason(data, bot);
+    } else if(prediction == 4) {
+        // (User requesting for power cut in case of emergency)
+        await alertOfficial(data, bot);
+    }    
   
     const messages = await fetchUserMessages(area.ZoneId);
     return res.status(200).json({
