@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
 import { changeHandler } from '../../app/reducers/signupSlice';
@@ -12,6 +12,10 @@ import { IoMdInformationCircleOutline, IoIosGitPullRequest } from 'react-icons/i
 const Home = () => {
     const formData = useSelector((state) => state.signup.formDetails);
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+        document.title = "TNEB | Home";
+    }, []);
 
     const handleChange = (e) => {
         const payload = {

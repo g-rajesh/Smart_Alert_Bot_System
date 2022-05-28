@@ -44,6 +44,10 @@ const Dashboard = ({socket, rtc}) => {
     }
     
     useEffect(()=>{
+        document.title = "TNEB | Dashboard";
+    }, []);
+    
+    useEffect(()=>{
         fetchData();
     }, []);
 

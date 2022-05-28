@@ -42,6 +42,11 @@ const Feedback = () => {
         fetchData();
     }, []);
 
+    
+    useEffect(()=>{
+        document.title = "TNEB | Feedback";
+    }, []);
+
     useEffect(()=>{
         if(localStorage.getItem("feedback")) {
             setMessage(JSON.parse(localStorage.getItem("feedback")));

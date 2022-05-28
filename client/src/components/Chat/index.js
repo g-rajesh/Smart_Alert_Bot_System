@@ -52,6 +52,10 @@ const Chat = () => {
     useEffect(()=>{
         fetchData();
     }, []);
+    
+    useEffect(()=>{
+        document.title = "TNEB | Chat";
+    }, []);
 
     useEffect(() => {        
         if(!user) {

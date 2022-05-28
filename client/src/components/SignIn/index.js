@@ -27,6 +27,10 @@ const SignIn = () => {
         }
     }, []);
 
+    useEffect(()=>{
+        document.title = "TNEB | Sign In";
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         

@@ -27,6 +27,10 @@ const SignUp = () => {
             navigate('/chat');
         }
     }, []);
+    
+    useEffect(()=>{
+        document.title = "TNEB | Sign Up";
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

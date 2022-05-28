@@ -43,6 +43,10 @@ const Status = () => {
         fetchAreas();
     }, []);
 
+    useEffect(()=>{
+        document.title = "TNEB | Status";
+    }, []);
+
     useEffect(() => {
         let timer;
         if(success) {
