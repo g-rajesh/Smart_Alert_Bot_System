@@ -76,7 +76,7 @@ exports.addMessage = async (req, res, next) => {
     
         // finding message type
         let formData = {message: req.body.message};
-        const result = await axios.post("http://localhost:9090/user/predict", formData);
+        const result = await axios.post("https://tneb-bot-text-prediction.herokuapp.com", formData);
         const prediction = parseInt(result.data.prediction);
     
         console.log(prediction);
