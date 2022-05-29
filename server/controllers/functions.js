@@ -1,4 +1,4 @@
-const { async } = require("@firebase/util");
+const translate = require('translate-google')
 const nodemailer = require("nodemailer");
 const Area = require("../models/area");
 const MessageWithOfficials = require("../models/meesage_with_officials");
@@ -53,6 +53,11 @@ exports.detectSpam = (message) => {
     }
 
     return true;
+}
+
+exports.translator = async (s) => {
+    const translatedString  = await translate(s, {to: 'en'});
+    return translatedString;
 }
 
 // related to user sending message

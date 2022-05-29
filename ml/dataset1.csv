@@ -1,4 +1,5 @@
 Query,Category
+why there is no power supply in my street,1
 In our are we dont have power,1
 we dont have power in our area,1
 we dont have  electricity  In our area,1
@@ -19,10 +20,10 @@ in our area we didnt have current,1
 our area didnt have power,1
 our area didnt have power supply,1
 our area didnt have electricty,1
-No electricity in our area ,1
-we lost power supply ,1
+No electricity in our area,1
+we lost power supply,1
 power loss is happened in our area,1
-there is no current supply ,1
+there is no current supply,1
 electricity is stopped in my area,1
 power supply is cut down im my area,1
 there is power shutdown for a while in my area,1
@@ -34,7 +35,6 @@ There is power shortage in my area,1
 When do we expect the power back,1
 When will the power supply resume,1
 our street people are struggling due to the power loss for about 6 hours,1
-in my area tree fallen in power line,1
 voltage fluctuation in our area power supply,2
 voltage drops happen iin our area power supply,2
 we have low power supply due to low voltage,2
@@ -45,26 +45,41 @@ there is  voltage drop  in our street power line,2
 Voltage fluctuation ocuurs oftenly in our street,2
 We are facing low voltage problem,2
 We don't have proper voltage supply in our area,2
+There is continous voltage fluctuation in my area,2
 Voltage drop in my area,2
+Voltage fluctuation occurs continously in my area,2
+There is heavy voltage drop in our area,2
+In our street  voltage drops occurs often,2
+Voltage drop occurs in my street ,2
 voltage fluctuation in my area,2
+We are facing recently electric accident due to heavy voltage,2
 There is a drop in voltage in my area,2
 We area facing voltage fluctuation problem in my area,2
+can you tell the reason for voltage drop,2
 There is transformer burst near my house,3
-in my area heavy load vehicles cuts the power lie,3
+In my area heavy load vehicle cuts the power line,3
 The tree fallen in power line near my house,3
-power line cut due to heavy rain,3
+in my area tree fallen in power line,3
+power line cuts due to heavy rain,3
 The transformer is bursted due to heavy lightning,3
 Tree fallen in power line cause the power cut in my street,3
 Tree near my house has fallen in power line,3
 We lacking power supply for about 12 hours due to transformer burst,3
-is there any problem in our power line since we dont have power in our area,3
-why there is no power supply in my street ,3
-can you tell the reason for voltage drop ,3
 Transformer burst due to heavy load. That interrupted the power supply in my area,3
 Trees fall on the power line which interrupt the power supply in my area,3
 Power line cuts due to heavy rain,3
 Vehicle cut the power line by accident. So we don't have power supply,3
+power line is on fire,3
+power transmission tower fall down,3
+electricity is leaking in the nearby power line,3
+"In my area, the power line is fallen down due to heavy storm",3
+"In our area ,The transformer bursts due to heavy voltage passing",3
+We have insufficient power supply due to low voltage occurs in my area,3
+Heavy rain cuts the power line in my area,3
+Heavy storm cuts the power line in my area,3
+electric post fall down,3
 Heavy load vehicle cut the power line by accident,3
+The power supply is interrupted because of the power line collpase in my area,3
 Emergency situation. stop the power supply in my area,4
 Fire accident in my neighborhood. Stop the power supply,4
 "Due to heavy rain, power line fell in the roads. So please stop the power supply",4
@@ -83,7 +98,7 @@ Our street is flooded with rain water. Stop electricity supply to our street,4
 "stop the power supply near my area , since fire accident is happened",4
 "Shutdown the electrcity supply to my area , since fire accident is occured in my area ",4
 Stop the current in my area because a fire accident is happened,4
-Cut the power supply because fire accident occured ,4
+Cut the power supply because fire accident occured,4
 "You have to stop the power supply  ,since there is fire accident",4
 "A fire accident in my near street, cut down power supply",4
 "Due to heavy storm and thunder, there is fire accident in my area so stop the power supply",4
@@ -93,4 +108,4 @@ Cut the power supply because fire accident occured ,4
 "Houses in our street is flooded with water due to rain , shutdown the current",4
 "Rain water is passing through the houses in my street , cut down the current",4
 "There is heavy storm and thunder , please stop the power supply in order to avoid damage to electric appliances",4
-"Stop the power supply in order to avoid damage to elecrtric appliances , since there is heavy sstorm and thunder",4
+"Stop the power supply in order to avoid damage to elecrtric appliances, since there is heavy storm and thunder in my area",4
