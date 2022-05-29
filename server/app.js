@@ -36,7 +36,7 @@ const corsOptions = {
 }
 
 const options = {
-     origin: 'https://master.dn49bp9l5bydf.amplifyapp.com/signin',
+     origin: '*',
 }
 
 // http connection

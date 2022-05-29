@@ -25,6 +25,7 @@ const Chat = () => {
         setLoading(true);
         const responce = await fetch("http://54.215.235.218:8080/user/messages", {
                                 headers: {
+                                    "Access-Control-Allow-Origin": "*",
                                     Authorization: `Bearer ${token}`,
                                 },
                             });
@@ -75,6 +76,7 @@ const Chat = () => {
         const responce = await fetch("http://54.215.235.218:8080/user/addMessage", {
                                 method: "POST",
                                 headers: {
+                                    "Access-Control-Allow-Origin": "*",
                                     "Authorization": `Bearer ${token}`,
                                     "Content-Type": "application/json"
                                 },

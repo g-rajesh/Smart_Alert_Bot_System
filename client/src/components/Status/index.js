@@ -26,6 +26,7 @@ const Status = () => {
     const fetchAreas = async () => {
         const response = await fetch("http://54.215.235.218:8080/user/getAreas", {
                                     headers: {
+                                        "Access-Control-Allow-Origin": "*",
                                         Authorization: `Bearer ${token}`,
                                     },
                                 });
@@ -80,6 +81,7 @@ const Status = () => {
         const response = await fetch("http://54.215.235.218:8080/user/updateStatus", {
                                 method: "POST",
                                 headers: {
+                                    "Access-Control-Allow-Origin": "*",
                                     "Authorization": `Bearer ${token}`,
                                     "Content-Type": "application/json"
                                 },

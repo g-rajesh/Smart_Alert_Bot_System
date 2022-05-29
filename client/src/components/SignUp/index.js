@@ -41,7 +41,8 @@ const SignUp = () => {
         const responce = await fetch("http://54.215.235.218:8080/user/signup", {
             method: "POST",
             headers: {
-              "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(formDetails),
         });

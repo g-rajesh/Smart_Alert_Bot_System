@@ -23,6 +23,7 @@ const Feedback = () => {
         setLoading(true);
         const responce = await fetch("http://54.215.235.218:8080/user/getFeedback", {
                                 headers: {
+                                    "Access-Control-Allow-Origin": "*",
                                     Authorization: `Bearer ${token}`,
                                 },
                             });
@@ -68,6 +69,7 @@ const Feedback = () => {
         const responce = await fetch("http://54.215.235.218:8080/user/addFeedback", {
                                 method: "POST",
                                 headers: {
+                                    "Access-Control-Allow-Origin": "*",
                                     "Authorization": `Bearer ${token}`,
                                     "Content-Type": "application/json"
                                 },

@@ -40,7 +40,8 @@ const SignIn = () => {
         const responce = await fetch("http://54.215.235.218:8080/user/signin", {
             method: "POST",
             headers: {
-              "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(formData),
         });
