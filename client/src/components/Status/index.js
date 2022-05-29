@@ -24,7 +24,7 @@ const Status = () => {
     const [success, setSuccess] = useState("");
 
     const fetchAreas = async () => {
-        const response = await fetch("https://54.215.235.218:8080/user/getAreas", {
+        const response = await fetch("http://54.215.235.218:8080/user/getAreas", {
                                     headers: {
                                         Authorization: `Bearer ${token}`,
                                     },
@@ -77,7 +77,7 @@ const Status = () => {
         console.log(formData);
 
         setLoading(true);
-        const response = await fetch("https://54.215.235.218:8080/user/updateStatus", {
+        const response = await fetch("http://54.215.235.218:8080/user/updateStatus", {
                                 method: "POST",
                                 headers: {
                                     "Authorization": `Bearer ${token}`,

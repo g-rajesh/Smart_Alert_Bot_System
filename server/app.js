@@ -21,9 +21,23 @@ const userRoutes = require("./routes/user");
 
 const app = express();
 
+
+   
+const whitelist = ["https://master.dn49bp9l5bydf.amplifyapp.com"]
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  }
+}
+
 // http connection
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 // socket server connection
 const httpServer = createServer(app);

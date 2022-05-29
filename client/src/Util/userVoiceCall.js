@@ -45,7 +45,7 @@ const handeVoiceCallStart = async (rtc, socket, id, email) => {
     console.log('socket: ', socket.id)
     socket.emit("userAttendedCall", data)
 
-    await axios.post("https://54.215.235.218:8080/user/rtcToken", body, {
+    await axios.post("http://54.215.235.218:8080/user/rtcToken", body, {
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
                 'Access-Control-Allow-Origin': '*'
