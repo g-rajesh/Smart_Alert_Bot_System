@@ -64,7 +64,11 @@ const Status = () => {
     }
 
     const changeHandler = (e) => {
-        setFormData({...formData, [e.target.name]: e.target.value});
+        if(e.target.name === "restoration" && e.target.value < 0) {
+            setFormData({...formData, [e.target.name]: 0});
+        } else {
+            setFormData({...formData, [e.target.name]: e.target.value});
+        }
     }
 
     const submitHandler = async (e) => {
@@ -124,20 +128,24 @@ const Status = () => {
                             <>
                                 <InputWithoutError
                                     name="problem"
-                                    type="problem"
+                                    type="text"
                                     label="Problem"
                                     className={formData.problem ? "active": ""}
                                     value={formData.problem}
                                     changeHandler={changeHandler}
                                 />
-                                <InputWithoutError
+                                {/* <InputWithoutError
                                     name="restoration"
-                                    type="restoration"
+                                    type="number"
                                     label="Restoration"
                                     className={formData.restoration ? "active": ""}
                                     value={formData.restoration}
                                     changeHandler={changeHandler}
-                                />
+                                /> */}
+                                <div className="form-group">
+                                    <label htmlFor="restoration">Restoration time in hours</label>
+                                    <input type="number" className={formData.restoration ? "active": ""} name="restoration" id="restoration" value={formData.restoration} onChange={changeHandler} autoComplete="off" />
+                                </div>
                             </>
                         )
                     }                
