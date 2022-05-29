@@ -185,7 +185,7 @@ sequelize
      // .sync({ force: true })
      // .sync({ alter: true })
      .sync()
-     .then((result) => {
+     .then(() => {
           console.log("Connected to Mysql database");
           app.listen(process.env.PORT, async () => {
                console.log(`Server starts listening at PORT ${process.env.PORT}`);

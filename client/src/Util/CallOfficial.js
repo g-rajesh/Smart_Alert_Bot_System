@@ -17,7 +17,12 @@ const CallOfficial = ({rtc}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const timer = setTimeout(()=>{
+        
+        if(!user.attend){   
+            setSeconds(0)
+            setMinutes(0)
+        }
+        let timer = setTimeout(()=>{
             setSeconds(seconds+1);
 
             if(seconds === 59) {
@@ -25,9 +30,8 @@ const CallOfficial = ({rtc}) => {
                 setSeconds(0);
             }
         }, 1000);
-
         return () => clearTimeout(timer);
-    }, [seconds]);
+    }, [seconds, user.attend]);
 
     const cutCall = () => {
         dispatch(updateAttend(false));

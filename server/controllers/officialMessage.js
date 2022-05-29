@@ -109,7 +109,7 @@ exports.updateArea = async (req, res, next) => {
 
         let message;
         if(type==="Change") {
-            message = problem + ". " + restoration;
+            message = problem + ". Power will resume in " + restoration + ' hours';
             if(area !== "All") {
                 message = "In " + area + ", " + message;
             }
@@ -154,6 +154,7 @@ exports.updateArea = async (req, res, next) => {
 
         if(users.length !== 0) {
             let to = users.toString();
+            console.log('to : ', to)
             await sendMail(to, "From TNEB, regarding power cut issue", message);
         }
         
