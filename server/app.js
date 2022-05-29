@@ -35,9 +35,13 @@ const corsOptions = {
   }
 }
 
+const options = {
+     origin: 'https://master.dn49bp9l5bydf.amplifyapp.com/signin',
+}
+
 // http connection
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors(options));
 
 // socket server connection
 const httpServer = createServer(app);
