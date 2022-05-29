@@ -37,7 +37,7 @@ const SignIn = () => {
         setLoading(true);
         dispatch(deleteError());
 
-        const responce = await fetch("http://54.215.235.218:8080/user/signin", {
+        const responce = await fetch("https://54.215.235.218:8080/user/signin", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
