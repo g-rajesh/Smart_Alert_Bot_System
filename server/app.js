@@ -41,7 +41,7 @@ const options = {
 
 // http connection
 app.use(express.json());
-app.use(cors(options));
+app.use(cors());
 
 // socket server connection
 const httpServer = createServer(app);
