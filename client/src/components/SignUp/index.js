@@ -38,7 +38,7 @@ const SignUp = () => {
         setLoading(true);
         dispatch(deleteError);
         
-        const responce = await fetch("http://54.215.235.218:8080/user/signup", {
+        const responce = await fetch("http://172.31.6.236:8080/user/signup", {
             method: "POST",
             headers: {
                 "Access-Control-Allow-Origin": "*",

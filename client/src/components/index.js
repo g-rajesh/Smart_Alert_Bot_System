@@ -56,7 +56,7 @@ const Root = () => {
         // dispatch(updateUserRTC(rtc))
 
         
-        socket = io( "http://54.215.235.218:9080", { upgrade: false, transports: ['websocket'] });
+        socket = io( "http://172.31.6.236:9080", { upgrade: false, transports: ['websocket'] });
 
         if(type === "official") {
             let data = { officialId: user.id }

@@ -23,7 +23,7 @@ const Chat = () => {
     const fetchData = async () => {
         if(!user || user.type=="official") return;
         setLoading(true);
-        const responce = await fetch("http://54.215.235.218:8080/user/messages", {
+        const responce = await fetch("http://172.31.6.236:8080/user/messages", {
                                 headers: {
                                     "Access-Control-Allow-Origin": "*",
                                     Authorization: `Bearer ${token}`,
@@ -73,7 +73,7 @@ const Chat = () => {
 
         const formData = { message };
 
-        const responce = await fetch("http://54.215.235.218:8080/user/addMessage", {
+        const responce = await fetch("http://172.31.6.236:8080/user/addMessage", {
                                 method: "POST",
                                 headers: {
                                     "Access-Control-Allow-Origin": "*",

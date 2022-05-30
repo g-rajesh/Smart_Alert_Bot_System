@@ -21,7 +21,7 @@ const Feedback = () => {
     const fetchData = async () => {
         if(!user || user.type=="official") return;
         setLoading(true);
-        const responce = await fetch("http://54.215.235.218:8080/user/getFeedback", {
+        const responce = await fetch("http://172.31.6.236:8080/user/getFeedback", {
                                 headers: {
                                     "Access-Control-Allow-Origin": "*",
                                     Authorization: `Bearer ${token}`,
@@ -66,7 +66,7 @@ const Feedback = () => {
 
         console.log(message);
 
-        const responce = await fetch("http://54.215.235.218:8080/user/addFeedback", {
+        const responce = await fetch("http://172.31.6.236:8080/user/addFeedback", {
                                 method: "POST",
                                 headers: {
                                     "Access-Control-Allow-Origin": "*",
