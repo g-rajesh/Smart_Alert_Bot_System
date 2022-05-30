@@ -37,7 +37,7 @@ const SignIn = () => {
         setLoading(true);
         dispatch(deleteError());
 
-        const responce = await fetch("http://172.31.6.236:8080/user/signin", {
+        const responce = await fetch("http://localhost:8080/user/signin", {
             method: "POST",
             headers: {
                 "Access-Control-Allow-Origin": "*",

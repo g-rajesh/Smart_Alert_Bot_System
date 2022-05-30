@@ -22,7 +22,7 @@ const Dashboard = ({socket, rtc}) => {
         if(!user || user.type=="user") return;
 
         setLoading(true);
-        const response = await fetch("http://172.31.6.236:8080/user/officialMessages", {
+        const response = await fetch("http://localhost:8080/user/officialMessages", {
                                 headers: {
                                     Authorization: `Bearer ${token}`,
                                 },

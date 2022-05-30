@@ -24,7 +24,7 @@ const Status = () => {
     const [success, setSuccess] = useState("");
 
     const fetchAreas = async () => {
-        const response = await fetch("http://172.31.6.236:8080/user/getAreas", {
+        const response = await fetch("http://localhost:8080/user/getAreas", {
                                     headers: {
                                         "Access-Control-Allow-Origin": "*",
                                         Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ const Status = () => {
         console.log(formData);
 
         setLoading(true);
-        const response = await fetch("http://172.31.6.236:8080/user/updateStatus", {
+        const response = await fetch("http://localhost:8080/user/updateStatus", {
                                 method: "POST",
                                 headers: {
                                     "Access-Control-Allow-Origin": "*",
