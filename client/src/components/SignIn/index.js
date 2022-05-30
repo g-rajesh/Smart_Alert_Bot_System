@@ -40,13 +40,13 @@ const SignIn = () => {
         const responce = await fetch("http://localhost:8080/user/signin", {
             method: "POST",
             headers: {
-                "Access-Control-Allow-Origin": "*",
+                // "Access-Control-Allow-Origin": "*",
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(formData),
         });
         const result = await responce.json();
-
+        console.log('result: ', result)
         setLoading(false);
         if(responce.status == 500) {
             dispatch(changeError(result.data));
