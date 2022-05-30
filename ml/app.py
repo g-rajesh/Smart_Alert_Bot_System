@@ -1,3 +1,4 @@
+from concurrent.futures import process
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 import joblib
@@ -7,6 +8,11 @@ app = Flask("Team_TNEB")
 
 loaded_model = joblib.load("model")
 loaded_vect = joblib.load("vectorizer")
+
+@app.route("/greet", methods=["GET"])
+def greeting():
+    print("Called")
+    return jsonify({ "message": "Welcome to TNEB text prediction model" })
 
 @app.route("/user/predict", methods=["POST"])
 def user():
@@ -21,5 +27,7 @@ def user():
     prediction = loaded_model.predict(df)
 
     return jsonify({ "prediction": str(prediction[0])})
+
+
 
 app.run(port=9090)

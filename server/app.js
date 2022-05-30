@@ -156,6 +156,17 @@ io.on('connection', (soc) => {
      })
 })
 
+app.use(function(req, res, next) {
+     res.header("Access-Control-Allow-Origin", "*");
+     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+     next();
+});
+
+app.use("/", (req, res, next) => {
+     return res.status(200).json({ "message": "Hello fro server" });
+})
+   
+
 // http connection implementation
 app.use("/user", userRoutes);
 
