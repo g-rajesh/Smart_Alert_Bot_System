@@ -2,7 +2,7 @@ import AgoraRTC from "agora-rtc-sdk-ng"
 import axios from "axios";
 
 
-let tokenServerURL = "http://localhost:8080/user/rtcToken"
+let tokenServerURL = "http://172.31.20.192:8080/user/rtcToken"
 
 let options = {
     appId: '78396c152c624a65b212ca2922a1fa6c',
