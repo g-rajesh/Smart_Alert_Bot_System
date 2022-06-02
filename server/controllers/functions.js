@@ -10,9 +10,9 @@ const possibilities = [
     "do not have power", "do not have electricity", "do not have current", "do not have power supply", "don't have power", "don't have electricity", "don't have current", "don't have power supply", "didn't have power", "didn't have electricity", "didn't have current", "didn't have power supply", "did not have power", "did not have electricity", "did not have current", "did not have power supply", "dont have power", "dont have electricity", "dont have current", "dont have power supply", "didnt have power", "didnt have electricity", "didnt have current", "didnt have power supply", "no power", "no electricity", "no current", "no power supply", "power supply", "power resume", "doesn't have power", "doesn't have electricity", "doesn't have current",
     "doesn't have power supply", "does not have power", "does not have electricity", "does not have current", "does not have power supply", "doesnt have power", "doesnt have electricity", "doesnt have current", "doesnt have power supply", "power shortage", "power cut", 
     
-    "transformer burst", "power line", "trees fall on power line", "power line cuts due to heavy rain", "heavy load vehicles cuts the power line", 
+    "transformer burst", "power line", "tree fall on power line", "power line cuts due to heavy rain", "heavy load vehicles cuts the power line", 
     
-    "low voltage", "voltage fluctutation", "voltage drop", "cut power", "cut the power", "cut power supply",
+    "low voltage", "voltage fluctuation", "voltage drop", "cut power", "cut the power", "cut power supply",
     
     "cut the power supply", "cut electricity supply", "cut the electricity supply", "cut current supply", "cut the current supply", "stop power", "stop the power", "stop power supply", "stop the power supply", "stop electricity supply", "stop the electricity supply", "stop current supply", "stop the current supply", "heavy rain", "storm"
 ]
@@ -46,6 +46,8 @@ exports.detectSpam = (message) => {
 
     message = message.toLowerCase();
 
+    console.log(message);
+
     for(let i in possibilities) {
         if(message.includes(possibilities[i])) {
             return false;
@@ -68,7 +70,7 @@ exports.checkAndSendMessage = async (data, bot, area, prediction) => {
     
     if(area.problem) {
         if(area.problem !== "ALREADY RAISED") {
-            data.message = area.problem + ". " + area.restoration;
+            data.message = "In " + area.name + ", " + area.problem + ". " + "Power will resume in " + area.restoration + ' hours';
         } else {
             data.message = "We have notified your problem to the officials. Please wait for their reply."
         }
