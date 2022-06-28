@@ -14,6 +14,8 @@ mongoose.connect(process.env.DB_URL).then(async () => {
     console.log("Hello world");
 });
 
+// pip freeze > requirements.txt
+
 // const name = "Tiruvottiyur";
 // 	const feedbacks = await Feedback.find().sort({date: -1, createdAt: -1});
 // 	console.log(feedbacks);
