@@ -1,21 +1,20 @@
 const Area = require("../models/area");
 const User = require("../models/user");
 const Official = require("../models/official");
-const { Sequelize } = require("sequelize");
 const Feedback = require("../models/feedback");
 
 exports.fetchAreas = async (req, res, next) => {
     const email = req.email;
 
     try {
-        const official = await Official.findOne({where: { email }});
+        const official = await Official.findOne({ email });
         if(!official) {
             const notFound = new Error("User not found");
             notFound.status = 500;
             throw notFound;
         }
 
-        const areas = await Area.findAll({where: {ZoneId: official.ZoneId}});
+        const areas = await Area.find({ZoneId: official.ZoneId});
         const areaNames = areas.map(area => area.name);
 
         return res.status(200).json({
@@ -29,25 +28,16 @@ exports.fetchAreas = async (req, res, next) => {
 
 // for both user and official
 const fetchFeeedback = async (ZoneId) => {
-    const dates = await Feedback.findAll({
-        attributes: [
-            [Sequelize.fn('DISTINCT', Sequelize.col('date')) ,'date']
-        ],
-        order: [['date', 'ASC']]
-    });
+    const dates = await Feedback.find({}, { date: 1 }).sort({ createdAt: 1 });
 
     const feedbacks = {};
     for(let i = 0; i < dates.length; i++) {
-        const {date} = dates[i].dataValues;
-        console.log(date);
-        let fb = await Feedback.findAll({
-            where: { ZoneId, date },
-            order: [['createdAt', 'ASC']]
-        });
+        const {date} = dates[i];
+        let fb = await Feedback.find({ ZoneId, date }).sort({ createdAt: 1 })
 
         let message = [];
         for(let j=0; j<fb.length; j++) {
-            let values = fb[j].dataValues;
+            let values = fb[j];
             let newMessage = {};
             newMessage.id = values.id;
             newMessage.from = values.from;
@@ -58,9 +48,9 @@ const fetchFeeedback = async (ZoneId) => {
 
             let user;
             if(values.userType == 0) {
-                user = await User.findOne({where: {email: values.email}});
+                user = await User.findOne({email: values.email});
             } else {
-                user = await Official.findOne({where: {email: values.email}});
+                user = await Official.findOne({email: values.email});
             }
 
             newMessage.UserId = user.id;
@@ -79,9 +69,9 @@ exports.getFeedback = async (req, res, next) => {
     try {
         let userType = 0;
         let user;
-        user = await User.findOne({where: {email}});
+        user = await User.findOne({ email });
         if(!user) {
-            user = await Official.findOne({where: {email}});
+            user = await Official.findOne({ email });
             userType = 1;
 
             if(!user) {
@@ -95,7 +85,7 @@ exports.getFeedback = async (req, res, next) => {
         if(userType == 1) {
             ZoneId = user.ZoneId;
         } else {
-            const area = await Area.findOne({where: {id: user.AreaId}});
+            const area = await Area.findOne({id: user.AreaId});
             ZoneId = area.ZoneId;
         }
 
@@ -116,9 +106,9 @@ exports.addFeedback = async (req, res, next) => {
     try {
         let userType = 0;
         let user;
-        user = await User.findOne({where: {email}});
+        user = await User.findOne({ email });
         if(!user) {
-            user = await Official.findOne({where: {email}});
+            user = await Official.findOne({ email });
             userType = 1;
 
             if(!user) {
@@ -132,7 +122,7 @@ exports.addFeedback = async (req, res, next) => {
         if(userType == 1) {
             ZoneId = user.ZoneId;
         } else {
-            const area = await Area.findOne({where: {id: user.AreaId}});
+            const area = await Area.findOne({ id: user.AreaId });
             ZoneId = area.ZoneId;
         }
 

@@ -78,7 +78,7 @@ exports.signup = async (req, res, next) => {
         const token = jwt.sign({email: user.email}, process.env.JWT_TOKEN, { expiresIn: '1w' });
 
         // getting user's area
-        let userArea = await Area.findByPk(user.AreaId);
+        let userArea = await Area.findById(user.AreaId);
 
         return res.status(200).json({
             message: "User created successfully...",
@@ -176,7 +176,7 @@ exports.signin = async (req, res, next) => {
         const token = jwt.sign({email: user.email}, process.env.JWT_TOKEN, { expiresIn: '1w' });
         
         // getting user's area
-        const area = await Area.findByPk(user.AreaId);
+        const area = await Area.findById(user.AreaId);
 
         return res.status(200).json({
             message: "User logged in successfully...",

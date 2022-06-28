@@ -37,6 +37,7 @@ const Chat = () => {
             handleLogout();
         } else {
             const newMessages = result.data.messages;
+            console.log(newMessages);
             setMessages(newMessages);
 
             if(user.isVerified === 0) {

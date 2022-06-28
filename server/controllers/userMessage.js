@@ -3,45 +3,35 @@ const axios = require('axios').default;
 const Area = require("../models/area");
 const MessageWithUsers = require("../models/message_with_users");
 const User = require("../models/user");
-const { Sequelize } = require("sequelize");
 const { isEmailVerified } = require("../util/firebase");
-const MessageWithOfficials = require("../models/meesage_with_officials");
 const { detectSpam, checkAndSendMessage, notifyOfficial, notifyOfficialWithReason, alertOfficial, translator } = require("./functions");
 
 const fetchUserMessages = async (ZoneId) => {
-    const dates = await MessageWithUsers.findAll({
-        attributes: [
-            [Sequelize.fn('DISTINCT', Sequelize.col('date')) ,'date']
-        ],
-        order: [['date', 'ASC']]
-    });
+    const dates = await MessageWithUsers.find({}, { date: 1 }).sort({ date: 1 });
     const messages = {};
     for(let i = 0; i < dates.length; i++) {
-        const {date} = dates[i].dataValues;
-        messages[date] = await MessageWithUsers.findAll({
-            where: { ZoneId, date },
-            order: [['createdAt', 'ASC']]
-        });
+        const { date } = dates[i];
+        messages[date] = await MessageWithUsers.find({ ZoneId, date }).sort({ date: 1 })
     }
-
     return messages;
 }
 
 exports.getMessages = async (req, res, next) => {
 
-    const user = await User.findOne({ where: { email: req.email } });
+    const user = await User.findOne({ email: req.email });
     // Verifying whether the user is verified his account
     if(!user.isVerified) {
         const isVerified = await isEmailVerified(user.email, user.password);
 
         if(isVerified) {
-            await User.update({isVerified: 1}, { where: { email: user.email } });
+            //await User.updateOne({name: "Sathish"}, {age: 25});
+            await User.updateOne({ email: user.email }, { isVerified: 1 });
             user.isVerified = 1;
         }
     }
 
     // finding his area
-    const area = await Area.findByPk(user.AreaId);
+    const area = await Area.findById(user.AreaId);
 
     const messages = await fetchUserMessages(area.ZoneId);
     // console.log(messages);
@@ -58,10 +48,10 @@ exports.addMessage = async (req, res, next) => {
     try {
         const today = new Date().toISOString().slice(0, 10);
 
-        const user = await User.findOne({ where: { email: req.email } });
-        const area = await Area.findByPk(user.AreaId);
+        const user = await User.findOne({ email: req.email });
+        const area = await Area.findById(user.AreaId);
         // finding the bot of this zone
-        const bot = await User.findOne({ where: { email: "bot@gmail.com" } });
+        const bot = await User.findOne({ email: "bot@gmail.com" });
     
         // detect spam
         const spamMessage = await translator(req.body.message);

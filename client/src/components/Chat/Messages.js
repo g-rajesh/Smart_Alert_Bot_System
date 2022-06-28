@@ -16,6 +16,7 @@ const Messages = ({messages, loading, setToggleUpDown}) => {
 
     let isMessagesEmpty = true;
     Object.keys(messages).map(key => {
+        console.log(key);
         if(messages[key].length) {
             isMessagesEmpty = false;
         }
@@ -36,7 +37,7 @@ const Messages = ({messages, loading, setToggleUpDown}) => {
     return (
         <div className="messages">
             {
-                Object.keys(messages).map(key => {
+                Object.keys(messages).map((key) => {
                     return (
                         <div className="dateMessage" key={key}>
                             <div className="date">

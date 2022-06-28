@@ -8,7 +8,7 @@ const MessageWithOfficials = require("../models/meesage_with_officials");
 const { sendMail } = require("./functions");
 
 exports.getOfficalMessages = async (req, res, next) => {
-    const official = await Official.findOne({ where: { email: req.email } });
+    const official = await Official.findOne({ email: req.email });
 
     if(!official) {
         const error = new Error("Not authorized");
@@ -18,23 +18,17 @@ exports.getOfficalMessages = async (req, res, next) => {
     }
 
     try {
-        const dates = await MessageWithOfficials.findAll({
-            attributes: [
-                [Sequelize.fn('DISTINCT', Sequelize.col('date')) ,'date']
-            ],
-            order: [['date', 'ASC']]
-        });
+        const dates = await MessageWithOfficials.find({}, { date: 1 }).sort({ date: 1 });
+
         const messages = {};
         for(let i = 0; i < dates.length; i++) {
-            const {date} = dates[i].dataValues;
-            let fullMessage = await MessageWithOfficials.findAll({
-                where: { ZoneId: official.ZoneId, date: date },
-                order: [['createdAt', 'ASC']]
-            });
+            const {date} = dates[i];
+            
+            let fullMessage = await MessageWithOfficials.find({ ZoneId: official.ZoneId, date: date }).sort({ date: 1 })
     
             let message = [];
             for(let j=0; j<fullMessage.length; j++) {
-                let values = fullMessage[j].dataValues;
+                let values = fullMessage[j];
                 let newMessage = {};
                 newMessage.id = values.id;
                 newMessage.message = values.message;
@@ -77,7 +71,7 @@ exports.updateArea = async (req, res, next) => {
     // req -> area(all, 1,2,3,4), change
 
     try {
-        const official = await Official.findOne({where: { email }});
+        const official = await Official.findOne({ email });
         if(!official) {
             const notFound = new Error("User not found");
             notFound.status = 500;
@@ -85,25 +79,25 @@ exports.updateArea = async (req, res, next) => {
         }
 
         if(area === "All") {
-            await Area.update(
-                { problem, restoration }, 
-                { where: { ZoneId: official.ZoneId }}
+            await Area.updateOne(
+                { ZoneId: official.ZoneId },
+                { problem, restoration }
             );
-            await Zone.update(
-                { problem, restoration }, 
-                { where: { id: official.ZoneId }}
+            await Zone.updateOne(
+                { id: official.ZoneId },
+                { problem, restoration }
             );
         } else {
-            await Area.update(
-                { problem, restoration }, 
-                { where: { name: area, ZoneId: official.ZoneId }}
+            await Area.updateOne(
+                { name: area, ZoneId: official.ZoneId },
+                { problem, restoration }
             );
         }
 
         if(type !== "Change") {
-            await Zone.update(
-                { problem, restoration }, 
-                { where: { id: official.ZoneId }}
+            await Zone.updateOne(
+                { id: official.ZoneId },
+                { problem, restoration }
             );
         }
 
@@ -122,34 +116,34 @@ exports.updateArea = async (req, res, next) => {
 
         let fetchedUsers;
         if(area !== "All") {
-            let findArea = await Area.findOne({where: {name: area, ZoneId: official.ZoneId}});
-            let AreaId = findArea.dataValues.id;
-            fetchedUsers = await User.findAll({where: { AreaId }})
+            let findArea = await Area.findOne({name: area, ZoneId: official.ZoneId});
+            let AreaId = findArea.id;
+            fetchedUsers = await User.find({ AreaId })
 
             // users = fetchedUsers.map(user => {
-            //     if(user.dataValues.isVerified)
-            //         return user.dataValues.email
+            //     if(user.isVerified)
+            //         return user.email
             // });
         } else {
-            let findArea = await Area.findAll({where: {ZoneId: official.ZoneId}});
+            let findArea = await Area.find({ ZoneId: official.ZoneId });
             let AreaIds = findArea.map(fArea => {
-                return fArea.dataValues.id;
+                return fArea.id;
             });
 
-            fetchedUsers = await User.findAll({where: { AreaId: { [Op.in]: AreaIds } }});
+            fetchedUsers = await User.find({ AreaId: { $in: AreaIds }});
             // users = fetchedUsers.map(user => {
-            //     if(user.dataValues.isVerified)
-            //         return user.dataValues.email
+            //     if(user.isVerified)
+            //         return user.email
             //     return;
             // });
         }
 
         let users = fetchedUsers.filter(user => {
-                return user.dataValues.isVerified
+                return user.isVerified
         })
 
         users = users.map(user => {
-            return user.dataValues.email
+            return user.email
         })
 
         if(users.length !== 0) {
@@ -158,7 +152,7 @@ exports.updateArea = async (req, res, next) => {
             await sendMail(to, "From TNEB, regarding power cut issue", message);
         }
         
-        const bot = await User.findOne({ where: { email: "bot@gmail.com" } });
+        const bot = await User.findOne({ email: "bot@gmail.com" });
         let newMessage = await MessageWithUsers.create({
             from: bot.fName,
             message: message,

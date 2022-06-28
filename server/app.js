@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const { createServer } = require("http");
 const cors = require("cors");
 require("dotenv").config();
@@ -6,16 +7,8 @@ require("dotenv").config();
 // socket connection imports
 const { Server } = require("socket.io");
 
-const sequelize = require("./util/database");
-const Official = require("./models/official");
-const User = require("./models/user");
-const Zone = require("./models/zone");
-const Area = require("./models/area");
-const Message1 = require("./models/message_with_users");
-const Message2 = require("./models/meesage_with_officials");
-const Feedback = require("./models/feedback");
 const SocketUser = require("./models/socketUser");
-const SocketOfficial = require("./models/socketOfficial");
+const SocketOfficial = require("./models/SocketOfficial");
 
 const userRoutes = require("./routes/user");
 
@@ -46,7 +39,7 @@ io.on('connection', (soc) => {
           // db[uid] = soc.id --> insert user soc id into socketUser
           
           try {
-               let socUser = await SocketUser.findOne({ where: { UserId: uid } });
+               let socUser = await SocketUser.findOne({ UserId: uid });
                if(!socUser) {
                     socUser = await SocketUser.create({
                          UserId: uid,
@@ -54,9 +47,9 @@ io.on('connection', (soc) => {
                     });
                     await socUser.save();
                } else {
-                    await SocketUser.update(
-                         { socketId: soc.id },
-                         { where: { UserId: uid } }
+                    await SocketUser.updateOne(
+                         { UserId: uid },
+                         { socketId: soc.id }
                     );
                }
           } catch(err) {
@@ -69,7 +62,7 @@ io.on('connection', (soc) => {
           officialId = data.officialId
           
           try{
-               let socOfficial = await SocketOfficial.findOne({ where: { OfficialId: officialId } });
+               let socOfficial = await SocketOfficial.findOne({ OfficialId: officialId });
 
                if(!socOfficial) {
                     socOfficial = await SocketOfficial.create({
@@ -78,9 +71,9 @@ io.on('connection', (soc) => {
                     });
                     await socOfficial.save();
                } else {
-                    await SocketOfficial.update(
-                         { socketId: soc.id },
-                         { where: { OfficialId: officialId } }
+                    await SocketOfficial.updateOne(
+                         { OfficialId: officialId },
+                         { socketId: soc.id }
                     );
                }
 
@@ -94,8 +87,8 @@ io.on('connection', (soc) => {
      soc.on('callUser', async (data) => {
           // fetch socket id from db using this uid
           try {
-               let socket = await SocketUser.findOne({where: {UserId: data.uid}});
-               let socketId = socket.dataValues.socketId;
+               let socket = await SocketUser.findOne({ UserId: data.uid });
+               let socketId = socket.socketId;
 
                let officialId = data.officialId
 
@@ -113,8 +106,8 @@ io.on('connection', (soc) => {
      soc.on("userAttendedCall", async (data)=> {
           console.log('data', data)
           officialId = data.officialId
-          let socOfficial = await SocketOfficial.findOne({ where: { OfficialId: officialId } })
-          let sockId = socOfficial.dataValues.socketId
+          let socOfficial = await SocketOfficial.findOne({ OfficialId: officialId })
+          let sockId = socOfficial.socketId
           console.log('user atttended call is emiitter to : ', sockId)
           io.to(sockId).emit("userAttended")
      })
@@ -122,8 +115,8 @@ io.on('connection', (soc) => {
      soc.on('endCallByOfficial', async (data)=> {
           console.log('end call by official, ',data)
           try {
-               let socket = await SocketUser.findOne({where: {UserId: data.uid}});
-               let socketId = socket.dataValues.socketId;
+               let socket = await SocketUser.findOne({ UserId: data.uid });
+               let socketId = socket.socketId;
                io.to(socketId).emit('officialEndedCall')
           } catch (err) {
                console.log("endCallByOfficial", err);
@@ -132,8 +125,8 @@ io.on('connection', (soc) => {
 
      soc.on('endCallByUser', async (data) => {
           try{
-               let socket = await SocketOfficial.findOne({where: {OfficialId: data.officialId}});
-               let socketId = socket.dataValues.socketId;
+               let socket = await SocketOfficial.findOne({ OfficialId: data.officialId });
+               let socketId = socket.socketId;
                io.to(socketId).emit('userEndedCall')
           }
           catch(err){
@@ -164,49 +157,9 @@ app.use((error, req, res, next) => {
      return res.status(status).json({ message, data });
 });
 
-Zone.hasOne(Official);
-Official.belongsTo(Zone);
-
-Zone.hasMany(Area);
-Area.belongsTo(Zone);
-
-Area.hasMany(User);
-User.belongsTo(User);
-
-User.hasMany(Message1);
-Message1.belongsTo(User);
-
-Zone.hasMany(Message1);
-Message1.belongsTo(Zone);
-
-User.hasMany(Message2);
-Message2.belongsTo(User);
-
-Zone.hasMany(Message2);
-Message2.belongsTo(Zone);
-
-Zone.hasMany(Feedback);
-Feedback.belongsTo(Zone);
-
-User.hasOne(SocketUser);
-SocketUser.belongsTo(User);
-
-Official.hasOne(SocketOfficial);
-SocketOfficial.belongsTo(Official);
-
-// mail password to env
-
-sequelize
-     // .sync({ force: true })
-     // .sync({ alter: true })
-     .sync()
-     .then(() => {
-          console.log("Connected to Mysql database");
-          app.listen(process.env.PORT, async () => {
-               console.log(`Server starts listening at PORT ${process.env.PORT}`);
-          });
-     })
-     .catch((err) => {
-          console.log(err);
+mongoose.connect(process.env.DB_URL).then(() => {
+     console.log("Connected to MongoDB database");
+     app.listen(process.env.PORT, async () => {
+          console.log(`Server starts listening at PORT ${process.env.PORT}`);
      });
-
+ });

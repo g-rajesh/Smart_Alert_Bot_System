@@ -77,7 +77,7 @@ exports.checkAndSendMessage = async (data, bot, area, prediction) => {
         data.from = bot.fName;
         data.UserId = bot.id;
         // bot reply message
-        message = await MessageWithUsers.create({...data, type: prediction});
+        message = await MessageWithUsers.create(data);
         await message.save();
 
     } else {
@@ -94,9 +94,9 @@ exports.checkAndSendMessage = async (data, bot, area, prediction) => {
         await message.save();
 
         // c. stop further queries from the same area
-        await Area.update(
-            { problem: "ALREADY RAISED" }, 
-            { where: { id: area.id }}
+        await Area.updateOne(
+            { id: area.id },
+            { problem: "ALREADY RAISED" }
         );
     }
 }

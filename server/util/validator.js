@@ -52,45 +52,46 @@ exports.error = (e, data, status) => {
 }
 
 exports.isInvalidZone = async (zone) => {
-    const res = await Zone.findOne({ where: { name: zone } });
+    const res = await Zone.findOne({ name: zone });
     return res == null;
 }
 
 exports.isInvalidArea = async (zone, area) => {
-    const zone1 = await Zone.findOne({ where: { name: zone } });
-    const area1 = await Area.findOne({ where: { name: area, ZoneId: zone1.id } });
+    const zone1 = await Zone.findOne({ name: zone });
+    const area1 = await Area.findOne({ name: area, ZoneId: zone1.id });
 
     return area1 == null;
 }
 
 exports.isEmailAlreadyTaken = async (email) => {
-    const official = await Official.findOne({ where: { email } });
-    const user = await User.findOne({ where: { email } });
+    const official = await Official.findOne({ email });
+    const user = await User.findOne({ email });
     return user != null || official != null;
 }
 
 exports.createUser = async (data) => {
-    data.isVerified = false;
-    const area = await Area.findOne({ where: { name: data.area } });
+    data.isVerified = 0;
+    const area = await Area.findOne({ name: data.area });
     data.AreaId = area.id;
     
     const user = await User.create(data);
     await user.save();
 
-    const isVerified = await sendVerificationEmail(user.email, user.password);
+    await sendVerificationEmail(user.email, user.password);
 
     return user;
 }
 
 exports.getOfficial = async (email) => {
-    return await Official.findOne({ where: { email } });
+    return await Official.findOne({ email });
 }
 
 exports.getUser = async (email) => {
-    return await User.findOne({ where: { email } });
+    return await User.findOne({ email });
 }
 
 exports.isPasswordMatch = async (hashed, password) => {
+    console.log(hashed, password);
     const isEqual = await bcrypt.compare(password, hashed);
 
     console.log(isEqual);
