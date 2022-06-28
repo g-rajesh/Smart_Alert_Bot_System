@@ -41,8 +41,6 @@ const handeVoiceCallStart = async (rtc, socket, id, email) => {
     let data = {
         officialId: JSON.parse(localStorage.getItem('officialId'))
     }
-    console.log('offid: ', data.officialId)
-    console.log('socket: ', socket.id)
     socket.emit("userAttendedCall", data)
 
     await axios.post("http://localhost:8080/user/rtcToken", body, {
@@ -52,31 +50,25 @@ const handeVoiceCallStart = async (rtc, socket, id, email) => {
         }})
         .then(res => {
             token = res.data.rtcToken
-            console.log('token: ', token)
         })
         .catch(err => {
             console.log('fetch token error: ', err)
         })
 
-        console.log('options; ', options)
 
     await rtc_new.client.join(options.appId, options.channel, token, options.uid);
     rtc_new.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-    console.log('rtc 12345', rtc_new.localAudioTrack)
     await rtc.client.publish([rtc_new.localAudioTrack]);
-    console.log("publish success!");
 
     //notify the user and pop up a modal with a button 'connect' to join the voice call channel
 }
 
 const handleOfficialEndCall = async () => {
-    console.log('official ended call !')
     rtc_new.localAudioTrack.close();
     await rtc_new.client.leave();
 }
 
 const handleVoiceCallEnd = async (socket) => {
-    console.log("user end call socket id: " , socket.id)
     rtc_new.localAudioTrack.close();
     await rtc_new.client.leave();
     // window.alert('you (user) disconected the call !')

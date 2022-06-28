@@ -95,7 +95,6 @@ io.on('connection', (soc) => {
                let newData = {
                     officialId: officialId
                }
-               console.log('callUser: ', newData)
                // inform user that official is on call
                io.to(socketId).emit('officialOnCall', newData)
           } catch(err) {
@@ -104,16 +103,13 @@ io.on('connection', (soc) => {
      })
 
      soc.on("userAttendedCall", async (data)=> {
-          console.log('data', data)
           officialId = data.officialId
           let socOfficial = await SocketOfficial.findOne({ OfficialId: officialId })
           let sockId = socOfficial.socketId
-          console.log('user atttended call is emiitter to : ', sockId)
           io.to(sockId).emit("userAttended")
      })
 
      soc.on('endCallByOfficial', async (data)=> {
-          console.log('end call by official, ',data)
           try {
                let socket = await SocketUser.findOne({ UserId: data.uid });
                let socketId = socket.socketId;
@@ -150,7 +146,6 @@ app.get("/", (req, res, next) => {
 app.use("/user", userRoutes);
 
 app.use((error, req, res, next) => {
-     console.log(error);
      const status = error.status || 500;
      const message = error.message;
      const data = error.data;

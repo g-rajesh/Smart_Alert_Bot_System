@@ -7,6 +7,7 @@ import Preloader from '../../Util/Preloader';
 
 import { changeError, deleteError, submitHandler } from '../../app/reducers/signupSlice';
 import { updateUser } from '../../app/reducers/userSlice';
+import { USER_SIGNUP } from "../../Util/links";
 
 const SignUp = () => {
     const user = useSelector(state => state.user.user);
@@ -38,7 +39,7 @@ const SignUp = () => {
         setLoading(true);
         dispatch(deleteError);
         
-        const responce = await fetch("http://localhost:8080/user/signup", {
+        const responce = await fetch(USER_SIGNUP, {
             method: "POST",
             headers: {
                 "Access-Control-Allow-Origin": "*",
@@ -57,7 +58,6 @@ const SignUp = () => {
             dispatch(updateUser(result));
             navigate('/chat');
         }
-        console.log(result);
     }
 
     return (

@@ -38,15 +38,11 @@ exports.sendMail = async (to, subject, text) => {
     } catch (e) {
         console.log(e.message);
     }
-
-    console.log("Mail sent successfully");
 };
 
 exports.detectSpam = (message) => {
 
     message = message.toLowerCase();
-
-    console.log(message);
 
     for(let i in possibilities) {
         if(message.includes(possibilities[i])) {

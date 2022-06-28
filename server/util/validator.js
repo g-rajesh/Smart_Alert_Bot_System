@@ -91,9 +91,6 @@ exports.getUser = async (email) => {
 }
 
 exports.isPasswordMatch = async (hashed, password) => {
-    console.log(hashed, password);
     const isEqual = await bcrypt.compare(password, hashed);
-
-    console.log(isEqual);
     return isEqual;
 }

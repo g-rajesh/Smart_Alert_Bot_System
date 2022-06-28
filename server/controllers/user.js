@@ -72,7 +72,6 @@ exports.signup = async (req, res, next) => {
 
         // creating user
         const user = await createUser(req.body);
-        // console.log(user);
 
         // creating token
         const token = jwt.sign({email: user.email}, process.env.JWT_TOKEN, { expiresIn: '1w' });
@@ -103,7 +102,6 @@ exports.signup = async (req, res, next) => {
 }
 
 exports.signin = async (req, res, next) => {
-    // console.log(req.body);
     const { email, password } = req.body;
 
     let errors = { "email": "", "password": "" };

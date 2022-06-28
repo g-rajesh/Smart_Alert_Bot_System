@@ -22,17 +22,14 @@ export const signupSlice = createSlice({
     initialState,
     reducers: {
         changeHandler: (state, {payload}) => {
-            // console.log(payload);
             state.formDetails = {
                 ...state.formDetails, [payload.name]: payload.value
             }
 
             localStorage.setItem("signupState", JSON.stringify(state.formDetails));
-            // console.log(state.formDetails)
         },
 
         submitHandler: (state) => {
-            // console.log(current(state));
             state.currPage = 1;
             localStorage.setItem("page", JSON.stringify(state.currPage));
             localStorage.removeItem("signupState");
@@ -59,7 +56,6 @@ export const signupSlice = createSlice({
 
         changePageHandler: (state, {payload}) => {
             state.currPage = payload;
-            // console.log(state.currPage);
             localStorage.setItem("page", JSON.stringify(state.currPage));
         }
     },

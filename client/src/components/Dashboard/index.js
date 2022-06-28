@@ -5,6 +5,7 @@ import {FiSend} from 'react-icons/fi'
 
 import Messages from './Messages';
 import Profile from './Profile';
+import { FETCH_OFFICIAL_MESSAGES } from "../../Util/links";
 import { logoutHandler, updateUserIsVerified } from '../../app/reducers/userSlice';
 
 const Dashboard = ({socket, rtc}) => {
@@ -22,24 +23,19 @@ const Dashboard = ({socket, rtc}) => {
         if(!user || user.type=="user") return;
 
         setLoading(true);
-        const response = await fetch("http://localhost:8080/user/officialMessages", {
+        const response = await fetch(FETCH_OFFICIAL_MESSAGES, {
                                 headers: {
                                     Authorization: `Bearer ${token}`,
                                 },
                             });
 
         const result = await response.json();
-        // console.log(result);
         setLoading(false);
         if(response.status !== 200) {
             handleLogout();
         } else {
             const newMessages = result.messages;
             setMessages(newMessages);
-
-            console.log(newMessages);
-
-            console.log(result.messages);
         }
     }
     

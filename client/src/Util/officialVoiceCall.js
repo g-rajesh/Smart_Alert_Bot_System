@@ -52,20 +52,16 @@ const handeVoiceCallStart = async () => {
     }})
         .then(res => {
             token = res.data.rtcToken
-            console.log('token: ', token)
         })
         .catch(err => {
-            console.log('fetch token error: ', err)
         })
 
     await rtc_new.client.join(options.appId, options.channel, token, options.uid);
     rtc_new.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
     await rtc_new.client.publish([rtc_new.localAudioTrack]).then().catch(e => console.log('rtc error: ', e));
-    console.log("publish success! rtc: ", rtc_new.localAudioTrack);
 }
 
 const handleUserEndedcall = async () => {
-    console.log('User has ended the call !')
     rtc_new.localAudioTrack.close();
     await rtc_new.client.leave().then().catch(e => console.log('rtc error: ', e));
 }
@@ -75,7 +71,6 @@ const handleVoiceCallEnd = async () => {
     await rtc_new.client.leave().then().catch(e => console.log('rtc error: ', e))
     // window.alert('you (official) has disconnected the call !')
     // notify user that official has cut the call
-    console.log('socket: ', socket_new)
     socket_new.emit('endCallByOfficial', data)
 }
 

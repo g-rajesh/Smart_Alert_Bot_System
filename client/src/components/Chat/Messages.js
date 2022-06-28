@@ -16,7 +16,6 @@ const Messages = ({messages, loading, setToggleUpDown}) => {
 
     let isMessagesEmpty = true;
     Object.keys(messages).map(key => {
-        console.log(key);
         if(messages[key].length) {
             isMessagesEmpty = false;
         }

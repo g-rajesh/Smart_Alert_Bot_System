@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { logoutHandler } from '../../app/reducers/userSlice';
 
 import { InputWithoutError, SelectWithoutError } from '../../Util/Input'
+import { GET_AREAS, UPDATE_STATUS } from "../../Util/links";
 
 let initialData = {
     area: '',
@@ -24,7 +25,7 @@ const Status = () => {
     const [success, setSuccess] = useState("");
 
     const fetchAreas = async () => {
-        const response = await fetch("http://localhost:8080/user/getAreas", {
+        const response = await fetch(GET_AREAS, {
                                     headers: {
                                         "Access-Control-Allow-Origin": "*",
                                         Authorization: `Bearer ${token}`,
@@ -32,7 +33,6 @@ const Status = () => {
                                 });
 
         const result = await response.json();
-        console.log(result);
         if(response.status !== 200) {
             handleLogout();
         } else {
@@ -75,10 +75,8 @@ const Status = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
 
-        console.log(formData);
-
         setLoading(true);
-        const response = await fetch("http://localhost:8080/user/updateStatus", {
+        const response = await fetch(UPDATE_STATUS, {
                                 method: "POST",
                                 headers: {
                                     "Access-Control-Allow-Origin": "*",
@@ -93,7 +91,6 @@ const Status = () => {
         if(response.status !== 200) {
             handleLogout();
         } else {
-            console.log(result);
             setFormData(initialData);
             setSuccess(result.success);
         }

@@ -5,6 +5,7 @@ import {FiSend} from 'react-icons/fi'
 
 import Messages from './Messages';
 import Profile from './Profile';
+import { FETCH_USER_FEEDBACKS, ADD_USER_FEEDBACKS } from "../../Util/links";
 import { logoutHandler, updateUserIsVerified } from '../../app/reducers/userSlice';
 
 const Feedback = () => {
@@ -21,7 +22,7 @@ const Feedback = () => {
     const fetchData = async () => {
         if(!user || user.type=="official") return;
         setLoading(true);
-        const responce = await fetch("http://localhost:8080/user/getFeedback", {
+        const responce = await fetch(FETCH_USER_FEEDBACKS, {
                                 headers: {
                                     "Access-Control-Allow-Origin": "*",
                                     Authorization: `Bearer ${token}`,
@@ -34,7 +35,6 @@ const Feedback = () => {
         if(responce.status != 200) {
             handleLogout();
         } else {
-            console.log(result);
             setMessages(result);
         }
     }
@@ -64,9 +64,7 @@ const Feedback = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
 
-        console.log(message);
-
-        const responce = await fetch("http://localhost:8080/user/addFeedback", {
+        const responce = await fetch(ADD_USER_FEEDBACKS, {
                                 method: "POST",
                                 headers: {
                                     "Access-Control-Allow-Origin": "*",
@@ -78,7 +76,6 @@ const Feedback = () => {
 
         const result = await responce.json();
 
-        console.log(result);
         if(responce.status != 200) {
             handleLogout();
         } else {

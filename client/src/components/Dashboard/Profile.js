@@ -22,9 +22,7 @@ const Profile = ({selectedUser, setToggleUpDown, user, socket, rtc}) => {
     }
 
     const viewCall = async () => {
-        console.log('offical calling rtc: ', rtc.localAudioTrack )
         await handleSocketConnection(rtc, socket, selectedUser, user.id)
-        console.log('socket connection -> voice call start , rtc: ', rtc.localAudioTrack)
         dispatch(updateViewCall(true));
     }
 

@@ -34,7 +34,6 @@ exports.getMessages = async (req, res, next) => {
     const area = await Area.findById(user.AreaId);
 
     const messages = await fetchUserMessages(area.ZoneId);
-    // console.log(messages);
 
     return res.status(200).json({
         data: {
@@ -68,9 +67,6 @@ exports.addMessage = async (req, res, next) => {
         let formData = {message: req.body.message};
         const result = await axios.post("http://localhost:9090/user/predict", formData);
         const prediction = parseInt(result.data.prediction);
-    
-        console.log(prediction);
-        // prediction -> 1,2,3,4
     
         let data = {
             from: user.fName,

@@ -1,19 +1,17 @@
 const mongoose = require("mongoose");
-require("dotenv").config();
+// require("dotenv").config();
 
-const bcrypt = require("bcryptjs");
+// const bcrypt = require("bcryptjs");
 
-const Zone = require("./models/zone");
-const User = require("./models/user");
-const Area = require("./models/area");
-const Feedback = require("./models/feedback");
+// const Zone = require("./models/zone");
+// const User = require("./models/user");
+// const Area = require("./models/area");
+// const Feedback = require("./models/feedback");
 
 // message is sending even after already raised
 
 mongoose.connect(process.env.DB_URL).then(async () => {
-	const hashed = await bcrypt.hash("Rajesh", 12);
-
-    console.log(hashed);
+    console.log("Hello world");
 });
 
 // const name = "Tiruvottiyur";

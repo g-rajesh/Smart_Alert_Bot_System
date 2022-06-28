@@ -54,8 +54,6 @@ exports.getOfficalMessages = async (req, res, next) => {
             messages[date] = message;
         }
     
-        // console.log(messages);
-    
         return res.status(200).json({ messages });
     } catch (err) {
         if(!err.status) err.status=500;
@@ -148,7 +146,6 @@ exports.updateArea = async (req, res, next) => {
 
         if(users.length !== 0) {
             let to = users.toString();
-            console.log('to : ', to)
             await sendMail(to, "From TNEB, regarding power cut issue", message);
         }
         

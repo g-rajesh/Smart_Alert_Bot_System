@@ -48,7 +48,6 @@ const CallUser = ({rtc, socket}) => {
 
     // useEffect(()=>{
     //     const print = setInterval(()=>{
-    //         console.log("Hello");
     //     }, 100);
 
     //     return () => clearInterval(print);

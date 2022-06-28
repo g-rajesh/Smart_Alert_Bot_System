@@ -6,6 +6,7 @@ import {FiSend} from 'react-icons/fi'
 import Messages from './Messages';
 import Profile from './Profile';
 import { logoutHandler, updateUserIsVerified } from '../../app/reducers/userSlice';
+import { FETCH_USER_MESSAGES, ADD_USER_MESSAGES } from "../../Util/links";
 import Warning from './Warning';
 
 const Chat = () => {
@@ -23,7 +24,7 @@ const Chat = () => {
     const fetchData = async () => {
         if(!user || user.type=="official") return;
         setLoading(true);
-        const responce = await fetch("http://localhost:8080/user/messages", {
+        const responce = await fetch(FETCH_USER_MESSAGES, {
                                 headers: {
                                     "Access-Control-Allow-Origin": "*",
                                     Authorization: `Bearer ${token}`,
@@ -37,7 +38,6 @@ const Chat = () => {
             handleLogout();
         } else {
             const newMessages = result.data.messages;
-            console.log(newMessages);
             setMessages(newMessages);
 
             if(user.isVerified === 0) {
@@ -74,7 +74,7 @@ const Chat = () => {
 
         const formData = { message };
 
-        const responce = await fetch("http://localhost:8080/user/addMessage", {
+        const responce = await fetch(ADD_USER_MESSAGES, {
                                 method: "POST",
                                 headers: {
                                     "Access-Control-Allow-Origin": "*",
@@ -86,7 +86,6 @@ const Chat = () => {
 
         const result = await responce.json();
 
-        // console.log(result);
         if(responce.status != 200) {
             handleLogout();
         } else {

@@ -3,7 +3,6 @@ require("dotenv").config();
 
 
 exports.generateRTCToken = (req, res, next) => {
-    console.log("Called");
     const {channelName, uid} = req.body
     
     res.header('Access-Control-Allow-Origin', '*');
@@ -44,6 +43,5 @@ exports.generateRTCToken = (req, res, next) => {
         return res.status(500).json({ 'error': 'token type is invalid' });
     }
 
-    // console.log('token: ', token)
     return res.json({ 'rtcToken': token });
 }

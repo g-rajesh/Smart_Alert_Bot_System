@@ -26,9 +26,7 @@ module.exports = (req, res, next) => {
 
         next();
 
-    } catch(err) {       
-
-        console.log(err); 
+    } catch(err) {
         
         if(!err.status) err.status = 500;
         if(err.message === "jwt expired") {

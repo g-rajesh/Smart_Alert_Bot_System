@@ -21,6 +21,7 @@ import calling from "../audio/calling.mp3";
 import { handleOfficialEndCall } from '../Util/userVoiceCall';
 import { handleUserEndedcall } from '../Util/officialVoiceCall';
 import { updateAttend, updateViewCall } from '../app/reducers/userSlice';
+import { SOCKET_LINK } from "./../Util/links";
 
 
 const Root = () => {
@@ -40,7 +41,6 @@ const Root = () => {
         rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
         rtc.client.on("user-published", async (user, mediaType) => {
             await rtc.client.subscribe(user, mediaType);
-            console.log("subscribe success");
 
             if (mediaType === "audio") {
                 const remoteAudioTrack = user.audioTrack;
@@ -48,7 +48,6 @@ const Root = () => {
             }
 
             rtc.client.on("user-unpublished", async (user) => {
-                console.log('unsubscribed user: ', user.uid)
                 await rtc.client.unsubscribe(user);
             });
         })
@@ -56,7 +55,7 @@ const Root = () => {
         // dispatch(updateUserRTC(rtc))
 
         
-        socket = io( "http://localhost:9080", { upgrade: false, transports: ['websocket'] });
+        socket = io( SOCKET_LINK, { upgrade: false, transports: ['websocket'] });
 
         if(type === "official") {
             let data = { officialId: user.id }
@@ -64,7 +63,6 @@ const Root = () => {
             socket.on('connect', () => {
                 // dispatch(updateUserSocket(socket))
                 socket.emit('officialId', data)
-                console.log(' offical socket connected !')
 
                 socket.on('userEndedCall', () => {
                     dispatch(updateViewCall(false))
@@ -73,35 +71,29 @@ const Root = () => {
 
                 socket.on("userAttended", ()=>{
                     dispatch(updateAttend(true))
-                    console.log('user attended our call')
                 })
             })
 
         } else if(type === "user"){
             let socketId ;
-            console.log('user type is user')
             let data = { uid: user.id, fName: user.fName };
 
             socket.on('connect', () => {    
 
                 socketId = socket.id
-                console.log('user connected! ', socketId)
 
                 socket.emit('uid', data)
 
                 socket.on('officialOnCall', (data) => {
                     officialId = data.officialId
-                    console.log('off id inside socket', data)
                     localStorage.setItem('officialId', JSON.stringify(officialId))
 
-                    console.log('official on call: ', officialId)
 
                     dispatch(updateViewCall(true))
                 })
 
                 socket.on('officialEndedCall', () => {
                     // official ended call
-                    console.log('officalEndedCall emit received')
                     dispatch(updateViewCall(false))
                     handleOfficialEndCall()
                 })

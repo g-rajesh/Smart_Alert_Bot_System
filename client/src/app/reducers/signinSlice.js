@@ -25,11 +25,9 @@ export const signinSlice = createSlice({
             }
 
             localStorage.setItem("signinState", JSON.stringify(state.formDetails));
-            // console.log(current(state));
         },
 
         submitHandler: (state) => {
-            // console.log(current(state));
             localStorage.removeItem("signinState");
             state.formDetails = formDetails;
         },

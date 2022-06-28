@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { changeHandler, deleteError, changeError, submitHandler } from '../../app/reducers/signinSlice';
 import { updateUser } from '../../app/reducers/userSlice';
 import { Input } from '../../Util/Input';
+import { USER_SIGNIN } from "../../Util/links";
 import Preloader from '../../Util/Preloader';
 
 const SignIn = () => {
@@ -37,7 +38,7 @@ const SignIn = () => {
         setLoading(true);
         dispatch(deleteError());
 
-        const responce = await fetch("http://localhost:8080/user/signin", {
+        const responce = await fetch(USER_SIGNIN, {
             method: "POST",
             headers: {
                 // "Access-Control-Allow-Origin": "*",
@@ -46,7 +47,6 @@ const SignIn = () => {
             body: JSON.stringify(formData),
         });
         const result = await responce.json();
-        console.log('result: ', result)
         setLoading(false);
         if(responce.status == 500) {
             dispatch(changeError(result.data));
@@ -60,7 +60,6 @@ const SignIn = () => {
                 navigate('/dashboard');
             }
         }
-        // console.log(result);
     }
 
     const classes = { "email": "", "password": "" };
